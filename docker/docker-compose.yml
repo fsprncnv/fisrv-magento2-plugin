@@ -16,7 +16,7 @@ services:
     volumes:
       - db:/var/lib/mysql
   magento:
-    image: registry.gitlab.mherrm.de/cgi/fisrv-magento-plugin:latest
+    image: registry.gitlab.mherrm.de/cgi/fisrv-magento2-plugin:latest
     container_name: fisrv-magento-apache
     restart: always
     labels:
