@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  database:    
+    image: mariadb:11
+    container_name: fisrv-magento-db
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=somewordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    networks:
+      - default
+    volumes:
+      - db:/var/lib/mysql
+  magento:
+    image: registry.gitlab.mherrm.de/cgi/fiserv-woocommerce-plugin:latest
+    container_name: fisrv-magento-apache
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fiwoo-secure.entrypoints=http,https"
+      - "traefik.http.routers.fiwoo-secure.rule=Host(`fiwoo.mherrm.de`)"
+      - "traefik.http.routers.fiwoo-secure.tls=true"
+      - "traefik.http.routers.fiwoo-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.fiwoo-secure.service=fiwoo"
+      - "traefik.http.services.fiwoo.loadbalancer.server.scheme=https"
+      - "traefik.http.services.fiwoo.loadbalancer.server.port=443"
+      - "traefik.docker.network=traefik"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    networks:
+      - default
+      - traefik
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 512M
+networks:
+  traefik:
+    external: true
+volumes:
+  db:
