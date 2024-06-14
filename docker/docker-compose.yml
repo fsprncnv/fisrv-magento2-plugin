@@ -16,18 +16,18 @@ services:
     volumes:
       - db:/var/lib/mysql
   magento:
-    image: registry.gitlab.mherrm.de/cgi/fiserv-woocommerce-plugin:latest
+    image: registry.gitlab.mherrm.de/cgi/fisrv-magento-plugin:latest
     container_name: fisrv-magento-apache
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.fiwoo-secure.entrypoints=http,https"
-      - "traefik.http.routers.fiwoo-secure.rule=Host(`fiwoo.mherrm.de`)"
-      - "traefik.http.routers.fiwoo-secure.tls=true"
-      - "traefik.http.routers.fiwoo-secure.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.fiwoo-secure.service=fiwoo"
-      - "traefik.http.services.fiwoo.loadbalancer.server.scheme=https"
-      - "traefik.http.services.fiwoo.loadbalancer.server.port=443"
+      - "traefik.http.routers.fisrv-magento-secure.entrypoints=http,https"
+      - "traefik.http.routers.fisrv-magento-secure.rule=Host(`fisrv-magento.mherrm.de`)"
+      - "traefik.http.routers.fisrv-magento-secure.tls=true"
+      - "traefik.http.routers.fisrv-magento-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.fisrv-magento-secure.service=fisrv-magento"
+      - "traefik.http.services.fisrv-magento.loadbalancer.server.scheme=https"
+      - "traefik.http.services.fisrv-magento.loadbalancer.server.port=443"
       - "traefik.docker.network=traefik"
     logging:
       driver: "json-file"
