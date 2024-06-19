@@ -7,6 +7,7 @@ FROM registry.gitlab.mherrm.de/default/base:latest
 # Install Magento Open Source
 # ---------------------------------------------------
 WORKDIR /var/www/html/
+which composer
 composer config --no-plugins allow-plugins.automattic/jetpack-autoloader false
 composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition <install-directory-name>
 
