@@ -9,7 +9,7 @@ FROM registry.gitlab.mherrm.de/default/base:latest
 WORKDIR /var/www/html/
 ADD docker/auth.json .
 #RUN composer config --no-plugins allow-plugins.automattic/jetpack-autoloader false
-RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition .
+RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition magento/
 
 USER www-data
 
