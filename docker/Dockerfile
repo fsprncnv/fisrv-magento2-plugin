@@ -3,6 +3,8 @@
 # ---------------------------------------------------
 FROM registry.gitlab.mherrm.de/default/base:latest
 
+RUN touch /var/www/.composer/config.json
+
 # ---------------------------------------------------
 # Install Magento Open Source
 # ---------------------------------------------------
