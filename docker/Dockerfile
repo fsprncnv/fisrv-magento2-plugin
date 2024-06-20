@@ -3,8 +3,6 @@
 # ---------------------------------------------------
 FROM registry.gitlab.mherrm.de/default/base:latest
 
-RUN mkdir /var/www/.composer/
-
 # ---------------------------------------------------
 # Install Magento Open Source
 # ---------------------------------------------------
