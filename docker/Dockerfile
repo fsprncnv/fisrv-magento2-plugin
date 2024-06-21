@@ -7,7 +7,7 @@ FROM registry.gitlab.mherrm.de/default/base:latest
 # Configure Database
 # ---------------------------------------------------
 RUN mysql -V
-RUN systemctl start mysql.service
+RUN mysqld
 RUN mysql -e "UPDATE mysql.user SET Password = PASSWORD('test') WHERE User = 'root'"
 RUN mysql -e "DROP USER ''@'localhost'"
 RUN mysql -e "DROP DATABASE test"
