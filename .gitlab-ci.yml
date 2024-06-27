@@ -22,3 +22,5 @@ build:
 docker:
   extends: .base_docker
 
+deploy:
+  extends: .base_deploy
