@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Config Repository -->
+    <preference for="Fisrv\Payment\Api\Config\RepositoryInterface"
+                type="Fisrv\Payment\Model\Config\Repository"/>
+    <!-- Payment Adapter -->
+    <virtualType name="FisrvPaymentAdapter" type="Fisrv\Payment\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_gateway</argument>
+            <argument name="valueHandlerPool" xsi:type="object">FisrvValueHandlerPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+        </arguments>
+    </virtualType>
+    <!-- Value Handler Pool -->
+    <virtualType name="FisrvValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">FisrvConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Config Value Handler -->
+    <virtualType name="FisrvConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">FisrvGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+    <!-- Config  -->
+    <virtualType name="FisrvGatewayConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">fisrv_gateway</argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "fisrv/php-client": "^0.0.2"
+    }
+}

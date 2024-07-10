@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <fisrv_gateway>
+                <active>1</active>
+                <title>Fisrv Payment</title>
+                <payment_action>authorize_capture</payment_action>
+                <model>FisrvPaymentAdapter</model>
+                <can_use_checkout>1</can_use_checkout>
+                <can_capture>1</can_capture>
+                <can_authorize>1</can_authorize>
+                <cctypes>AE,VI,MC,DI,JCB,DN</cctypes>
+                <xml_api_endpoint_demo>https://api.demo.convergepay.com/VirtualMerchantDemo/processxml.do</xml_api_endpoint_demo>
+                <xml_api_endpoint_production>https://api.convergepay.com/VirtualMerchant/processxml.do</xml_api_endpoint_production>
+                <mode>demo</mode>
+            </fisrv_gateway>
+        </payment>
+    </default>
+</config>
