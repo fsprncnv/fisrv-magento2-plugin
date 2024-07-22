@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-            <fisrv_gateway>
+            <fisrv_generic>
                 <title>Fisrv Checkout</title>
                 <active>1</active>
                 <payment_action>authorize_capture</payment_action>
@@ -11,7 +11,7 @@
                 <can_capture>1</can_capture>
                 <can_authorize>1</can_authorize>
                 <cctypes>AE,VI,MC,DI,JCB,DN</cctypes>
-            </fisrv_gateway>
+            </fisrv_generic>
         </payment>
         <csp>
             <mode>

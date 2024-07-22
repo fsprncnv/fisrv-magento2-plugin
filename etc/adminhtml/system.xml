@@ -12,22 +12,39 @@
 					<label>Branding</label>
 					<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Header</frontend_model>
 				</group>
-				<group id="fisrv_general" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+				<group id="fisrv_generic" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>General</label>
 					<field id="enabled" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
 						<label>Enabled</label>
 						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-						<config_path>payment/fisrv_general/enabled</config_path>
+						<config_path>payment/fisrv_generic/enabled</config_path>
+					</field>
+					<field id="sanbox" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>Enabled</label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+						<config_path>payment/fisrv_generic/sanbox</config_path>
 					</field>
 					<field id="heading_api" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
 						<label>API Details</label>
 						<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Heading</frontend_model>
-						<comment><![CDATA[Fill in your API Key below.]]></comment>
+						<comment>
+							<![CDATA[Fill in your API Key below.]]>
+						</comment>
 					</field>
-					<field id="apikey" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+					<field id="apikey" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
 						<label>API Key</label>
 						<backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-						<config_path>payment/fisrv_general/apikey</config_path>
+						<config_path>payment/fisrv_generic/apikey</config_path>
+					</field>
+					<field id="apisecret" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>API Secret</label>
+						<backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+						<config_path>payment/fisrv_generic/apisecret</config_path>
+					</field>
+					<field id="storeid" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>Fisrv Store ID</label>
+						<backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+						<config_path>payment/fisrv_generic/storeid</config_path>
 					</field>
 				</group>
 				<include path="Fisrv_Payment::methods.xml"/>

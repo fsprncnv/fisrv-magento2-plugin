@@ -5,6 +5,8 @@ namespace Fisrv\Payment\Controller\Checkout;
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
 use Fisrv\Payment\Logger\DebugLogger;
+use Fisrv\Payment\Model\Method\ConfigData;
+use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
 use Fisrv\Models\Currency;
 use Fisrv\Models\Locale;
@@ -22,22 +24,27 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
 class CheckoutCreator
 {
     private static \Fisrv\Checkout\CheckoutClient $client;
-
     private Session $session;
     private Store $store;
     private Resolver $resolver;
     private DebugLogger $logger;
+    private UrlInterface $url;
+    private ConfigData $config;
 
     public function __construct(
         Session $session,
         Store $store,
         Resolver $resolver,
-        DebugLogger $logger
+        DebugLogger $logger,
+        UrlInterface $url,
+        ConfigData $config,
     ) {
         $this->session = $session;
         $this->store = $store;
         $this->resolver = $resolver;
         $this->logger = $logger;
+        $this->url = $url;
+        $this->config = $config;
     }
 
     /**
@@ -48,13 +55,15 @@ class CheckoutCreator
     public function create(): string
     {
         $order = $this->session->getLastRealOrder();
+        $magentoStoreId = $this->store->getId();
+        $moduleVersion = $this->config->getModuleVersion();
 
         self::$client = new \Fisrv\Checkout\CheckoutClient([
-            'user' => 'Magento2Plugin/0.0.1',
-            'is_prod' => false,
-            'api_key' => '7V26q9EbRO2hCmpWARdFtOyrJ0A4cHEP',
-            'api_secret' => 'KCFGSj3JHY8CLOLzszFGHmlYQ1qI9OSqNEOUj24xTa0',
-            'store_id' => '72305408',
+            'user' => 'Magento2Plugin/' . $moduleVersion,
+            'is_prod' => !$this->config->isSandbox($magentoStoreId),
+            'api_key' => $this->config->getApiKey($magentoStoreId),
+            'api_secret' => $this->config->getApiSecret($magentoStoreId),
+            'store_id' => $this->config->isSandbox($magentoStoreId),
         ]);
 
         $request = self::$client->createBasicCheckoutRequest(43.99, 'https://success.com', 'https://failure.com');
@@ -84,6 +93,8 @@ class CheckoutCreator
         $req->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
 
         /** Order numbers, IDs */
+        $req->merchantTransactionId = strval($order->getId());
+        $req->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
 
         /** Order totals */
         $req->transactionAmount->total = floatval($order->getGrandTotal());
@@ -99,7 +110,9 @@ class CheckoutCreator
         /** Append ampersand to allow checkout solution to append query params */
         $req->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
-        $req->checkoutSettings->webHooksUrl = '';
+        $req->checkoutSettings->webHooksUrl = $this->url->getUrl('/fisrv/checkout/webhook', [
+            'orderid' => $order->getId()
+        ]);
 
         return $req;
     }

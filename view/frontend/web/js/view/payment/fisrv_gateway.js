@@ -5,15 +5,14 @@
 /*browser:true*/
 /*global define*/
 define([
-    "uiComponent",
-    "Magento_Checkout/js/model/payment/renderer-list",
+  'uiComponent',
+  'Magento_Checkout/js/model/payment/renderer-list',
 ], function (Component, rendererList) {
-    "use strict";
-    rendererList.push({
-        type: "fisrv_gateway",
-        component:
-            "Fisrv_Payment/js/view/payment/method-renderer/fisrv_gateway",
-    });
-    /** Add view logic here if needed */
-    return Component.extend({});
+  'use strict';
+  rendererList.push({
+    type: 'fisrv_generic',
+    component: 'Fisrv_Payment/js/view/payment/method-renderer/fisrv_generic',
+  });
+  /** Add view logic here if needed */
+  return Component.extend({});
 });

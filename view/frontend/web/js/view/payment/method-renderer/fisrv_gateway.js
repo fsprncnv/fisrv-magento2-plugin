@@ -10,12 +10,12 @@ define([
   return Component.extend({
     defaults: {
       redirectAfterPlaceOrder: false,
-      code: 'fisrv_gateway',
+      code: 'fisrv_generic',
       template: 'Fisrv_Payment/payment/form',
     },
 
     getCode: function () {
-      return 'fisrv_gateway';
+      return 'fisrv_generic';
     },
 
     afterPlaceOrder: function () {
