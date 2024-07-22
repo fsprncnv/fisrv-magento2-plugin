@@ -4,6 +4,7 @@ namespace Fisrv\Payment\Controller\Checkout;
 
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
+use Fisrv\Payment\Logger\DebugLogger;
 use Magento\Sales\Model\Order;
 use Fisrv\Models\Currency;
 use Fisrv\Models\Locale;
@@ -15,6 +16,9 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
     require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
 }
 
+/**
+ * Creates instance (checkout ID or URL) of hosted payment page
+ */
 class CheckoutCreator
 {
     private static \Fisrv\Checkout\CheckoutClient $client;
@@ -22,15 +26,18 @@ class CheckoutCreator
     private Session $session;
     private Store $store;
     private Resolver $resolver;
+    private DebugLogger $logger;
 
     public function __construct(
         Session $session,
         Store $store,
-        Resolver $resolver
+        Resolver $resolver,
+        DebugLogger $logger
     ) {
         $this->session = $session;
         $this->store = $store;
         $this->resolver = $resolver;
+        $this->logger = $logger;
     }
 
     /**
@@ -60,8 +67,13 @@ class CheckoutCreator
         return $response->checkout->checkoutId;
     }
 
+
     /**
      * Pass checkout data (totals, redirects, language etc.) to request object of checkout
+     * 
+     * @param \Fisrv\Models\CheckoutClientRequest $req
+     * @param \Magento\Sales\Model\Order $order
+     * @return \Fisrv\Models\CheckoutClientRequest
      */
     private function transferBaseData(CheckoutClientRequest $req, Order $order): CheckoutClientRequest
     {
@@ -69,7 +81,7 @@ class CheckoutCreator
         $req->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
 
         /** Currency */
-        $req->transactionAmount->currency = Currency::tryFrom($order->getOrderCurrency()->getCurrencyCode()) ?? Currency::EUR;
+        $req->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
 
         /** Order numbers, IDs */
 
@@ -92,25 +104,50 @@ class CheckoutCreator
         return $req;
     }
 
+    /**
+     * Pass cart (line) items to checkout 
+     * 
+     * @param \Fisrv\Models\CheckoutClientRequest $req
+     * @param \Magento\Sales\Model\Order $order
+     * @return \Fisrv\Models\CheckoutClientRequest
+     */
     private function transferCartItems(CheckoutClientRequest $req, Order $order): CheckoutClientRequest
     {
         $items = $order->getItems();
 
         foreach ($items as $item) {
-            $req->order->basket->lineItems[] = new LineItem([
-                'itemIdentifier' => strval($item->getItemId()),
-                'name' => $item->getName(),
-                'price' => $item->getPrice(),
-                'quantity' => intval($item->getQtyOrdered()),
-                'total' => $item->getPriceInclTax(),
-            ]);
+            try {
+                $req->order->basket->lineItems[] = new LineItem([
+                    'itemIdentifier' => strval($item->getItemId()),
+                    'name' => $item->getName(),
+                    'quantity' => intval($item->getQtyOrdered()),
+                    'price' => $item->getPrice(),
+                    'total' => $item->getPrice(),
+                    'shippingCost' => 0,
+                    'valueAddedTax' => 0,
+                    'miscellaneousFee' => 0,
+                ]);
+            } catch (\Throwable $th) {
+                $this->logger->write('Added line item to checkout: ' . $item->getName());
+            }
         }
 
         return $req;
     }
 
+    /**
+     * Pass acount information like billing data to checkout
+     * 
+     * @param \Fisrv\Models\CheckoutClientRequest $req
+     * @param \Magento\Sales\Model\Order $order
+     * @return \Fisrv\Models\CheckoutClientRequest
+     */
     private function transferAccountPerson(CheckoutClientRequest $req, Order $order): CheckoutClientRequest
     {
+        if (is_null($order->getBillingAddress())) {
+            return $req;
+        }
+
         $req->order->billing->person->firstName = $order->getBillingAddress()->getFirstname();
         $req->order->billing->person->lastName = $order->getBillingAddress()->getLastname();
         $req->order->billing->contact->email = $order->getBillingAddress()->getEmail();
