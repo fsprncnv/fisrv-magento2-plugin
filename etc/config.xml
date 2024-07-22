@@ -3,18 +3,28 @@
     <default>
         <payment>
             <fisrv_gateway>
+                <title>Fisrv Checkout</title>
                 <active>1</active>
-                <title>Fisrv Payment</title>
                 <payment_action>authorize_capture</payment_action>
-                <model>FisrvPaymentAdapter</model>
+                <model>Fisrv\Payment\Model\Method\GenericMethod</model>
                 <can_use_checkout>1</can_use_checkout>
                 <can_capture>1</can_capture>
                 <can_authorize>1</can_authorize>
                 <cctypes>AE,VI,MC,DI,JCB,DN</cctypes>
-                <xml_api_endpoint_demo>https://api.demo.convergepay.com/VirtualMerchantDemo/processxml.do</xml_api_endpoint_demo>
-                <xml_api_endpoint_production>https://api.convergepay.com/VirtualMerchant/processxml.do</xml_api_endpoint_production>
-                <mode>demo</mode>
             </fisrv_gateway>
         </payment>
+        <csp>
+            <mode>
+                <storefront_checkout_index_index>
+                    <report_only>1</report_only>
+                </storefront_checkout_index_index>
+                <storefront>
+                    <report_only>1</report_only>
+                </storefront>
+                <admin>
+                    <report_only>1</report_only>
+                </admin>
+            </mode>
+        </csp>
     </default>
 </config>

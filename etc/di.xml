@@ -5,14 +5,14 @@
     <preference for="Fisrv\Payment\Api\Config\RepositoryInterface"
                 type="Fisrv\Payment\Model\Config\Repository"/>
     <!-- Payment Adapter -->
-    <virtualType name="FisrvPaymentAdapter" type="Fisrv\Payment\Model\Method\GenericMethod">
+    <type name="Fisrv\Payment\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_gateway</argument>
             <argument name="valueHandlerPool" xsi:type="object">FisrvValueHandlerPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
         </arguments>
-    </virtualType>
+    </type>
     <!-- Value Handler Pool -->
     <virtualType name="FisrvValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>

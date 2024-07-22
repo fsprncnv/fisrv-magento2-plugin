@@ -1,7 +1,3 @@
-# Operating System files
-.DS_Store
-Thumbs.db
-
 # IDE files
 .idea
 .vscode/*
@@ -12,12 +8,6 @@ project.properties
 *.sublime-project
 *.sublime-workspace
 .sublimelinterrc
-
-# Sass
-.sass-cache/
-
-# Logs
-logs/
 
 # Environment files
 wp-cli.local.yml
@@ -38,21 +28,7 @@ build-style/
 build-types/
 dist/
 
-# Project files
-node_modules/
-vendor/
-
-# TypeScript files
-tsconfig.tsbuildinfo
-
-# Node Package Dependencies
-package-lock.json
-
-# wp-env config
-.wp-env.override.json
-
 # Unit tests
-tmp/
 .phpunit.result.cache
 phpunit.xml
 
@@ -63,5 +39,4 @@ lib/vendor/
 contributors.md
 contributors.html
 composer.lock
-
 auth.json
