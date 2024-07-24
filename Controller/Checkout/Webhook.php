@@ -107,12 +107,7 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
                 $status = Order::STATE_CANCELED;
                 break;
             default:
-                $status = 'INVALID';
-                break;
-        }
-
-        if ($status === 'INVALID') {
-            return;
+                return;
         }
 
         $order->setStatus($status)->setState($status);

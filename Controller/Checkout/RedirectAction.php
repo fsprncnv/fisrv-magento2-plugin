@@ -9,8 +9,6 @@ use Magento\Framework\App\Action\Context;
 
 class RedirectAction extends Action
 {
-    const CHECKOUT_LANE_BASEURL = 'https://ci.checkout-lane.com/#/?checkoutId=';
-
     private DebugLogger $logger;
     private CheckoutCreator $checkoutCreator;
 
@@ -28,11 +26,11 @@ class RedirectAction extends Action
 
     public function execute()
     {
-        $checkoutId = $this->checkoutCreator->create();
+        $checkoutUrl = $this->checkoutCreator->create();
         $this->logger->write('Processing checkout action...');
 
         $resultRedirect = $this->resultRedirectFactory->create();
-        $resultRedirect->setUrl(self::CHECKOUT_LANE_BASEURL . $checkoutId);
+        $resultRedirect->setUrl($checkoutUrl);
 
         return $resultRedirect;
     }

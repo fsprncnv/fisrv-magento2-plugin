@@ -24,12 +24,7 @@ class ConfigData
         $this->moduleList = $moduleList;
     }
 
-    public function getModuleVersion()
-    {
-        return $this->moduleList->getOne('Fisrv_Payment')['setup_version'];
-    }
-
-    private function getConfigEntry(int $storeId, string $configXmlPath)
+    private function getConfigEntry(?int $storeId, string $configXmlPath)
     {
         return $this->scopeConfig->getValue(
             $configXmlPath,
@@ -38,22 +33,28 @@ class ConfigData
         );
     }
 
-    public function isSandbox(int $storeId): bool
+    public function getModuleVersion()
     {
-        return $this->getConfigEntry($storeId, self::PATH_SANBOX);
+        return $this->moduleList->getOne('Fisrv_Payment')['setup_version'];
     }
 
-    public function getApiKey(int $storeId): string
+
+    public function isSandbox(?int $storeId): bool
+    {
+        return $this->getConfigEntry($storeId, self::PATH_SANBOX) ?? true;
+    }
+
+    public function getApiKey(?int $storeId): string
     {
         return $this->getConfigEntry($storeId, self::PATH_APIKEY);
     }
 
-    public function getApiSecret(int $storeId): bool
+    public function getApiSecret(?int $storeId): bool
     {
         return $this->getConfigEntry($storeId, self::PATH_APISECRET);
     }
 
-    public function getFisrvStoreId(int $storeId): bool
+    public function getFisrvStoreId(?int $storeId): bool
     {
         return $this->getConfigEntry($storeId, self::PATH_STOREID);
     }

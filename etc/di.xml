@@ -7,12 +7,37 @@
     <!-- Payment Adapter -->
     <type name="Fisrv\Payment\Model\Method\GenericMethod">
         <arguments>
-            <argument name="code" xsi:type="string">fisrv_generic</argument>
             <argument name="valueHandlerPool" xsi:type="object">FisrvValueHandlerPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
         </arguments>
     </type>
+    <virtualType name="FisrvApplepay" type="Fisrv\Payment\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_applepay</argument>
+            <argument name="title" xsi:type="string">Apple Pay (Fisrv)</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="FisrvCreditcard" type="Fisrv\Payment\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_creditcard</argument>
+            <argument name="title" xsi:type="string" translate="true">
+                Credit Card (Fisrv)
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="FisrvGeneric" type="Fisrv\Payment\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_generic</argument>
+            <argument name="title" xsi:type="string">Generic Checkout (Fisrv)</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="FisrvGooglepay" type="Fisrv\Payment\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_googlepay</argument>
+            <argument name="title" xsi:type="string">Google Pay (Fisrv)</argument>
+        </arguments>
+    </virtualType>
     <!-- Value Handler Pool -->
     <virtualType name="FisrvValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
@@ -30,7 +55,7 @@
     <!-- Config  -->
     <virtualType name="FisrvGatewayConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="string">fisrv_generic</argument>
+            <argument name="methodCode" xsi:type="string">fisrv_applepay</argument>
         </arguments>
     </virtualType>
 </config>

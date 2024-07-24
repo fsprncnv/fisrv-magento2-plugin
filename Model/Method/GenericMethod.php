@@ -18,6 +18,7 @@ class GenericMethod extends Adapter
     private DebugLogger $debugLogger;
     private UrlInterface $url;
     private Http $http;
+    private string $title;
 
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
@@ -28,7 +29,8 @@ class GenericMethod extends Adapter
         $infoBlockType,
         DebugLogger $debugLogger,
         UrlInterface $url,
-        Http $http
+        Http $http,
+        string $title,
     ) {
         parent::__construct(
             $eventManager,
@@ -42,25 +44,11 @@ class GenericMethod extends Adapter
         $this->debugLogger = $debugLogger;
         $this->url = $url;
         $this->http = $http;
+        $this->title = $title;
     }
 
     public function capture(InfoInterface $payment, $amount)
     {
-        // $checkoutId = 'abcdef';
-        // $this->debugLogger->write('Capturing checkout: ' . $checkoutId);
-
-        // $target = $this->url->getUrl('fisrv/checkout/redirectaction', [
-        //     'checkoutId' => $checkoutId
-        // ]);
-
-        // $this->http->setRedirect($target)->sendResponse();
-
-        return $this;
-    }
-
-    public function authorize(InfoInterface $payment, $amount)
-    {
-        echo 'authorizing...';
         return $this;
     }
 
@@ -68,5 +56,10 @@ class GenericMethod extends Adapter
     {
         echo 'accepting...';
         return $this;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

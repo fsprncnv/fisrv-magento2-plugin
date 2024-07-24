@@ -46,27 +46,6 @@ class OrderObserver implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-        // $event = $observer->getEvent();
-        // $order = $event->getData('order');
-
-        // if ($order->getPayment()->getMethod() !== $this->genericMethod->getCode()) {
-        //     $this->logger->write('Cancelling since method is incorrect');
-        //     return;
-        // }
-
-        $this->actionFlag->set('', \Magento\Framework\App\ActionInterface::FLAG_NO_DISPATCH, true);
-
-        $checkoutId = 'xxx';
-        // $checkoutId = self::createCheckout();
-        // $this->logger->write('Created checkout ID: ' . $checkoutId);
-
-        $this->logger->write('GenericObserver execute.');
-        $target = $this->url->getUrl('fisrv/checkout/redirectaction', [
-            'checkoutId' => $checkoutId
-        ]);
-
-        $this->http->setRedirect($target)->sendResponse();
-
         return $this;
     }
 }

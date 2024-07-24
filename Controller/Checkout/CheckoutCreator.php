@@ -4,7 +4,9 @@ namespace Fisrv\Payment\Controller\Checkout;
 
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
+use Fisrv\Models\PreSelectedPaymentMethod;
 use Fisrv\Payment\Logger\DebugLogger;
+use Fisrv\Payment\Logger\NotificationMessage;
 use Fisrv\Payment\Model\Method\ConfigData;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
@@ -30,6 +32,7 @@ class CheckoutCreator
     private DebugLogger $logger;
     private UrlInterface $url;
     private ConfigData $config;
+    private NotificationMessage $message;
 
     public function __construct(
         Session $session,
@@ -38,6 +41,7 @@ class CheckoutCreator
         DebugLogger $logger,
         UrlInterface $url,
         ConfigData $config,
+        NotificationMessage $message,
     ) {
         $this->session = $session;
         $this->store = $store;
@@ -45,7 +49,14 @@ class CheckoutCreator
         $this->logger = $logger;
         $this->url = $url;
         $this->config = $config;
+        $this->message = $message;
     }
+
+    private const PAYMENT_METHOD_MAP = [
+        'fisrv_creditcard' => PreSelectedPaymentMethod::CARDS,
+        'fisrv_applepay' => PreSelectedPaymentMethod::APPLE,
+        'fisrv_googlepay' => PreSelectedPaymentMethod::GOOGLEPAY,
+    ];
 
     /**
      * Create a checkout link
@@ -58,79 +69,114 @@ class CheckoutCreator
         $magentoStoreId = $this->store->getId();
         $moduleVersion = $this->config->getModuleVersion();
 
+        // self::$client = new \Fisrv\Checkout\CheckoutClient([
+        //     'user' => 'Magento2Plugin/' . $moduleVersion,
+        //     'is_prod' => !$this->config->isSandbox($magentoStoreId),
+        //     'api_key' => $this->config->getApiKey($magentoStoreId),
+        //     'api_secret' => $this->config->getApiSecret($magentoStoreId),
+        //     'store_id' => $this->config->getFisrvStoreId($magentoStoreId),
+        // ]);
+
         self::$client = new \Fisrv\Checkout\CheckoutClient([
             'user' => 'Magento2Plugin/' . $moduleVersion,
             'is_prod' => !$this->config->isSandbox($magentoStoreId),
-            'api_key' => $this->config->getApiKey($magentoStoreId),
-            'api_secret' => $this->config->getApiSecret($magentoStoreId),
-            'store_id' => $this->config->isSandbox($magentoStoreId),
+            'api_key' => '7V26q9EbRO2hCmpWARdFtOyrJ0A4cHEP',
+            'api_secret' => 'KCFGSj3JHY8CLOLzszFGHmlYQ1qI9OSqNEOUj24xTa0',
+            'store_id' => '72305408',
         ]);
 
-        $request = self::$client->createBasicCheckoutRequest(43.99, 'https://success.com', 'https://failure.com');
-        $request = self::transferBaseData($request, $order);
-        $request = self::transferCartItems($request, $order);
-        $request = self::transferAccountPerson($request, $order);
+        $request = self::$client->createBasicCheckoutRequest(0, '', '');
+
+        /** Set (preselected) payment method */
+        try {
+            $method = $this->session->getQuote()->getPayment()->getMethod();
+            $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
+            $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
+
+            $this->logger->write('Current method is: ' . $method);
+            echo $method;
+        } catch (\Throwable $th) {
+            $this->logger->write('Creating generic checkout.');
+        }
+
+        $request = $this->transferBaseData($request, $order);
+        $request = $this->transferCartItems($request, $order);
+        $request = $this->transferAccountPerson($request, $order);
 
         $response = self::$client->createCheckout($request);
 
-        return $response->checkout->checkoutId;
+        $checkoutId = $response->checkout->checkoutId;
+        $checkoutLink = $response->checkout->redirectionUrl;
+        $traceId = $response->traceId;
+
+        $order->addCommentToStatusHistory(
+            __(
+                'Fisrv checkout link %1 created with checkout ID %2 and trace ID %3.',
+                $checkoutLink,
+                $checkoutId,
+                $traceId,
+            )
+        );
+        $order->save();
+
+        return $checkoutLink;
     }
 
 
     /**
      * Pass checkout data (totals, redirects, language etc.) to request object of checkout
      * 
-     * @param \Fisrv\Models\CheckoutClientRequest $req
+     * @param \Fisrv\Models\CheckoutClientRequest $request
      * @param \Magento\Sales\Model\Order $order
      * @return \Fisrv\Models\CheckoutClientRequest
      */
-    private function transferBaseData(CheckoutClientRequest $req, Order $order): CheckoutClientRequest
+    private function transferBaseData(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
         /** Locale */
-        $req->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
+        $request->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
 
         /** Currency */
-        $req->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
+        $request->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
 
         /** Order numbers, IDs */
-        $req->merchantTransactionId = strval($order->getId());
-        $req->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
+        $request->merchantTransactionId = strval($order->getId());
+        $request->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
 
         /** Order totals */
-        $req->transactionAmount->total = floatval($order->getGrandTotal());
-        $req->transactionAmount->components->subtotal = floatval($order->getSubtotal());
-        $req->transactionAmount->components->vatAmount = floatval($order->getBaseTaxAmount());
-        $req->transactionAmount->components->shipping = floatval($order->getShippingAmount());
+        $request->transactionAmount->total = floatval($order->getGrandTotal());
+        $request->transactionAmount->components->subtotal = floatval($order->getSubtotal());
+        $request->transactionAmount->components->vatAmount = floatval($order->getBaseTaxAmount());
+        $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
         /** Redirect URLs */
         $baseUrl = $this->store->getBaseUrl();
-        $req->checkoutSettings->redirectBackUrls->successUrl = $baseUrl . '/checkout/onepage/success/?utm_nooverride=1';
-        $req->checkoutSettings->redirectBackUrls->failureUrl = $baseUrl . '/checkout/onepage/success/?utm_nooverride=1';
+        $request->checkoutSettings->redirectBackUrls->successUrl = $baseUrl . '/checkout/onepage/success/?utm_nooverride=1';
+        $request->checkoutSettings->redirectBackUrls->failureUrl = $baseUrl . '/checkout/onepage/#payment';
 
         /** Append ampersand to allow checkout solution to append query params */
-        $req->checkoutSettings->redirectBackUrls->failureUrl .= '&';
+        $request->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
-        $req->checkoutSettings->webHooksUrl = $this->url->getUrl('/fisrv/checkout/webhook', [
+        $request->checkoutSettings->webHooksUrl = $this->url->getUrl('/fisrv/checkout/webhook', [
             'orderid' => $order->getId()
         ]);
 
-        return $req;
+        return $request;
     }
 
     /**
      * Pass cart (line) items to checkout 
      * 
-     * @param \Fisrv\Models\CheckoutClientRequest $req
+     * @param \Fisrv\Models\CheckoutClientRequest $request
      * @param \Magento\Sales\Model\Order $order
      * @return \Fisrv\Models\CheckoutClientRequest
      */
-    private function transferCartItems(CheckoutClientRequest $req, Order $order): CheckoutClientRequest
+    private function transferCartItems(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
         $items = $order->getItems();
 
         foreach ($items as $item) {
             try {
-                $req->order->basket->lineItems[] = new LineItem([
+                $request->order->basket->lineItems[] = new LineItem([
                     'itemIdentifier' => strval($item->getItemId()),
                     'name' => $item->getName(),
                     'quantity' => intval($item->getQtyOrdered()),
@@ -145,31 +191,31 @@ class CheckoutCreator
             }
         }
 
-        return $req;
+        return $request;
     }
 
     /**
      * Pass acount information like billing data to checkout
      * 
-     * @param \Fisrv\Models\CheckoutClientRequest $req
+     * @param \Fisrv\Models\CheckoutClientRequest $request
      * @param \Magento\Sales\Model\Order $order
      * @return \Fisrv\Models\CheckoutClientRequest
      */
-    private function transferAccountPerson(CheckoutClientRequest $req, Order $order): CheckoutClientRequest
+    private function transferAccountPerson(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
         if (is_null($order->getBillingAddress())) {
-            return $req;
+            return $request;
         }
 
-        $req->order->billing->person->firstName = $order->getBillingAddress()->getFirstname();
-        $req->order->billing->person->lastName = $order->getBillingAddress()->getLastname();
-        $req->order->billing->contact->email = $order->getBillingAddress()->getEmail();
-        $req->order->billing->address->address1 = $order->getBillingAddress()->getStreet()[0];
-        $req->order->billing->address->city = $order->getBillingAddress()->getCity();
-        $req->order->billing->address->country = $order->getBillingAddress()->getCountryId();
-        $req->order->billing->address->postalCode = $order->getBillingAddress()->getPostcode();
+        $request->order->billing->person->firstName = $order->getBillingAddress()->getFirstname();
+        $request->order->billing->person->lastName = $order->getBillingAddress()->getLastname();
+        $request->order->billing->contact->email = $order->getBillingAddress()->getEmail();
+        $request->order->billing->address->address1 = $order->getBillingAddress()->getStreet()[0];
+        $request->order->billing->address->city = $order->getBillingAddress()->getCity();
+        $request->order->billing->address->country = $order->getBillingAddress()->getCountryId();
+        $request->order->billing->address->postalCode = $order->getBillingAddress()->getPostcode();
 
-        return $req;
+        return $request;
     }
 
 }
