@@ -6,7 +6,6 @@ use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
 use Fisrv\Models\PreSelectedPaymentMethod;
 use Fisrv\Payment\Logger\DebugLogger;
-use Fisrv\Payment\Logger\NotificationMessage;
 use Fisrv\Payment\Model\Method\ConfigData;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
@@ -14,7 +13,9 @@ use Fisrv\Models\Currency;
 use Fisrv\Models\Locale;
 use Magento\Framework\Locale\Resolver;
 use Magento\Checkout\Model\Session;
+use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
+
 
 if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php")) {
     require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
@@ -32,7 +33,8 @@ class CheckoutCreator
     private DebugLogger $logger;
     private UrlInterface $url;
     private ConfigData $config;
-    private NotificationMessage $message;
+    private OrderRepository $orderRepository;
+    private UrlInterface $urlInterface;
 
     public function __construct(
         Session $session,
@@ -41,7 +43,8 @@ class CheckoutCreator
         DebugLogger $logger,
         UrlInterface $url,
         ConfigData $config,
-        NotificationMessage $message,
+        OrderRepository $orderRepository,
+        UrlInterface $urlInterface
     ) {
         $this->session = $session;
         $this->store = $store;
@@ -49,7 +52,8 @@ class CheckoutCreator
         $this->logger = $logger;
         $this->url = $url;
         $this->config = $config;
-        $this->message = $message;
+        $this->orderRepository = $orderRepository;
+        $this->urlInterface = $urlInterface;
     }
 
     private const PAYMENT_METHOD_MAP = [
@@ -66,6 +70,9 @@ class CheckoutCreator
     public function create(): string
     {
         $order = $this->session->getLastRealOrder();
+        $this->logger->write('--- Order from CheckoutCreator::getLastRealOrder ---');
+        $this->logger->write($order);
+
         $magentoStoreId = $this->store->getId();
         $moduleVersion = $this->config->getModuleVersion();
 
@@ -99,9 +106,9 @@ class CheckoutCreator
             $this->logger->write('Creating generic checkout.');
         }
 
-        $request = $this->transferBaseData($request, $order);
-        $request = $this->transferCartItems($request, $order);
-        $request = $this->transferAccountPerson($request, $order);
+        $request = self::transferBaseData($request, $order);
+        $request = self::transferCartItems($request, $order);
+        $request = self::transferAccountPerson($request, $order);
 
         $response = self::$client->createCheckout($request);
 
@@ -117,7 +124,8 @@ class CheckoutCreator
                 $traceId,
             )
         );
-        $order->save();
+
+        $this->orderRepository->save($order);
 
         return $checkoutLink;
     }
@@ -149,14 +157,13 @@ class CheckoutCreator
         $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
         /** Redirect URLs */
-        $baseUrl = $this->store->getBaseUrl();
-        $request->checkoutSettings->redirectBackUrls->successUrl = $baseUrl . '/checkout/onepage/success/?utm_nooverride=1';
-        $request->checkoutSettings->redirectBackUrls->failureUrl = $baseUrl . '/checkout/onepage/#payment';
+        $request->checkoutSettings->redirectBackUrls->successUrl = $this->url->getUrl('fisrv/checkout/completeorder');
+        $request->checkoutSettings->redirectBackUrls->failureUrl = $this->url->getUrl('fisrv/checkout/cancelorder');
 
         /** Append ampersand to allow checkout solution to append query params */
         $request->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
-        $request->checkoutSettings->webHooksUrl = $this->url->getUrl('/fisrv/checkout/webhook', [
+        $request->checkoutSettings->webHooksUrl = $this->url->getUrl('fisrv/checkout/webhook', [
             'orderid' => $order->getId()
         ]);
 
@@ -172,6 +179,7 @@ class CheckoutCreator
      */
     private function transferCartItems(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
+        error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
         $items = $order->getItems();
 
         foreach ($items as $item) {
@@ -187,7 +195,7 @@ class CheckoutCreator
                     'miscellaneousFee' => 0,
                 ]);
             } catch (\Throwable $th) {
-                $this->logger->write('Added line item to checkout: ' . $item->getName());
+                $this->logger->write('Could not transfer cart item: ' . $item->getName() . ' ' . $th->getMessage());
             }
         }
 

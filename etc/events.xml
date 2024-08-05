@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <!-- <event name="checkout_submit_all_after">
-        <observer name="fisrv_payment_gateway_order_observer_after" instance="Fisrv\Payment\Observer\OrderObserver" />
-    </event> -->
-    <!-- <event name="controller_action_predispatch_cms_index_index">
-        <observer name="test_generic_observer_after" instance="Fisrv\Payment\Observer\OrderObserver" />
-    </event> -->
+    <!-- <event name="controller_action_predispatch_cms_index_index"> -->
+    <!-- <event name="checkout_onepage_controller_success_action"> -->
+    <!-- <event name="sales_order_place_before"> -->
+        <!-- <observer name="order_result_observer_after" instance="Fisrv\Payment\Observer\OrderResultObserver" /> -->
+    <!-- </event> -->
 </config>

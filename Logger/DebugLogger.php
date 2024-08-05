@@ -14,7 +14,7 @@ class DebugLogger extends Zend_Log
 
     public function __construct()
     {
-        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/custom.log');
+        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fisrv-checkout.log');
         $this->addWriter($writer);
         parent::__construct();
     }
@@ -22,13 +22,17 @@ class DebugLogger extends Zend_Log
     /**
      * Write info or debug log
      *
-     * @param string | DataObject $message String message
+     * @param mixed $message String message
      * @param string $type Error log on 'error', info log on anything else
      * @return void
      */
-    public function write(string | DataObject $message, string $type = 'info')
+    public function write(mixed $message, string $type = 'info')
     {
         try {
+            if (is_array($message)) {
+                $message = new DataObject($message);
+            }
+
             if ($message instanceof DataObject) {
                 $message = $message->toJson();
             }

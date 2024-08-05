@@ -20,6 +20,8 @@ class GenericMethod extends Adapter
     private Http $http;
     private string $title;
 
+    protected string $code = 'fisrv_generic';
+
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Payment\Gateway\Config\ValueHandlerPoolInterface $valueHandlerPool,
@@ -49,12 +51,17 @@ class GenericMethod extends Adapter
 
     public function capture(InfoInterface $payment, $amount)
     {
+        $this->debugLogger->write('--- Order from GenericMethod::capture ---');
+        $this->debugLogger->write($payment);
+
         return $this;
     }
 
     public function acceptPayment(InfoInterface $payment)
     {
-        echo 'accepting...';
+        $this->debugLogger->write('--- Order from GenericMethod::acceptPayment ---');
+        $this->debugLogger->write($payment);
+
         return $this;
     }
 

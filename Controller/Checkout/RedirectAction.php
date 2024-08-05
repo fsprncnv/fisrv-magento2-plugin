@@ -27,7 +27,7 @@ class RedirectAction extends Action
     public function execute()
     {
         $checkoutUrl = $this->checkoutCreator->create();
-        $this->logger->write('Processing checkout action...');
+        $this->logger->write('######## STARTING REDIRECT ########');
 
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setUrl($checkoutUrl);
