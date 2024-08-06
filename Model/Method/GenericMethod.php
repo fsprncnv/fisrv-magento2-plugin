@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Fisrv\Payment\Model\Method;
 
-use Magento\Framework\Url;
-use Magento\Payment\Gateway\Config\ValueHandlerPool;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\Adapter;
 
@@ -68,5 +66,15 @@ class GenericMethod extends Adapter
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function canRefund()
+    {
+        return true;
+    }
+
+    public function refund(InfoInterface $infoInterface, $amount)
+    {
+        $this->debugLogger->write('--- Refund from GenericMethod::refund ---');
     }
 }

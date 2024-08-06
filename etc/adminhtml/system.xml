@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ All rights reserved.
-  ~ See COPYING.txt for license details.
-  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config:etc/system_file.xsd">
 	<system>
 		<section id="payment">
@@ -12,42 +8,28 @@
 					<label>Branding</label>
 					<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Header</frontend_model>
 				</group>
-				<group id="fisrv_generics" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>General</label>
-					<field id="enabled" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>Enabled</label>
-						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-						<config_path>payment/fisrv_generics/enabled</config_path>
-					</field>
-					<field id="sanbox" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>Enabled</label>
-						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-						<config_path>payment/fisrv_generics/sanbox</config_path>
-					</field>
-					<field id="heading_api" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>API Details</label>
-						<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Heading</frontend_model>
-						<comment>
-							<![CDATA[Fill in your API Key below.]]>
-						</comment>
-					</field>
-					<field id="apikey" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>API Key</label>
-						<backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-						<config_path>payment/fisrv_generics/apikey</config_path>
-					</field>
-					<field id="apisecret" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>API Secret</label>
-						<backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-						<config_path>payment/fisrv_generics/apisecret</config_path>
-					</field>
-					<field id="storeid" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-						<label>Fisrv Store ID</label>
-						<backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-						<config_path>payment/fisrv_generics/storeid</config_path>
-					</field>
-				</group>
-				<include path="Fisrv_Payment::methods.xml"/>
+				<field id="enabled" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Enabled</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<config_path>payment/fisrv_generic/enabled</config_path>
+				</field>
+				<field id="production" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Production Mode</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<config_path>payment/fisrv_generic/production</config_path>
+				</field>
+				<field id="apikey" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>API Key</label>
+					<config_path>payment/fisrv_generic/apikey</config_path>
+				</field>
+				<field id="apisecret" translate="label" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>API Secret</label>
+					<config_path>payment/fisrv_generic/apisecret</config_path>
+				</field>
+				<field id="storeid" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Fisrv Store ID</label>
+					<config_path>payment/fisrv_generic/storeid</config_path>
+				</field>
 			</group>
 		</section>
 	</system>

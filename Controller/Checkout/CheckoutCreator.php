@@ -76,32 +76,23 @@ class CheckoutCreator
         $magentoStoreId = $this->store->getId();
         $moduleVersion = $this->config->getModuleVersion();
 
-        // self::$client = new \Fisrv\Checkout\CheckoutClient([
-        //     'user' => 'Magento2Plugin/' . $moduleVersion,
-        //     'is_prod' => !$this->config->isSandbox($magentoStoreId),
-        //     'api_key' => $this->config->getApiKey($magentoStoreId),
-        //     'api_secret' => $this->config->getApiSecret($magentoStoreId),
-        //     'store_id' => $this->config->getFisrvStoreId($magentoStoreId),
-        // ]);
-
         self::$client = new \Fisrv\Checkout\CheckoutClient([
             'user' => 'Magento2Plugin/' . $moduleVersion,
-            'is_prod' => !$this->config->isSandbox($magentoStoreId),
-            'api_key' => '7V26q9EbRO2hCmpWARdFtOyrJ0A4cHEP',
-            'api_secret' => 'KCFGSj3JHY8CLOLzszFGHmlYQ1qI9OSqNEOUj24xTa0',
-            'store_id' => '72305408',
+            'is_prod' => $this->config->isProductionMode($magentoStoreId),
+            'api_key' => $this->config->getApiKey($magentoStoreId),
+            'api_secret' => $this->config->getApiSecret($magentoStoreId),
+            'store_id' => $this->config->getFisrvStoreId($magentoStoreId),
         ]);
 
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
         /** Set (preselected) payment method */
         try {
-            $method = $this->session->getQuote()->getPayment()->getMethod();
+            $method = $this->session->getLastRealOrder()->getPayment()->getMethod();
             $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
             $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
 
-            $this->logger->write('Current method is: ' . $method);
-            echo $method;
+            $this->logger->write('Preselected method is: ' . $method);
         } catch (\Throwable $th) {
             $this->logger->write('Creating generic checkout.');
         }

@@ -19,7 +19,7 @@ class Header extends Field
     /**
      * @var string
      */
-    protected $_template = 'Fisrv_Payment::system/config/fieldset/header.phtml';
+    // protected $_template = 'Fisrv_Payment::system/config/fieldset/header.phtml';
 
     /**
      * @param AbstractElement $element
@@ -28,7 +28,7 @@ class Header extends Field
      */
     public function render(AbstractElement $element): string
     {
-        $element->addClass('gingerpay-payment');
+        $element->addClass('fisrv-payment');
         return $this->toHtml();
     }
 }

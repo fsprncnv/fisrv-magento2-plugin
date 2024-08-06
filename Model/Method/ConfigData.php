@@ -8,10 +8,16 @@ use Magento\Framework\Module\ModuleListInterface;
 
 class ConfigData
 {
-    private const PATH_SANBOX = 'payment/fisrv_generic/sanbox';
+    private const PATH_PROD = 'payment/fisrv_generic/production';
     private const PATH_APIKEY = 'payment/fisrv_generic/apikey';
     private const PATH_APISECRET = 'payment/fisrv_generic/apisecret';
     private const PATH_STOREID = 'payment/fisrv_generic/storeid';
+
+    private array $requiredXmlPaths = [
+        self::PATH_APIKEY,
+        self::PATH_APISECRET,
+        self::PATH_STOREID
+    ];
 
     private ScopeConfigInterface $scopeConfig;
     private ModuleListInterface $moduleList;
@@ -38,24 +44,38 @@ class ConfigData
         return $this->moduleList->getOne('Fisrv_Payment')['setup_version'];
     }
 
-
-    public function isSandbox(?int $storeId): bool
+    public function isProductionMode(?int $storeId): bool
     {
-        return $this->getConfigEntry($storeId, self::PATH_SANBOX) ?? true;
+        return $this->getConfigEntry($storeId, self::PATH_PROD) ?? false;
     }
 
-    public function getApiKey(?int $storeId): string
+    public function getApiKey(?int $storeId): ?string
     {
         return $this->getConfigEntry($storeId, self::PATH_APIKEY);
     }
 
-    public function getApiSecret(?int $storeId): bool
+    public function getApiSecret(?int $storeId): ?string
     {
         return $this->getConfigEntry($storeId, self::PATH_APISECRET);
     }
 
-    public function getFisrvStoreId(?int $storeId): bool
+    public function getFisrvStoreId(?int $storeId): ?string
     {
         return $this->getConfigEntry($storeId, self::PATH_STOREID);
+    }
+
+    public function isConfigDataSet(): bool
+    {
+        foreach ($this->requiredXmlPaths as $path) {
+            $entry = $this->getConfigEntry(null, $path);
+            if (
+                is_null($entry) ||
+                $entry === ''
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
