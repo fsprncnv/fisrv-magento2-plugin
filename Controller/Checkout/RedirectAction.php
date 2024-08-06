@@ -2,6 +2,8 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
+use Exception;
+use Fisrv\Exception\ServerException;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\App\Action\Action;
@@ -19,7 +21,7 @@ class RedirectAction extends Action
         Redirect $resultRedirectFactory,
         DebugLogger $logger,
         CheckoutCreator $checkoutCreator,
-        Session $session
+        Session $session,
     ) {
         $this->logger = $logger;
         $this->checkoutCreator = $checkoutCreator;
@@ -28,12 +30,37 @@ class RedirectAction extends Action
         parent::__construct($context);
     }
 
+    // @todo Update php client to parse exception fields
+    private function getExceptionDetail($string)
+    {
+        $pos = strpos($string, '{');
+        if (!$pos) {
+            return false;
+        }
+
+        $parsed = json_decode(substr($string, $pos), true);
+        return 'Fiserv Server Error (' . $parsed['errors'][0]['title'] . '): ' . $parsed['errors'][0]['detail'];
+    }
+
     public function execute()
     {
-        $checkoutUrl = $this->checkoutCreator->create();
+        try {
+            $checkoutUrl = $this->checkoutCreator->create();
+        } catch (\Throwable $th) {
+
+            if ($th instanceof ServerException) {
+                $message = $this->getExceptionDetail($th->getMessage());
+            }
+
+            $this->messageManager->addErrorMessage($message ?? $th->getMessage());
+            return $this->_redirect('checkout/cart', [
+                '_secure=true',
+                'cancelled=true',
+            ]);
+        }
+
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setUrl($checkoutUrl);
-
         return $resultRedirect;
     }
 }

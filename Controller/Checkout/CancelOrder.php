@@ -11,7 +11,6 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\OrderRepository;
 
-
 class CancelOrder extends Action
 {
     private DebugLogger $logger;
