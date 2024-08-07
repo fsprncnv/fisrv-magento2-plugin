@@ -2,32 +2,35 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
-use Exception;
 use Fisrv\Exception\ServerException;
-use Magento\Checkout\Model\Session;
-use Magento\Framework\Controller\Result\Redirect;
-use Magento\Framework\App\Action\Action;
-use Fisrv\Payment\Logger\DebugLogger;
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\RequestInterface;
 
-class RedirectAction extends Action
+
+class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
-    private DebugLogger $logger;
     private CheckoutCreator $checkoutCreator;
-    private Session $session;
+    private GetActionContext $action;
 
     public function __construct(
-        Context $context,
-        Redirect $resultRedirectFactory,
-        DebugLogger $logger,
         CheckoutCreator $checkoutCreator,
-        Session $session,
+        GetActionContext $action
     ) {
-        $this->logger = $logger;
         $this->checkoutCreator = $checkoutCreator;
-        $this->resultRedirectFactory = $resultRedirectFactory;
-        $this->session = $session;
-        parent::__construct($context);
+        $this->action = $action;
+    }
+
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
+    }
+
+    public function createCsrfValidationException(
+        RequestInterface $request
+    ): ?InvalidRequestException {
+        return null;
     }
 
     // @todo Update php client to parse exception fields
@@ -39,7 +42,24 @@ class RedirectAction extends Action
         }
 
         $parsed = json_decode(substr($string, $pos), true);
+
+        if ($parsed['title'] === 'Authentication error') {
+            return _('Your Fiserv API Credentials are invalid. Please reconfigure them.');
+        }
+
         return 'Fiserv Server Error (' . $parsed['errors'][0]['title'] . '): ' . $parsed['errors'][0]['detail'];
+    }
+
+    /**
+     * Set redirect into response
+     *
+     * @param string $path
+     * @param array $arguments
+     */
+    protected function _redirect($path, $arguments = [])
+    {
+        $this->action->_redirect->redirect($this->action->getResponse(), $path, $arguments);
+        return $this->action->getResponse();
     }
 
     public function execute()
@@ -52,14 +72,14 @@ class RedirectAction extends Action
                 $message = $this->getExceptionDetail($th->getMessage());
             }
 
-            $this->messageManager->addErrorMessage($message ?? $th->getMessage());
+            $this->action->messageManager->addErrorMessage($message ?? $th->getMessage());
             return $this->_redirect('checkout/cart', [
                 '_secure=true',
                 'cancelled=true',
             ]);
         }
 
-        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect = $this->action->resultRedirectFactory->create();
         $resultRedirect->setUrl($checkoutUrl);
         return $resultRedirect;
     }

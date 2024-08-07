@@ -2,40 +2,41 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
-use Magento\Framework\App\Action\Action;
-use Fisrv\Payment\Logger\DebugLogger;
-use Magento\Framework\App\Action\Context;
-use Magento\Checkout\Model\Session;
-use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\OrderRepository;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\RequestInterface;
 
-class CancelOrder extends Action
+
+class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
-    private DebugLogger $logger;
-    private CheckoutCreator $checkoutCreator;
-    private Session $session;
-    private InvoiceService $invoiceService;
     private OrderRepository $orderRepository;
-    private Registry $registry;
+    private GetActionContext $action;
 
     public function __construct(
-        Context $context,
-        DebugLogger $logger,
-        Session $session,
         OrderRepository $orderRepository,
+        GetActionContext $action
     ) {
-        $this->logger = $logger;
-        $this->session = $session;
         $this->orderRepository = $orderRepository;
+        $this->action = $action;
+    }
 
-        parent::__construct($context);
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
+    }
+
+    public function createCsrfValidationException(
+        RequestInterface $request
+    ): ?InvalidRequestException {
+        return null;
     }
 
     public function execute()
     {
-        $order = $this->session->getLastRealOrder();
+        $order = $this->action->getSession()->getLastRealOrder();
 
         if (is_null($order) && $order instanceof Order) {
             $order->setState(Order::STATE_CANCELED);
@@ -43,10 +44,10 @@ class CancelOrder extends Action
             $this->orderRepository->save($order);
         }
 
-        $this->logger->write('Checkout failure message:');
-        $message = $this->getRequest()->getParams();
+        $this->action->getLogger()->write('Checkout failure message:');
+        $message = $this->action->getRequest()->getParams();
 
-        $this->logger->write($message);
+        $this->action->getLogger()->write($message);
 
         $messageToDisplay = 'Order has been cancelled';
 
@@ -54,10 +55,10 @@ class CancelOrder extends Action
             $messageToDisplay = $message['message'];
         }
 
-        $this->messageManager->addErrorMessage($messageToDisplay);
-        $this->logger->write($messageToDisplay, 'error');
+        $this->action->messageManager->addErrorMessage($messageToDisplay);
+        $this->action->getLogger()->write($messageToDisplay, 'error');
 
-        return $this->_redirect('checkout/cart', [
+        return $this->action->_redirect('checkout/cart', [
             '_secure=true',
             'cancelled=true',
         ]);
