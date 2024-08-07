@@ -17,8 +17,7 @@ class GenericMethod extends Adapter
     private UrlInterface $url;
     private Http $http;
     private string $title;
-
-    protected string $code = 'fisrv_generic';
+    private ConfigData $configData;
 
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
@@ -31,6 +30,7 @@ class GenericMethod extends Adapter
         UrlInterface $url,
         Http $http,
         string $title,
+        ConfigData $configData
     ) {
         parent::__construct(
             $eventManager,
@@ -45,6 +45,7 @@ class GenericMethod extends Adapter
         $this->url = $url;
         $this->http = $http;
         $this->title = $title;
+        $this->configData = $configData;
     }
 
     public function capture(InfoInterface $payment, $amount)
@@ -53,6 +54,11 @@ class GenericMethod extends Adapter
         $this->debugLogger->write($payment);
 
         return $this;
+    }
+
+    public function isActive($storeId = null)
+    {
+        return $this->configData->isMethodActive($this->getCode()) ?? false;
     }
 
     public function acceptPayment(InfoInterface $payment)

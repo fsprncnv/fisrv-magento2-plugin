@@ -2,8 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config:etc/system_file.xsd">
 	<system>
 		<section id="payment">
-			<group id="fisrv" translate="label" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-				<label>Fisrv Checkout</label>
+			<group id="fisrv" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Fisrv General Config</label>
 				<group id="branding" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Branding</label>
 					<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Header</frontend_model>
@@ -31,6 +31,7 @@
 					<config_path>payment/fisrv_generic/storeid</config_path>
 				</field>
 			</group>
+			<include path="Fisrv_Payment::methods.xml"/>
 		</section>
 	</system>
 </config>
