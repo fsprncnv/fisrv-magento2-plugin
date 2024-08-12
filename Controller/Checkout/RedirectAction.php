@@ -52,6 +52,8 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
     public function execute()
     {
+        $this->context->getLogger()->write('### START CHECKOUT FLOW ###');
+
         try {
             $checkoutUrl = $this->checkoutCreator->create();
         } catch (\Throwable $th) {

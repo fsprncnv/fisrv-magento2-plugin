@@ -5,6 +5,8 @@ namespace Fisrv\Payment\Controller\Checkout;
 use Fisrv\Checkout\CheckoutClient;
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
+use Fisrv\Models\PaymentsClientRequest;
+use Fisrv\Models\PaymentsClientResponse;
 use Fisrv\Models\PreSelectedPaymentMethod;
 use Fisrv\Models\Currency;
 use Fisrv\Models\Locale;
@@ -58,17 +60,7 @@ class CheckoutCreator
         $order = $this->context->getSession()->getLastRealOrder();
         $this->context->getLogger()->write('--- Order from CheckoutCreator::getLastRealOrder: ' . $order->getId() . ' ---');
 
-        $magentoStoreId = $this->store->getId();
-        $moduleVersion = $this->context->getConfigData()->getModuleVersion();
-
-        self::$client = new CheckoutClient([
-            'user' => 'Magento2Plugin/' . $moduleVersion,
-            'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
-            'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
-            'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
-            'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
-        ]);
-
+        $this->initClient();
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
         /** Set (preselected) payment method */
@@ -101,9 +93,37 @@ class CheckoutCreator
             )
         );
 
+        $order->setExtOrderId($checkoutId);
         $this->orderRepository->save($order);
 
         return $checkoutLink;
+    }
+
+    private function initClient()
+    {
+        $magentoStoreId = $this->store->getId();
+        $moduleVersion = $this->context->getConfigData()->getModuleVersion();
+
+        self::$client = new CheckoutClient([
+            'user' => 'Magento2Plugin/' . $moduleVersion,
+            'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
+            'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
+            'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
+            'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
+        ]);
+    }
+
+    public function refundCheckout(Order $order): PaymentsClientResponse
+    {
+        $this->initClient();
+
+        // $order->setExtOrderId('vZQKZ7');
+        return self::$client->refundCheckout(new PaymentsClientRequest([
+            'transactionAmount' => [
+                'total' => floatval($order->getGrandTotal()),
+                'currency' => $this->store->getBaseCurrencyCode()
+            ],
+        ]), $order->getExtOrderId());
     }
 
     /**
