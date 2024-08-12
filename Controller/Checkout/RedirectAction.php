@@ -12,14 +12,14 @@ use Magento\Framework\App\RequestInterface;
 class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;
-    private GetActionContext $action;
+    private OrderContext $context;
 
     public function __construct(
         CheckoutCreator $checkoutCreator,
-        GetActionContext $action
+        OrderContext $context
     ) {
         $this->checkoutCreator = $checkoutCreator;
-        $this->action = $action;
+        $this->context = $context;
     }
 
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -60,8 +60,8 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
                 $message = $this->getExceptionDetail($th->getMessage());
             }
 
-            $this->action->messageManager->addErrorMessage($message ?? $th->getMessage());
-            return $this->action->_redirect('checkout/cart', [
+            $this->context->messageManager->addErrorMessage($message ?? $th->getMessage());
+            return $this->context->_redirect('checkout/cart', [
                 '_query' => [
                     '_secure' => 'true',
                     'order_cancelled' => 'true'
@@ -69,7 +69,7 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
             ]);
         }
 
-        $resultRedirect = $this->action->resultRedirectFactory->create();
+        $resultRedirect = $this->context->resultRedirectFactory->create();
         $resultRedirect->setUrl($checkoutUrl);
         return $resultRedirect;
     }

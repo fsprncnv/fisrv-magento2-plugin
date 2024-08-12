@@ -15,7 +15,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 
 
-class GetActionContext
+class OrderContext
 {
     private const SIGNATURE_LIFETIME = 86400;
 
@@ -85,6 +85,11 @@ class GetActionContext
     public function getConfigData(): ConfigData
     {
         return $this->_config;
+    }
+
+    public function getOrderRepository(): OrderRepository
+    {
+        return $this->_orderRepository;
     }
 
     /**

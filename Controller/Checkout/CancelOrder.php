@@ -13,11 +13,11 @@ use Magento\Framework\App\RequestInterface;
 class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private OrderRepository $orderRepository;
-    private GetActionContext $action;
+    private OrderContext $action;
 
     public function __construct(
         OrderRepository $orderRepository,
-        GetActionContext $action
+        OrderContext $action
     ) {
         $this->orderRepository = $orderRepository;
         $this->action = $action;

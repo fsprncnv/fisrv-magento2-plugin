@@ -23,7 +23,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
     private TransactionFactory $transactionFactory;
     private OrderRepository $orderRepository;
     private OrderFactory $orderFactory;
-    private GetActionContext $action;
+    private OrderContext $action;
     private CreditmemoService $memoService;
     private OrderService $orderService;
 
@@ -36,7 +36,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         TransactionFactory $transactionFactory,
         OrderRepository $orderRepository,
         OrderFactory $orderFactory,
-        GetActionContext $action
+        OrderContext $action
     ) {
         $this->checkoutCreator = $checkoutCreator;
         $this->invoiceService = $invoiceService;
@@ -148,7 +148,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             ]);
 
         } catch (\Throwable $th) {
-            $this->action->messageManager->addErrorMessage($message);
+            $this->action->messageManager->addErrorMessage($th->getMessage());
             $this->action->getLogger()->write('Order completion failed: ' . $th->getMessage());
 
             return $this->action->_redirect('checkout/cart', [

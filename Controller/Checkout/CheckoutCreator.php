@@ -28,13 +28,13 @@ class CheckoutCreator
     private Store $store;
     private Resolver $resolver;
     private OrderRepository $orderRepository;
-    private GetActionContext $context;
+    private OrderContext $context;
 
     public function __construct(
         Store $store,
         Resolver $resolver,
         OrderRepository $orderRepository,
-        GetActionContext $context
+        OrderContext $context
     ) {
         $this->store = $store;
         $this->resolver = $resolver;
