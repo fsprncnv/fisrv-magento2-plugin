@@ -50,18 +50,6 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
         return 'Fiserv Server Error (' . $parsed['errors'][0]['title'] . '): ' . $parsed['errors'][0]['detail'];
     }
 
-    /**
-     * Set redirect into response
-     *
-     * @param string $path
-     * @param array $arguments
-     */
-    protected function _redirect($path, $arguments = [])
-    {
-        $this->action->_redirect->redirect($this->action->getResponse(), $path, $arguments);
-        return $this->action->getResponse();
-    }
-
     public function execute()
     {
         try {
@@ -73,9 +61,11 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
             }
 
             $this->action->messageManager->addErrorMessage($message ?? $th->getMessage());
-            return $this->_redirect('checkout/cart', [
-                '_secure=true',
-                'cancelled=true',
+            return $this->action->_redirect('checkout/cart', [
+                '_query' => [
+                    '_secure' => 'true',
+                    'order_cancelled' => 'true'
+                ]
             ]);
         }
 

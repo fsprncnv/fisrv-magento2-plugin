@@ -3,21 +3,31 @@
 namespace Fisrv\Payment\Controller\Checkout;
 
 use Fisrv\Payment\Logger\DebugLogger;
+use Fisrv\Payment\Model\Method\ConfigData;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Response\Http as Response;
 use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Message\ManagerInterface as MessageManagerInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\UrlInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderRepository;
 
 
 class GetActionContext
 {
+    private const SIGNATURE_LIFETIME = 86400;
+
     private DebugLogger $logger;
     private Session $session;
     private RedirectInterface $_redirect;
     private Response $_response;
     private Request $_request;
+    private UrlInterface $url;
+    private ConfigData $_config;
+    private OrderRepository $_orderRepository;
+
     public MessageManagerInterface $messageManager;
     public RedirectFactory $resultRedirectFactory;
 
@@ -29,6 +39,9 @@ class GetActionContext
         Request $request,
         MessageManagerInterface $messageManager,
         RedirectFactory $resultRedirectFactory,
+        UrlInterface $url,
+        ConfigData $_config,
+        OrderRepository $_orderRepository
     ) {
         $this->logger = $logger;
         $this->session = $session;
@@ -37,6 +50,16 @@ class GetActionContext
         $this->_request = $request;
         $this->messageManager = $messageManager;
         $this->resultRedirectFactory = $resultRedirectFactory;
+        $this->url = $url;
+        $this->_config = $_config;
+        $this->_orderRepository = $_orderRepository;
+    }
+
+    public function getRedirect(
+        string $path,
+        array $arguments = array())
+    {
+        return $this->_redirect($path, $arguments);
     }
 
     public function getRequest(): Request
@@ -59,6 +82,11 @@ class GetActionContext
         return $this->session;
     }
 
+    public function getConfigData(): ConfigData
+    {
+        return $this->_config;
+    }
+
     /**
      * Set redirect into response
      *
@@ -69,5 +97,31 @@ class GetActionContext
     {
         $this->_redirect->redirect($this->_response, $path, $arguments);
         return $this->_response;
+    }
+
+    /**
+     * Url builder for actions
+     * 
+     * @param 
+     */
+    public function getUrl(string $action, bool $internal = false, array $query = [])
+    {
+        return $this->url->getUrl(($internal ? 'fisrv/checkout/' : '') . $action, [
+            '_query' => $query
+        ]);
+    }
+
+    public function createSignature(Order $order)
+    {
+        return hash_hmac(
+            'sha256',
+            ceil(time() / (self::SIGNATURE_LIFETIME / 2))
+            . '|' .
+            $this->getSession()->getSessionId() . '|' .
+            $this->getConfigData()->getApiKey() . '|' .
+            $order->getId(),
+            $order->getProtectCode(),
+            false
+        );
     }
 }

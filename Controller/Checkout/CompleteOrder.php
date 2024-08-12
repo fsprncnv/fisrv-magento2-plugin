@@ -4,7 +4,10 @@ namespace Fisrv\Payment\Controller\Checkout;
 
 use Exception;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Sales\Model\Service\OrderService;
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -19,19 +22,28 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
     private InvoiceService $invoiceService;
     private TransactionFactory $transactionFactory;
     private OrderRepository $orderRepository;
+    private OrderFactory $orderFactory;
     private GetActionContext $action;
+    private CreditmemoService $memoService;
+    private OrderService $orderService;
+
+    private const REFERRER_URL = 'https://ci.checkout-lane.com/';
 
     public function __construct(
         CheckoutCreator $checkoutCreator,
         InvoiceService $invoiceService,
+        CreditmemoService $memoService,
         TransactionFactory $transactionFactory,
         OrderRepository $orderRepository,
+        OrderFactory $orderFactory,
         GetActionContext $action
     ) {
         $this->checkoutCreator = $checkoutCreator;
         $this->invoiceService = $invoiceService;
+        $this->memoService = $memoService;
         $this->orderRepository = $orderRepository;
         $this->transactionFactory = $transactionFactory;
+        $this->orderFactory = $orderFactory;
         $this->action = $action;
     }
 
@@ -40,10 +52,27 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $order->setActionFlag(Order::ACTION_FLAG_INVOICE, true);
     }
 
-    private function validateOrder()
+    private function validateOrder(Order $order)
     {
-        return true;
+        $sign = $this->action->getRequest()->getParam('_nonce', false);
+        $referrer = $this->action->getRequest()->getHeader('Referer');
+
+        if (!$referrer || $referrer !== self::REFERRER_URL) {
+            $this->action->getLogger()->write('Bad referrer, cancelling auth.');
+            return false;
+        }
+
+        if (!$sign) {
+            $this->action->getLogger()->write('No nonce given, cancelling auth.');
+            return false;
+        }
+
+        $sign = base64_decode($sign);
+        $digest = $this->action->createSignature($order);
+
+        return hash_equals($digest, $sign);
     }
+
 
     public function validateForCsrf(RequestInterface $request): ?bool
     {
@@ -56,43 +85,37 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         return null;
     }
 
-    private function completeOrder()
+    private function completeOrder(Order $order)
     {
-        $order = $this->action->getSession()->getLastRealOrder();
-        $this->action->getLogger()->write('Attempting manual order completion of order ' . $order->getId());
+        $this->action->getLogger()->write('Attempting manual order completion of order ' . $order->getId() . ' ' . $order->getIncrementId());
         $this->action->getLogger()->write('Payment Method ' . $order->getPayment()->getMethod());
 
-        try {
-            if (!$order instanceof Order) {
-                throw new Exception('Order was not retrieved properly on CompleteOrder');
-            }
-
-            if (!$order->canInvoice()) {
-                throw new Exception('Order cannot invoice');
-            }
-
-            if (!$order->getState() === ORDER::STATE_NEW) {
-                throw new Exception('Order does not have state new');
-            }
-
-            $invoice = $this->invoiceService->prepareInvoice($order);
-            $invoice->register();
-            $invoice->capture();
-
-            $order
-                ->setState(Order::STATE_COMPLETE)
-                ->setStatus(Order::STATE_COMPLETE);
-
-            $transaction = $this->transactionFactory->create()
-                ->addObject($invoice)
-                ->addObject($invoice->getOrder());
-
-            $transaction->save();
-            $this->orderRepository->save($order);
-        } catch (\Throwable $th) {
-            $this->action->getLogger()->write('CompleteOrder exception: ' . $th->getMessage());
-            return null;
+        if (!$order instanceof Order) {
+            throw new Exception('Order was not retrieved properly on CompleteOrder');
         }
+
+        if (!$order->canInvoice()) {
+            throw new Exception('Order cannot invoice');
+        }
+
+        if (!$order->getState() === ORDER::STATE_NEW) {
+            throw new Exception('Order does not have state new');
+        }
+
+        $invoice = $this->invoiceService->prepareInvoice($order);
+        $invoice->register();
+        $invoice->capture();
+
+        $order
+            ->setState(Order::STATE_COMPLETE)
+            ->setStatus(Order::STATE_COMPLETE);
+
+        $transaction = $this->transactionFactory->create()
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+
+        $transaction->save();
+        $this->orderRepository->save($order);
 
         $this->action->getLogger()->write('Order status is ' . $order->getStatus());
         $this->action->getLogger()->write('Order state is ' . $order->getState());
@@ -101,12 +124,39 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
     public function execute()
     {
-        $this->action->getLogger()->write('--- Run CompleteOrder action ---');
-        $this->validateOrder();
-        $this->completeOrder();
+        try {
+            $this->action->getLogger()->write('--- Run CompleteOrder action ---');
+            $orderId = $this->action->getRequest()->getParam('order_id', false);
 
-        return $this->action->_redirect('checkout/onepage/success?utm_nooverride=1', [
-            '_secure' => true,
-        ]);
+            if (!$orderId) {
+                throw new Exception('Order ID could not be found');
+            }
+
+            $order = $this->orderRepository->get($orderId);
+
+            if (!$this->validateOrder($order)) {
+                throw new Exception('Authorization failed. Could not validate request.');
+            }
+
+            $this->completeOrder($order);
+
+            return $this->action->_redirect('checkout/onepage/success', [
+                '_query' => [
+                    '_secure' => 'true',
+                    'utm_nooverride' => 'true'
+                ]
+            ]);
+
+        } catch (\Throwable $th) {
+            $this->action->messageManager->addErrorMessage($message);
+            $this->action->getLogger()->write('Order completion failed: ' . $th->getMessage());
+
+            return $this->action->_redirect('checkout/cart', [
+                '_query' => [
+                    '_secure' => 'true',
+                    'order_cancelled' => 'true'
+                ]
+            ]);
+        }
     }
 }

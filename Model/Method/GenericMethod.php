@@ -79,6 +79,14 @@ class GenericMethod extends Adapter
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function isOffline()
+    {
+        return false;
+    }
+
     public function refund(InfoInterface $infoInterface, $amount)
     {
         $this->debugLogger->write('--- Refund from GenericMethod::refund ---');

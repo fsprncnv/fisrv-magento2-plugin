@@ -44,20 +44,16 @@ class DebugLogger extends Zend_Log
                 $message = $message->toJson();
             }
 
-            if (!is_string($message)) {
-                throw new IllegalArgumentException('Logger message is of illegal type: ' . gettype($message));
-            }
-
             if (!$message) {
                 throw new SerializationException('Could not parse message object');
             }
 
             if ($type === 'error') {
-                $this->log($message, Zend_Log::ERR);
+                $this->log(strval($message), Zend_Log::ERR);
                 return;
             }
 
-            $this->log($message, Zend_Log::DEBUG);
+            $this->log(strval($message), Zend_Log::DEBUG);
         } catch (Throwable $th) {
             $this->log($th->getMessage(), Zend_Log::WARN);
         }

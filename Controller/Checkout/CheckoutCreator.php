@@ -2,17 +2,14 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
+use Fisrv\Checkout\CheckoutClient;
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
 use Fisrv\Models\PreSelectedPaymentMethod;
-use Fisrv\Payment\Logger\DebugLogger;
-use Fisrv\Payment\Model\Method\ConfigData;
-use Magento\Framework\UrlInterface;
-use Magento\Sales\Model\Order;
 use Fisrv\Models\Currency;
 use Fisrv\Models\Locale;
+use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
-use Magento\Checkout\Model\Session;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
@@ -21,39 +18,28 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
     require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
 }
 
+
 /**
  * Creates instance (checkout ID or URL) of hosted payment page
  */
 class CheckoutCreator
 {
-    private static \Fisrv\Checkout\CheckoutClient $client;
-    private Session $session;
+    private static CheckoutClient $client;
     private Store $store;
     private Resolver $resolver;
-    private DebugLogger $logger;
-    private UrlInterface $url;
-    private ConfigData $config;
     private OrderRepository $orderRepository;
-    private UrlInterface $urlInterface;
+    private GetActionContext $context;
 
     public function __construct(
-        Session $session,
         Store $store,
         Resolver $resolver,
-        DebugLogger $logger,
-        UrlInterface $url,
-        ConfigData $config,
         OrderRepository $orderRepository,
-        UrlInterface $urlInterface
+        GetActionContext $context
     ) {
-        $this->session = $session;
         $this->store = $store;
         $this->resolver = $resolver;
-        $this->logger = $logger;
-        $this->url = $url;
-        $this->config = $config;
         $this->orderRepository = $orderRepository;
-        $this->urlInterface = $urlInterface;
+        $this->context = $context;
     }
 
     private const PAYMENT_METHOD_MAP = [
@@ -69,32 +55,31 @@ class CheckoutCreator
      */
     public function create(): string
     {
-        $order = $this->session->getLastRealOrder();
-        $this->logger->write('--- Order from CheckoutCreator::getLastRealOrder ---');
-        $this->logger->write($order);
+        $order = $this->context->getSession()->getLastRealOrder();
+        $this->context->getLogger()->write('--- Order from CheckoutCreator::getLastRealOrder: ' . $order->getId() . ' ---');
 
         $magentoStoreId = $this->store->getId();
-        $moduleVersion = $this->config->getModuleVersion();
+        $moduleVersion = $this->context->getConfigData()->getModuleVersion();
 
-        self::$client = new \Fisrv\Checkout\CheckoutClient([
+        self::$client = new CheckoutClient([
             'user' => 'Magento2Plugin/' . $moduleVersion,
-            'is_prod' => $this->config->isProductionMode($magentoStoreId),
-            'api_key' => $this->config->getApiKey($magentoStoreId),
-            'api_secret' => $this->config->getApiSecret($magentoStoreId),
-            'store_id' => $this->config->getFisrvStoreId($magentoStoreId),
+            'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
+            'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
+            'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
+            'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
         ]);
 
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
         /** Set (preselected) payment method */
         try {
-            $method = $this->session->getLastRealOrder()->getPayment()->getMethod();
+            $method = $this->context->getSession()->getLastRealOrder()->getPayment()->getMethod();
             $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
             $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
 
-            $this->logger->write('Preselected method is: ' . $method);
+            $this->context->getLogger()->write('Preselected method is: ' . $method);
         } catch (\Throwable $th) {
-            $this->logger->write('Creating generic checkout.');
+            $this->context->getLogger()->write('Creating generic checkout.');
         }
 
         $request = self::transferBaseData($request, $order);
@@ -120,7 +105,6 @@ class CheckoutCreator
 
         return $checkoutLink;
     }
-
 
     /**
      * Pass checkout data (totals, redirects, language etc.) to request object of checkout
@@ -148,14 +132,21 @@ class CheckoutCreator
         $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
         /** Redirect URLs */
-        $request->checkoutSettings->redirectBackUrls->successUrl = $this->url->getUrl('fisrv/checkout/completeorder');
-        $request->checkoutSettings->redirectBackUrls->failureUrl = $this->url->getUrl('fisrv/checkout/cancelorder');
+        $request->checkoutSettings->redirectBackUrls->failureUrl = $this->context->getUrl('cancelorder', true);
+        $request->checkoutSettings->redirectBackUrls->successUrl = $this->context->getUrl('completeorder', true, [
+            'order_id' => $order->getId(),
+            '_nonce' => base64_encode($this->context->createSignature($order)),
+            '_secure' => 'true'
+        ]);
 
         /** Append ampersand to allow checkout solution to append query params */
         $request->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
-        $request->checkoutSettings->webHooksUrl = $this->url->getUrl('fisrv/checkout/webhook', [
-            'orderid' => $order->getId()
+        /** Webhook consumer route */
+        $request->checkoutSettings->webHooksUrl = $this->context->getUrl('webhook', true, [
+            'order_id' => $order->getId(),
+            '_nonce' => base64_encode($this->context->createSignature($order)),
+            '_secure' => 'true',
         ]);
 
         return $request;
@@ -186,7 +177,7 @@ class CheckoutCreator
                     'miscellaneousFee' => 0,
                 ]);
             } catch (\Throwable $th) {
-                $this->logger->write('Could not transfer cart item: ' . $item->getName() . ' ' . $th->getMessage());
+                $this->context->getLogger()->write('Could not transfer cart item: ' . $item->getName() . ' ' . $th->getMessage());
             }
         }
 
