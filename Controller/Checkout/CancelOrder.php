@@ -36,7 +36,9 @@ class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
     public function execute()
     {
-        $order = $this->context->getSession()->getLastRealOrder();
+        $orderId = $this->context->getRequest()->getParam('order_id');
+        $order = $this->context->getOrderRepository()->get($orderId);
+
         $this->context->getLogger()->write($this->context->getRequest()->getContent());
 
         if ($order instanceof Order) {

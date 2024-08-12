@@ -52,10 +52,11 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
     public function execute()
     {
-        $this->context->getLogger()->write('### START CHECKOUT FLOW ###');
+        $order = $this->context->getSession()->getLastRealOrder();
+        $this->context->getLogger()->write('### START ORDER FLOW OF ORDER: ' . $order->getId() . ' ###');
 
         try {
-            $checkoutUrl = $this->checkoutCreator->create();
+            $checkoutUrl = $this->checkoutCreator->create($order);
         } catch (\Throwable $th) {
 
             if ($th instanceof ServerException) {

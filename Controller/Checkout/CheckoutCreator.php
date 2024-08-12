@@ -55,17 +55,14 @@ class CheckoutCreator
      *
      * @return string Checkout ID of hosted payment page
      */
-    public function create(): string
+    public function create(Order $order): string
     {
-        $order = $this->context->getSession()->getLastRealOrder();
-        $this->context->getLogger()->write('--- Order from CheckoutCreator::getLastRealOrder: ' . $order->getId() . ' ---');
-
         $this->initClient();
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
         /** Set (preselected) payment method */
         try {
-            $method = $this->context->getSession()->getLastRealOrder()->getPayment()->getMethod();
+            $method = $order->getPayment()->getMethod();
             $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
             $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
 
@@ -152,7 +149,9 @@ class CheckoutCreator
         $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
         /** Redirect URLs */
-        $request->checkoutSettings->redirectBackUrls->failureUrl = $this->context->getUrl('cancelorder', true);
+        $request->checkoutSettings->redirectBackUrls->failureUrl = $this->context->getUrl('cancelorder', true, [
+            'order_id' => $order->getId(),
+        ]);
         $request->checkoutSettings->redirectBackUrls->successUrl = $this->context->getUrl('completeorder', true, [
             'order_id' => $order->getId(),
             '_nonce' => base64_encode($this->context->createSignature($order)),
