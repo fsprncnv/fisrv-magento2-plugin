@@ -13,12 +13,20 @@ use Magento\Sales\Api\RefundInvoiceInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 
+/**
+ * GET rest route to handle refund action
+ */
 class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;
     private OrderContext $context;
     private RefundInvoiceInterface $refundOrder;
 
+    /**
+     * RefundAction constructor.
+     * Transaction return is handled via CheckoutCreator.
+     * Store backend refund registration is handled via RefundInvoiceInterface.
+     */
     public function __construct(
         CheckoutCreator $checkoutCreator,
         OrderContext $context,
@@ -40,6 +48,13 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         return null;
     }
 
+    /**
+     * Refund transaction on payment gateway. Transaction that was created by Fiserv Checkout
+     * is returned. 
+     * 
+     * @param Order $order Order to be refundend
+     * @throws Exception When payment method is not Fiserv or refund flow has failed (server-side)
+     */
     private function refundOnGateway(Order $order): void
     {
         $method = $order->getPayment()->getMethod();
@@ -59,6 +74,15 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $order->addStatusToHistory('Fisrv transaction of ID ' . $response->ipgTransactionId . ' has been refunded with amount ' . $response->approvedAmount->total);
     }
 
+    /**
+     * Refund order on magento backend. This is used for magento backend to properly register the
+     * order refund and make it reviewable on store front.
+     * Does not actually refund the Fiserv transaction.
+     * 
+     * @param Order $order Order to be refundend
+     * @throws Exception When order is not invoiceable and thus not refundable. This happens if order state was not 
+     * properly configured
+     */
     private function refundOnBackend(Order $order): void
     {
         $invoice = $order->getInvoiceCollection()->getFirstItem();
@@ -70,6 +94,11 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $this->refundOrder->execute($invoice->getId(), [], true);
     }
 
+    /**
+     * Take order ID from query and process refund.
+     * 
+     * {@inheritDoc}
+     */
     public function execute()
     {
         $orderId = $this->context->getRequest()->getParam('order_id');

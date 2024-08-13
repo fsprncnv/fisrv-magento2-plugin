@@ -14,7 +14,10 @@ use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 
-
+/**
+ * Helper class serving as context containing commonly
+ * used dependency injections on GET actions and other helper methods.
+ */
 class OrderContext
 {
     private const SIGNATURE_LIFETIME = 86400;
@@ -105,17 +108,33 @@ class OrderContext
     }
 
     /**
-     * Url builder for actions
+     * Url builder for magento routes and action endpoints
+     * This method is a shorthand for internal action routes e.g.:
+     * getUrl('statusaction', true, [id => 3]) -> {magento site url}/fisrv/checkout/statusaction?id=3
      * 
-     * @param 
+     * Otherwise a standard URL builder for magento routes and pages e.g.:
+     * getUrl('checkout/cart) -> {magento site url}/checkout/cart 
+     * 
+     * @param string $path URL path
+     * @param bool $internal If true, appends default plugin action route before path parameter
+     * @param array $query URL query parameters as list
+     * @return string Full URL path with root and queries
      */
-    public function getUrl(string $action, bool $internal = false, array $query = [])
+    public function getUrl(string $path, bool $internal = false, array $query = []): string
     {
-        return $this->url->getUrl(($internal ? 'fisrv/checkout/' : '') . $action, [
+        return $this->url->getUrl(($internal ? 'fisrv/checkout/' : '') . $path, [
             '_query' => $query
         ]);
     }
 
+    /**
+     * Creates a message signature relating to an order.
+     * This signature is used for basic authentication e.g. on Fiserv checkout redirection.
+     * The lifetime of a signature is one day.
+     * 
+     * @param Order $order Order to be created a signature for
+     * @return string SHA256 hash from session identifiers
+     */
     public function createSignature(Order $order)
     {
         return hash_hmac(

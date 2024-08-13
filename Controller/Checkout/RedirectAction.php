@@ -8,7 +8,10 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\RequestInterface;
 
-
+/**
+ * GET rest route which is triggered on initial Place Order button press.
+ * Redirects to external page.
+ */
 class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;

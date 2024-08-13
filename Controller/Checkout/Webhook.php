@@ -19,6 +19,10 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
     require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
 }
 
+/**
+ * POST rest route.
+ * Handling consumption of webhook events.
+ */
 class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
 {
     private Response $response;

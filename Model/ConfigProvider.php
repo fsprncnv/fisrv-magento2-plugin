@@ -24,6 +24,9 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Provide config data on JS client side.
+     * Used on payment selection page to check method availabiltiy.
+     * 
      * {@inheritdoc}
      */
     public function getConfig()

@@ -16,6 +16,13 @@ class View
         $this->context = $context;
     }
 
+    /**
+     * This overide method injects into layout rendering.
+     * This is used to inject a button component (used as refund button) without affecting
+     * other modules.
+     * 
+     * @param \Magento\Sales\Block\Adminhtml\Order\View $view Block component of view
+     */
     public function beforeSetLayout(CoreView $view)
     {
         $message = _('Do you want to refund this order?');

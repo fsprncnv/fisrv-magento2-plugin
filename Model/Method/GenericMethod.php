@@ -11,6 +11,11 @@ use Fisrv\Payment\Logger\DebugLogger;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\App\Response\Http;
 
+/**
+ * Payment gateway adapter serving as
+ * model for all Fiserv payment options. Overrides
+ * certain API methods.
+ */
 class GenericMethod extends Adapter
 {
     private DebugLogger $debugLogger;

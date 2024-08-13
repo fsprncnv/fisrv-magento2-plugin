@@ -6,6 +6,9 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ScopeInterface;
 use Magento\Framework\Module\ModuleListInterface;
 
+/**
+ * Helper class to access (and verify) config parameters.
+ */
 class ConfigData
 {
     private const PATH_PROD = 'payment/fisrv_generic/production';

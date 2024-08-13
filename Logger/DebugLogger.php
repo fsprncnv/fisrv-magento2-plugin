@@ -2,16 +2,18 @@
 
 namespace Fisrv\Payment\Logger;
 
-use DASPRiD\Enum\Exception\IllegalArgumentException;
 use Laminas\Diactoros\Exception\SerializationException;
 use Magento\Framework\DataObject;
 use Throwable;
 use Zend_Log;
 use Zend_Log_Writer_Stream;
 
+/**
+ * Helper class for Logging.
+ * Wraps Zends API.
+ */
 class DebugLogger extends Zend_Log
 {
-
     public function __construct()
     {
         $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fisrv-checkout.log');

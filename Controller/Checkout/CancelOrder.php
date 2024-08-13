@@ -9,7 +9,10 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\RequestInterface;
 
-
+/**
+ * GET rest route which is triggered on failure page from
+ * Fiserv Checkout. Processes order cancellation.
+ */
 class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private OrderRepository $orderRepository;
@@ -34,6 +37,12 @@ class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         return null;
     }
 
+    /**
+     * Process order cancellation and possibly display error payload passed as query
+     * from Fiserv.
+     * 
+     * {@inheritDoc}
+     */
     public function execute()
     {
         $orderId = $this->context->getRequest()->getParam('order_id');

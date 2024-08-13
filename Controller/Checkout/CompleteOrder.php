@@ -16,6 +16,10 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\RequestInterface;
 
 
+/**
+ * GET rest route which is triggered on success page from
+ * Fiserv Checkout. Processes order completion.
+ */
 class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;
@@ -52,7 +56,13 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $order->setActionFlag(Order::ACTION_FLAG_INVOICE, true);
     }
 
-    private function validateOrder(Order $order)
+    /**
+     * Verify message signature on completion request.
+     * If message signature is rejected stop handling this order.
+     * 
+     * @param Order $order Order which has to be verified
+     */
+    private function validateOrder(Order $order): bool
     {
         $sign = $this->action->getRequest()->getParam('_nonce', false);
         $referrer = $this->action->getRequest()->getHeader('Referer');
@@ -85,6 +95,11 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         return null;
     }
 
+    /** 
+     * Complete order. Create invoice to register completion state.
+     * 
+     * @param Order $order Order to be set to complete
+     */
     private function completeOrder(Order $order)
     {
         $this->action->getLogger()->write('Attempting manual order completion of order ' . $order->getId() . ' ' . $order->getIncrementId());

@@ -20,9 +20,9 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
     require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
 }
 
-
 /**
- * Creates instance (checkout ID or URL) of hosted payment page
+ * Creates instance (checkout ID or URL) of hosted payment page.
+ * Middleware for Fiserv client related processes.
  */
 class CheckoutCreator
 {
@@ -96,6 +96,9 @@ class CheckoutCreator
         return $checkoutLink;
     }
 
+    /**
+     * Initialize request client
+     */
     private function initClient()
     {
         $magentoStoreId = $this->store->getId();
@@ -110,11 +113,16 @@ class CheckoutCreator
         ]);
     }
 
+    /**
+     * Refund checkout
+     * 
+     * @param Order $order Order to be refunded
+     * @return PaymentsClientResponse Client response data
+     */
     public function refundCheckout(Order $order): PaymentsClientResponse
     {
         $this->initClient();
 
-        // $order->setExtOrderId('vZQKZ7');
         return self::$client->refundCheckout(new PaymentsClientRequest([
             'transactionAmount' => [
                 'total' => floatval($order->getGrandTotal()),
