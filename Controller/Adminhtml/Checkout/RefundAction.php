@@ -60,18 +60,18 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $method = $order->getPayment()->getMethod();
 
         if (!str_starts_with($method, 'fisrv_')) {
-            throw new Exception(_('Method is not Fisrv. Cancelling refund process.'));
+            throw new Exception(_('Payment was not provided by Fiserv'));
         }
 
         $response = $this->checkoutCreator->refundCheckout($order);
 
         if (!isset($response->approvedAmount)) {
-            $this->context->getLogger()->write('Refund failed on server-side:');
+            $this->context->getLogger()->write('Refund failed server-side:');
             $this->context->getLogger()->write((string) $response);
-            throw new Exception(_('Refund has failed.'));
+            throw new Exception(__('Refund has failed. Contact support with trace ID: %s and client ID %s.', $response->traceId, $response->clientRequestId));
         }
 
-        $order->addStatusToHistory('Fisrv transaction of ID ' . $response->ipgTransactionId . ' has been refunded with amount ' . $response->approvedAmount->total);
+        $order->addStatusToHistory(__('Fiserv transaction of ID %s has been refunded with amount %s', $response->ipgTransactionId, $response->approvedAmount->total));
     }
 
     /**
@@ -88,7 +88,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $invoice = $order->getInvoiceCollection()->getFirstItem();
 
         if (!$invoice instanceof Invoice) {
-            throw new Exception('Invoice is not valid.');
+            throw new Exception(_('Invoice is invalid'));
         }
 
         $this->refundOrder->execute($invoice->getId(), [], true);

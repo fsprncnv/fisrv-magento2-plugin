@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fisrv\Payment\Block\Adminhtml\Order;
 
 use Fisrv\Payment\Controller\Checkout\OrderContext;
@@ -30,7 +32,8 @@ class View
             'order_id' => $view->getOrderId()
         ]);
 
-        if (!str_starts_with($view->getOrder()->getPayment()->getMethod(), 'fisrv_') ||
+        if (
+            !str_starts_with($view->getOrder()->getPayment()->getMethod(), 'fisrv_') ||
             $view->getOrder()->getStatus() !== Order::STATE_COMPLETE
         ) {
             return;

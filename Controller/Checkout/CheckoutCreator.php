@@ -65,7 +65,7 @@ class CheckoutCreator
             $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
             $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
 
-            $this->context->getLogger()->write('Preselected method is: ' . $method);
+            $this->context->getLogger()->write('Customer selected payment method: ' . $method);
         } catch (\Throwable $th) {
             $this->context->getLogger()->write('Creating generic checkout.');
         }
@@ -82,7 +82,7 @@ class CheckoutCreator
 
         $order->addCommentToStatusHistory(
             __(
-                'Fisrv checkout link %1 created with checkout ID %2 and trace ID %3.',
+                'Fiserv checkout link %s created with checkout ID %s and trace ID %s.',
                 $checkoutLink,
                 $checkoutId,
                 $traceId,

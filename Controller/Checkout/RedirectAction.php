@@ -56,7 +56,6 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
     public function execute()
     {
         $order = $this->context->getSession()->getLastRealOrder();
-        $this->context->getLogger()->write('### START ORDER FLOW OF ORDER: ' . $order->getId() . ' ###');
 
         try {
             $checkoutUrl = $this->checkoutCreator->create($order);

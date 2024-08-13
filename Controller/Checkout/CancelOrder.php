@@ -56,17 +56,17 @@ class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             $this->orderRepository->save($order);
         }
 
-        $this->context->getLogger()->write(_('Checkout failure message:'));
+        $this->context->getLogger()->write('Checkout failure message:');
         $message = $this->context->getRequest()->getParams();
 
         $this->context->getLogger()->write($message);
-        $messageToDisplay = _('Sorry, something went wrong. Try another payment method.');
+        $messageToDisplay = 'Sorry something went wrong. Try another payment method.';
 
         if (isset($message['message'])) {
             $messageToDisplay = $message['message'];
         }
 
-        $this->context->messageManager->addErrorMessage($messageToDisplay);
+        $this->context->messageManager->addErrorMessage(_($messageToDisplay));
         $this->context->getLogger()->write($messageToDisplay, 'error');
 
         return $this->context->_redirect('checkout/cart', [

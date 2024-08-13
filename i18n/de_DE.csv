@@ -1,8 +1,21 @@
 Credit Card Number,Kreditkartennummer
 Credit card,Kreditkarte
-Credit card (Fisrv),Kreditkarte (Fisrv)
-Month,Monat
-Year,Jahr
-Card Verification Number,Kartenvalidierungscode
+Card Verification Number,Kartenprüfwert
 What is this,Was ist das
 Place Order,Bestellen
+Do you want to refund this order?,Diese Bestellung erstatten?
+Refund,Erstatten
+Payment was not provided by Fiserv,Zahlung erfolgt nicht über Fiserv
+Refund has failed. Contact support with trace ID: %s and client ID %s.,Erstattung schlug fehl. Kontaktieren Sie den Support mit Trace ID %s und Client ID %s.
+Transaction of ID %s has been refunded with amount %s,Transaktion der ID %s wurde erstattet mit Betrag %s
+Invoice is invalid,Rechnung ist ungültig
+Order refunded,Bestellung wurde erstattet
+Sorry something went wrong. Try another payment method., Leider schlug etwas fehl. Versuchen Sie eine andere Zahlmethode.
+Maximum retry exceeded exception,Maximale Wiederholungszahl überschritten
+Fiserv checkout link %s created with checkout ID %s and trace ID %s.,Fiserv Checkout Link %s erstellt mit Checkout ID %s und Trace ID %s.
+Invoice cannot be created for this order,Für diese Bestellung kann keine Rechnung erstellt werden 
+Order has invalid state,Auftrag hat ungültigen Status
+Order ID could not be found,Order ID could not be found
+Authorization failed. Could not validate request.,Autorisierung fehlgeschlagen. Die Anfrage konnte nicht validiert werden.
+Your Fiserv API Credentials are invalid. Please reconfigure them.,Ihre Fiserv-API-Zugangsdaten sind ungültig. Bitte konfigurieren Sie sie neu.
+Webhook event is invalid,Webhook Event is ungültig

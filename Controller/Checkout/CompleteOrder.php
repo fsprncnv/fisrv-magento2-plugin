@@ -61,7 +61,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
      *
      * @param Order $order Order which has to be verified
      */
-    private function validateOrder(Order $order): bool
+    private function authenticate(Order $order): bool
     {
         $sign = $this->action->getRequest()->getParam('_nonce', false);
         $referrer = $this->action->getRequest()->getHeader('Referer');
@@ -72,7 +72,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         }
 
         if (!$sign) {
-            $this->action->getLogger()->write('No nonce given, cancelling auth.');
+            $this->action->getLogger()->write('No signature given, cancelling auth.');
             return false;
         }
 
@@ -101,19 +101,16 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
      */
     private function completeOrder(Order $order)
     {
-        $this->action->getLogger()->write('Attempting manual order completion of order ' . $order->getId() . ' ' . $order->getIncrementId());
-        $this->action->getLogger()->write('Payment Method ' . $order->getPayment()->getMethod());
-
         if (!$order instanceof Order) {
-            throw new Exception('Order was not retrieved properly on CompleteOrder');
+            throw new Exception(_('Order could not be retrieved'));
         }
 
         if (!$order->canInvoice()) {
-            throw new Exception('Order cannot invoice');
+            throw new Exception(_('Invoice cannot be created for this order'));
         }
 
         if (!$order->getState() === ORDER::STATE_NEW) {
-            throw new Exception('Order does not have state new');
+            throw new Exception(_('Order has invalid state'));
         }
 
         $invoice = $this->invoiceService->prepareInvoice($order);
@@ -133,23 +130,21 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
         $this->action->getLogger()->write('Order status is ' . $order->getStatus());
         $this->action->getLogger()->write('Order state is ' . $order->getState());
-        $this->action->getLogger()->write('--- End CompleteOrder ---');
     }
 
     public function execute()
     {
         try {
-            $this->action->getLogger()->write('--- Run CompleteOrder action ---');
             $orderId = $this->action->getRequest()->getParam('order_id', false);
 
             if (!$orderId) {
-                throw new Exception('Order ID could not be found');
+                throw new Exception(_('Order could not be retrieved'));
             }
 
             $order = $this->orderRepository->get($orderId);
 
-            if (!$this->validateOrder($order)) {
-                throw new Exception('Authorization failed. Could not validate request.');
+            if (!$this->authenticate($order)) {
+                throw new Exception(_('Authorization failed. Could not validate request.'));
             }
 
             $this->completeOrder($order);

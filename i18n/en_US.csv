@@ -1,7 +1,21 @@
 Credit Card Number,Credit Card Number
 Credit card,Credit card
-Month,Month
-Year,Year
 Card Verification Number,Card Verification Number
 What is this,What is this
 Place Order,Place Order
+Do you want to refund this order?,Do you want to refund this order?
+Refund,Refund
+Payment was not provided by Fiserv,Payment was not provided by Fiserv
+Refund has failed. Contact support with trace ID: %s and client ID %s.,Refund has failed. Contact support with trace ID: %s and client ID %s.
+Fiserv transaction of ID %s has been refunded with amount %s,Fiserv transaction of ID %s has been refunded with amount %s
+Invoice is invalid,Invoice is invalid
+Order refunded,Order refunded
+Sorry something went wrong. Try another payment method.,Sorry something went wrong. Try another payment method.
+Maximum retry exceeded exception,Maximum retry exceeded exception
+Fiserv checkout link %s created with checkout ID %s and trace ID %s.,Fiserv checkout link %s created with checkout ID %s and trace ID %s.
+Invoice cannot be created for this order,Invoice cannot be created for this order
+Order has invalid stateOrder has invalid state
+Order ID could not be found,Order ID could not be found
+Authorization failed. Could not validate request.,Authorization failed. Could not validate request.
+Your Fiserv API Credentials are invalid. Please reconfigure them.,Your Fiserv API Credentials are invalid. Please reconfigure them.
+Webhook event is invalid,Webhook event is invalid

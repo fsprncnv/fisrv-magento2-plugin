@@ -69,13 +69,13 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
         $orderId = $this->request->getParam('order', false);
 
         if (!$orderId) {
-            throw new \Exception('Order ID is invalid, cancelling process');
+            throw new \Exception('Order could not be retrieved');
         }
 
         try {
             $checkoutId = $event->checkoutId;
         } catch (\Throwable $th) {
-            throw new \Exception('Webhook event is invalid, cancelling process');
+            throw new \Exception('Webhook event is invalid');
         }
 
         $this->logger->write('Webhook event for checkout ID ' . $checkoutId);
