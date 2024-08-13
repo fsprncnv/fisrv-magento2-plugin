@@ -60,8 +60,8 @@ class OrderContext
 
     public function getRedirect(
         string $path,
-        array $arguments = array())
-    {
+        array $arguments = []
+    ) {
         return $this->_redirect($path, $arguments);
     }
 
@@ -111,10 +111,10 @@ class OrderContext
      * Url builder for magento routes and action endpoints
      * This method is a shorthand for internal action routes e.g.:
      * getUrl('statusaction', true, [id => 3]) -> {magento site url}/fisrv/checkout/statusaction?id=3
-     * 
+     *
      * Otherwise a standard URL builder for magento routes and pages e.g.:
-     * getUrl('checkout/cart) -> {magento site url}/checkout/cart 
-     * 
+     * getUrl('checkout/cart) -> {magento site url}/checkout/cart
+     *
      * @param string $path URL path
      * @param bool $internal If true, appends default plugin action route before path parameter
      * @param array $query URL query parameters as list
@@ -131,7 +131,7 @@ class OrderContext
      * Creates a message signature relating to an order.
      * This signature is used for basic authentication e.g. on Fiserv checkout redirection.
      * The lifetime of a signature is one day.
-     * 
+     *
      * @param Order $order Order to be created a signature for
      * @return string SHA256 hash from session identifiers
      */

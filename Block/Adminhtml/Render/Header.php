@@ -4,7 +4,6 @@ namespace Fisrv\Payment\Block\Adminhtml\Render;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-
 class Header extends Field
 {
 

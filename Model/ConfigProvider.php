@@ -26,13 +26,12 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * Provide config data on JS client side.
      * Used on payment selection page to check method availabiltiy.
-     * 
+     *
      * {@inheritdoc}
      */
     public function getConfig()
     {
         // @todo Check if current user is admin
-        $user = $this->session->getUser();
         $this->logger->write($this->session);
 
         return [

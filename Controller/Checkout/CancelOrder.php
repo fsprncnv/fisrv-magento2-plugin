@@ -40,7 +40,7 @@ class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
     /**
      * Process order cancellation and possibly display error payload passed as query
      * from Fiserv.
-     * 
+     *
      * {@inheritDoc}
      */
     public function execute()

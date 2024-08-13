@@ -25,7 +25,7 @@ class DebugLogger extends Zend_Log
      * Write info or debug log.
      * If message is of generic object type, convert to array.
      * If of array type, convert to Magento DataObject.
-     * if DataObject, parse to JSON string. 
+     * if DataObject, parse to JSON string.
      *
      * @param mixed $message Message data
      * @param string $type Error log on 'error', info log on anything else

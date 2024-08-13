@@ -86,7 +86,7 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
 
     /**
      * Update magento order according to webhook event
-     * 
+     *
      * @param \Fisrv\Models\WebhookEvent\WebhookEvent $event
      * @return void
      */

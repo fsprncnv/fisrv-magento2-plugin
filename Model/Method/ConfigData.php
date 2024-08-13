@@ -99,15 +99,14 @@ class ConfigData
 
     /**
      * Check if config data is complete
-     * 
+     *
      * @return false if any required field is not set, else true
      */
     public function isConfigDataSet(): bool
     {
         foreach ($this->requiredXmlPaths as $path) {
             $entry = $this->getConfigEntry(null, $path);
-            if (
-                is_null($entry) ||
+            if (is_null($entry) ||
                 $entry === ''
             ) {
                 return false;

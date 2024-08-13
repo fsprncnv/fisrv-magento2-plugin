@@ -32,7 +32,6 @@ class OrderResultObserver implements ObserverInterface
         TransactionFactory $transactionFactory,
         OrderRepository $orderRepository,
         Session $session,
-
         \Magento\Framework\App\ResponseFactory $responseFactory,
         \Magento\Framework\UrlInterface $url,
     ) {

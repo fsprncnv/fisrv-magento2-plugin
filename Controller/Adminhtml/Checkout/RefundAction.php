@@ -50,8 +50,8 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
     /**
      * Refund transaction on payment gateway. Transaction that was created by Fiserv Checkout
-     * is returned. 
-     * 
+     * is returned.
+     *
      * @param Order $order Order to be refundend
      * @throws Exception When payment method is not Fiserv or refund flow has failed (server-side)
      */
@@ -78,9 +78,9 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
      * Refund order on magento backend. This is used for magento backend to properly register the
      * order refund and make it reviewable on store front.
      * Does not actually refund the Fiserv transaction.
-     * 
+     *
      * @param Order $order Order to be refundend
-     * @throws Exception When order is not invoiceable and thus not refundable. This happens if order state was not 
+     * @throws Exception When order is not invoiceable and thus not refundable. This happens if order state was not
      * properly configured
      */
     private function refundOnBackend(Order $order): void
@@ -96,7 +96,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
     /**
      * Take order ID from query and process refund.
-     * 
+     *
      * {@inheritDoc}
      */
     public function execute()

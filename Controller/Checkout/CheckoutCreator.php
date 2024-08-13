@@ -15,7 +15,6 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-
 if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php")) {
     require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
 }
@@ -115,7 +114,7 @@ class CheckoutCreator
 
     /**
      * Refund checkout
-     * 
+     *
      * @param Order $order Order to be refunded
      * @return PaymentsClientResponse Client response data
      */
@@ -133,7 +132,7 @@ class CheckoutCreator
 
     /**
      * Pass checkout data (totals, redirects, language etc.) to request object of checkout
-     * 
+     *
      * @param \Fisrv\Models\CheckoutClientRequest $request
      * @param \Magento\Sales\Model\Order $order
      * @return \Fisrv\Models\CheckoutClientRequest
@@ -180,8 +179,8 @@ class CheckoutCreator
     }
 
     /**
-     * Pass cart (line) items to checkout 
-     * 
+     * Pass cart (line) items to checkout
+     *
      * @param \Fisrv\Models\CheckoutClientRequest $request
      * @param \Magento\Sales\Model\Order $order
      * @return \Fisrv\Models\CheckoutClientRequest
@@ -213,7 +212,7 @@ class CheckoutCreator
 
     /**
      * Pass acount information like billing data to checkout
-     * 
+     *
      * @param \Fisrv\Models\CheckoutClientRequest $request
      * @param \Magento\Sales\Model\Order $order
      * @return \Fisrv\Models\CheckoutClientRequest
@@ -234,5 +233,4 @@ class CheckoutCreator
 
         return $request;
     }
-
 }

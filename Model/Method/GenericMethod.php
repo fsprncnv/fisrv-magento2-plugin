@@ -53,33 +53,31 @@ class GenericMethod extends Adapter
         $this->configData = $configData;
     }
 
-    public function capture(InfoInterface $payment, $amount)
+    public function capture(InfoInterface $payment, $amount): Adapter
     {
-        $this->debugLogger->write('--- Order from GenericMethod::capture ---');
-        $this->debugLogger->write($payment);
+        $this->debugLogger->write('--- Fired from GenericMethod::capture ---');
 
         return $this;
     }
 
-    public function isActive($storeId = null)
+    public function isActive($storeId = null): bool
     {
         return $this->configData->isMethodActive($this->getCode()) ?? false;
     }
 
     public function acceptPayment(InfoInterface $payment)
     {
-        $this->debugLogger->write('--- Order from GenericMethod::acceptPayment ---');
-        $this->debugLogger->write($payment);
+        $this->debugLogger->write('--- Fired GenericMethod::acceptPayment ---');
 
         return $this;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function canRefund()
+    public function canRefund(): bool
     {
         return true;
     }
@@ -87,13 +85,9 @@ class GenericMethod extends Adapter
     /**
      * @inheritdoc
      */
-    public function isOffline()
+    public function isOffline(): bool
     {
         return false;
     }
 
-    public function refund(InfoInterface $infoInterface, $amount)
-    {
-        $this->debugLogger->write('--- Refund from GenericMethod::refund ---');
-    }
 }
