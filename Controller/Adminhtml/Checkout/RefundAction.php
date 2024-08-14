@@ -3,6 +3,7 @@
 namespace Fisrv\Payment\Controller\Adminhtml\Checkout;
 
 use Exception;
+use Fisrv\Exception\ErrorResponse;
 use Fisrv\Payment\Controller\Checkout\CheckoutCreator;
 use Fisrv\Payment\Controller\Checkout\OrderContext;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -63,11 +64,11 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
             throw new Exception(_('Payment was not provided by Fiserv'));
         }
 
-        $response = $this->checkoutCreator->refundCheckout($order);
-
-        if (!isset($response->approvedAmount)) {
+        try {
+            $response = $this->checkoutCreator->refundCheckout($order);
+        } catch (ErrorResponse $th) {
             $this->context->getLogger()->write('Refund failed server-side:');
-            $this->context->getLogger()->write((string) $response);
+            $this->context->getLogger()->write((string) $th->response);
             throw new Exception(__('Refund has failed. Contact support with trace ID: %s and client ID %s.', $response->traceId, $response->clientRequestId));
         }
 
