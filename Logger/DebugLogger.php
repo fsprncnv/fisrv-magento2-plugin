@@ -52,6 +52,7 @@ class DebugLogger extends Zend_Log
 
             if ($type === 'error') {
                 $this->log(strval($message), Zend_Log::ERR);
+
                 return;
             }
 

@@ -10,7 +10,9 @@ use Fisrv\Payment\Logger\DebugLogger;
 class ConfigProvider implements ConfigProviderInterface
 {
     private ConfigData $configData;
+
     private Session $session;
+
     private DebugLogger $logger;
 
     public function __construct(

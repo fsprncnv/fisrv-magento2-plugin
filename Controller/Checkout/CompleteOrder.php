@@ -22,12 +22,19 @@ use Magento\Framework\App\RequestInterface;
 class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;
+
     private InvoiceService $invoiceService;
+
     private TransactionFactory $transactionFactory;
+
     private OrderRepository $orderRepository;
+
     private OrderFactory $orderFactory;
+
     private OrderContext $action;
+
     private CreditmemoService $memoService;
+
     private OrderService $orderService;
 
     private const REFERRER_URL = 'https://ci.checkout-lane.com/';
@@ -68,11 +75,13 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
         if (!$referrer || $referrer !== self::REFERRER_URL) {
             $this->action->getLogger()->write('Bad referrer, cancelling auth.');
+
             return false;
         }
 
         if (!$sign) {
             $this->action->getLogger()->write('No signature given, cancelling auth.');
+
             return false;
         }
 
@@ -81,7 +90,6 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
         return hash_equals($digest, $sign);
     }
-
 
     public function validateForCsrf(RequestInterface $request): ?bool
     {

@@ -12,13 +12,19 @@ use Magento\Framework\Module\ModuleListInterface;
 class ConfigData
 {
     private const PATH_PROD = 'payment/fisrv_generic/production';
+
     private const PATH_APIKEY = 'payment/fisrv_generic/apikey';
+
     private const PATH_APISECRET = 'payment/fisrv_generic/apisecret';
+
     private const PATH_STOREID = 'payment/fisrv_generic/storeid';
 
     private const PATH_GENERIC_ENABLED = 'payment/fisrv_generic/active';
+
     private const PATH_GOOGLEPAY_ENABLED = 'payment/fisrv_googlepay/active';
+
     private const PATH_APPLEPAY_ENABLED = 'payment/fisrv_applepay/active';
+
     private const PATH_CARD_ENABLED = 'payment/fisrv_creditcard/active';
 
     private array $requiredXmlPaths = [
@@ -28,6 +34,7 @@ class ConfigData
     ];
 
     private ScopeConfigInterface $scopeConfig;
+
     private ModuleListInterface $moduleList;
 
     public function __construct(

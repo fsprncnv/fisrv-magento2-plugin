@@ -20,7 +20,9 @@ use Magento\Sales\Model\Order\Invoice;
 class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;
+
     private OrderContext $context;
+
     private RefundInvoiceInterface $refundOrder;
 
     /**
@@ -72,7 +74,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
             throw new Exception(__('Refund has failed. Contact support with trace ID: %s and client ID %s.', $response->traceId, $response->clientRequestId));
         }
 
-        $order->addStatusToHistory(__('Fiserv transaction of ID %s has been refunded with amount %s', $response->ipgTransactionId, $response->approvedAmount->total));
+        $order->addCommentToStatusHistory(__('Fiserv transaction of ID ' . $response->ipgTransactionId . ' has been refunded with amount ' . number_format((float) $response->approvedAmount->total, 2, '.', '') . ' ' . $response->approvedAmount->currency->value));
     }
 
     /**

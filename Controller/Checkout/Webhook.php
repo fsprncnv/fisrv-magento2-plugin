@@ -2,21 +2,19 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
+use Exception;
 use Fisrv\Models\TransactionStatus;
 use Fisrv\Models\WebhookEvent\WebhookEvent;
-use Fisrv\Payment\Logger\DebugLogger;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
-use Magento\Framework\App\Response\Http as Response;
 use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\OrderRepository;
 
-if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php")) {
-    require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
+if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
+    require_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
 }
 
 /**
@@ -25,24 +23,16 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
  */
 class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
 {
-    private Response $response;
-    private Request $request;
-    private DebugLogger $logger;
+    private OrderContext $context;
+
     private JsonFactory $jsonResultFactory;
-    private OrderRepository $orderRepository;
 
     public function __construct(
-        Response $response,
-        Request $request,
-        DebugLogger $logger,
+        OrderContext $context,
         JsonFactory $jsonResultFactory,
-        OrderRepository $orderRepository,
     ) {
-        $this->request = $request;
-        $this->response = $response;
-        $this->logger = $logger;
+        $this->context = $context;
         $this->jsonResultFactory = $jsonResultFactory;
-        $this->orderRepository = $orderRepository;
     }
 
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -64,24 +54,74 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
         $result = $this->jsonResultFactory->create();
         $result->setHeader('Content-Type', 'application/json', true);
 
-        $content = $this->request->getContent();
-        $event = new WebhookEvent($content);
-        $orderId = $this->request->getParam('order', false);
+        try {
+            $event = $this->handleWebhook();
+            $this->context->getLogger()->write('Webhook event handling success.');
+
+            return $result->setData($event);
+        } catch (\Throwable $th) {
+            $this->context->getLogger()->write($th->getMessage());
+
+            return $this->context->getResponse()->setContent($th->getMessage());
+        }
+    }
+
+    /**
+     * Verify message signature on completion request.
+     * If message signature is rejected stop handling this order.
+     *
+     * @param Order $order Order which has to be verified
+     */
+    private function authenticate(Order $order): void
+    {
+        $sign = $this->context->getRequest()->getParam('_nonce', false);
+
+        if (!$sign) {
+            throw new Exception('Authorization failed. No signature given.');
+        }
+
+        $sign = base64_decode($sign);
+        $digest = $this->context->createSignature($order);
+
+        if (!hash_equals($digest, $sign)) {
+            $this->context->getLogger()->write('DIGEST: ' . $digest);
+            $this->context->getLogger()->write('SIGNATURE: ' . $sign);
+            throw new Exception('Authorization failed. Signature validation failed.');
+        }
+    }
+
+    private function handleWebhook(): WebhookEvent
+    {
+        $this->context->getLogger()->write('### Received webhook event ###');
+        $this->context->getLogger()->write($this->context->getRequest()->getContent());
+
+        $content = $this->context->getRequest()->getContent();
+
+        try {
+            $event = new WebhookEvent($content);
+        } catch (\Throwable $th) {
+            $this->context->getLogger()->write('Webhook parsing failed: ' . $th->getMessage());
+        }
+
+        $orderId = $this->context->getRequest()->getParam('order_id', false);
 
         if (!$orderId) {
-            throw new \Exception('Order could not be retrieved');
+            throw new Exception('Order could not be retrieved');
         }
+
+        $order = $this->context->getOrderRepository()->get(intval($orderId));
+        $this->authenticate($order);
 
         try {
             $checkoutId = $event->checkoutId;
         } catch (\Throwable $th) {
-            throw new \Exception('Webhook event is invalid');
+            throw new Exception('Webhook does not contain checkout ID (Probably malformed on parse)');
         }
 
-        $this->logger->write('Webhook event for checkout ID ' . $checkoutId);
-        $this->updateOrder(intval($orderId), $event);
+        $this->context->getLogger()->write('Webhook event for checkout ID ' . $checkoutId);
+        $this->updateOrder($order, $event);
 
-        return $result->setData($event);
+        return $event;
     }
 
     /**
@@ -90,31 +130,36 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
      * @param \Fisrv\Models\WebhookEvent\WebhookEvent $event
      * @return void
      */
-    private function updateOrder(int $orderId, WebhookEvent $event)
+    private function updateOrder(Order $order, WebhookEvent $event)
     {
-        $order = $this->orderRepository->get($orderId);
         $status = Order::STATE_PROCESSING;
 
         switch ($event->transactionStatus) {
             case TransactionStatus::WAITING:
                 $status = Order::STATE_NEW;
+
                 break;
             case TransactionStatus::PARTIAL:
                 $status = Order::STATE_PROCESSING;
+
                 break;
             case TransactionStatus::APPROVED:
                 $status = Order::STATE_COMPLETE;
+
                 break;
             case TransactionStatus::PROCESSING_FAILED:
             case TransactionStatus::VALIDATION_FAILED:
             case TransactionStatus::DECLINED:
                 $status = Order::STATE_CANCELED;
+
                 break;
             default:
                 return;
         }
 
-        $order->setStatus($status)->setState($status);
-        $this->orderRepository->save($order);
+        $this->context->getLogger()->write('Changing order status of order ' . $order->getId() . ' from ' . $order->getStatus() . ' to ' . $status);
+        $order->addCommentToStatusHistory('Webhook successfully changed order status to ' . $status);
+        // $order->setStatus($status)->setState($status);
+        $this->context->getOrderRepository()->save($order);
     }
 }

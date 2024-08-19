@@ -12,7 +12,6 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
  */
 class Heading extends Field
 {
-
     /**
      * Render block: table heading
      *

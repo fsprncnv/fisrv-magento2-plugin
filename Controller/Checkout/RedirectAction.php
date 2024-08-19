@@ -15,6 +15,7 @@ use Magento\Framework\App\RequestInterface;
 class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private CheckoutCreator $checkoutCreator;
+
     private OrderContext $context;
 
     public function __construct(
@@ -39,13 +40,18 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
     public function execute()
     {
         $order = $this->context->getSession()->getLastRealOrder();
+        $this->context->getLogger()->write('### START ORDER FLOW OF ORDER: ' . $order->getId() . ' ###');
 
         try {
             $checkoutUrl = $this->checkoutCreator->create($order);
         } catch (\Throwable $th) {
-            if ($th instanceof ErrorResponse) {
-                $this->context->messageManager->addErrorMessage($th->getMessage());
-            }
+            $this->context->getLogger()->write('Failed checkout creation: ' . $th->getMessage());
+
+            $this->context->messageManager->addErrorMessage(
+                $th instanceof ErrorResponse ?
+                $th->getMessage() :
+                'Sorry something went wrong. Try another payment method.'
+            );
 
             return $this->context->_redirect('checkout/cart', [
                 '_query' => [
@@ -57,6 +63,7 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
         $resultRedirect = $this->context->resultRedirectFactory->create();
         $resultRedirect->setUrl($checkoutUrl);
+
         return $resultRedirect;
     }
 }

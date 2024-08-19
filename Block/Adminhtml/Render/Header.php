@@ -23,6 +23,7 @@ class Header extends Field
     public function render(AbstractElement $element): string
     {
         $element->addClass('fisrv-payment');
+
         return $this->toHtml();
     }
 }

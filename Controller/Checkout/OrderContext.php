@@ -23,15 +23,23 @@ class OrderContext
     private const SIGNATURE_LIFETIME = 86400;
 
     private DebugLogger $logger;
+
     private Session $session;
+
     private RedirectInterface $_redirect;
+
     private Response $_response;
+
     private Request $_request;
+
     private UrlInterface $url;
+
     private ConfigData $_config;
+
     private OrderRepository $_orderRepository;
 
     public MessageManagerInterface $messageManager;
+
     public RedirectFactory $resultRedirectFactory;
 
     public function __construct(
@@ -104,6 +112,7 @@ class OrderContext
     public function _redirect($path, $arguments = [])
     {
         $this->_redirect->redirect($this->_response, $path, $arguments);
+
         return $this->_response;
     }
 
@@ -131,6 +140,7 @@ class OrderContext
      * Creates a message signature relating to an order.
      * This signature is used for basic authentication e.g. on Fiserv checkout redirection.
      * The lifetime of a signature is one day.
+     * Removed session ID as not compatible with external POST.
      *
      * @param Order $order Order to be created a signature for
      * @return string SHA256 hash from session identifiers
@@ -139,9 +149,7 @@ class OrderContext
     {
         return hash_hmac(
             'sha256',
-            ceil(time() / (self::SIGNATURE_LIFETIME / 2))
-            . '|' .
-            $this->getSession()->getSessionId() . '|' .
+            ceil(time() / (self::SIGNATURE_LIFETIME / 2)) . '|' .
             $this->getConfigData()->getApiKey() . '|' .
             $order->getId(),
             $order->getProtectCode(),

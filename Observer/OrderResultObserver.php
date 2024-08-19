@@ -12,18 +12,24 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\Service\InvoiceService;
 
-if (file_exists(__DIR__ . "/../vendor/fisrv/php-client/vendor/autoload.php")) {
-    require_once __DIR__ . "/../vendor/fisrv/php-client/vendor/autoload.php";
+if (file_exists(__DIR__ . '/../vendor/fisrv/php-client/vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/fisrv/php-client/vendor/autoload.php';
 }
 
 class OrderResultObserver implements ObserverInterface
 {
     private DebugLogger $logger;
+
     private InvoiceService $invoiceService;
+
     private TransactionFactory $transactionFactory;
+
     private OrderRepository $orderRepository;
+
     private Session $session;
+
     private $responseFactory;
+
     private $url;
 
     public function __construct(

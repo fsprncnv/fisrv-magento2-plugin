@@ -16,6 +16,7 @@ use Magento\Framework\App\RequestInterface;
 class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private OrderRepository $orderRepository;
+
     private OrderContext $context;
 
     public function __construct(
@@ -48,7 +49,8 @@ class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $orderId = $this->context->getRequest()->getParam('order_id');
         $order = $this->context->getOrderRepository()->get($orderId);
 
-        $this->context->getLogger()->write($this->context->getRequest()->getContent());
+        $errorResponse = $this->context->getRequest()->getContent();
+        $this->context->getLogger()->write($errorResponse === '' ? 'No error response given.' : $errorResponse);
 
         if ($order instanceof Order) {
             $order->setState(Order::STATE_CANCELED);

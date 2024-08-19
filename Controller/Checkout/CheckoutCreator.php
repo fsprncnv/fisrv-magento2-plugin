@@ -15,8 +15,8 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php")) {
-    require_once __DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php";
+if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
+    require_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
 }
 
 /**
@@ -26,9 +26,13 @@ if (file_exists(__DIR__ . "/../../vendor/fisrv/php-client/vendor/autoload.php"))
 class CheckoutCreator
 {
     private static CheckoutClient $client;
+
     private Store $store;
+
     private Resolver $resolver;
+
     private OrderRepository $orderRepository;
+
     private OrderContext $context;
 
     public function __construct(
@@ -81,12 +85,7 @@ class CheckoutCreator
         $traceId = $response->traceId;
 
         $order->addCommentToStatusHistory(
-            __(
-                'Fiserv checkout link %s created with checkout ID %s and trace ID %s.',
-                $checkoutLink,
-                $checkoutId,
-                $traceId,
-            )
+            __('Fiserv checkout link ' . $checkoutLink . ' created with checkout ID ' . $checkoutId . ' and trace ID ' . $traceId)
         );
 
         $order->setExtOrderId($checkoutId);

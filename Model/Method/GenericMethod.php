@@ -19,9 +19,13 @@ use Magento\Framework\App\Response\Http;
 class GenericMethod extends Adapter
 {
     private DebugLogger $debugLogger;
+
     private UrlInterface $url;
+
     private Http $http;
+
     private string $title;
+
     private ConfigData $configData;
 
     public function __construct(
@@ -89,5 +93,4 @@ class GenericMethod extends Adapter
     {
         return false;
     }
-
 }
