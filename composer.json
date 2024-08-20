@@ -43,7 +43,6 @@
       "@composer --no-plugins --no-interaction archive"
     ],
     "format": [
-      "../../../../vendor/bin/php-cs-fixer fix --dry-run --diff"
     ],
     "format-fix": [
       "../../../../vendor/bin/php-cs-fixer fix"
