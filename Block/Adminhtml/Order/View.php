@@ -25,15 +25,21 @@ class View
      *
      * @param \Magento\Sales\Block\Adminhtml\Order\View $view Block component of view
      */
-    public function beforeSetLayout(CoreView $view)
+    public function beforeSetLayout(CoreView $view): void
     {
         $message = _('Do you want to refund this order?');
         $url = $this->context->getUrl('refundaction', true, [
             'order_id' => $view->getOrderId()
         ]);
 
+        $payment = $view->getOrder()->getPayment();
+
+        if (is_null($payment)) {
+            return;
+        }
+
         if (
-            !str_starts_with($view->getOrder()->getPayment()->getMethod(), 'fisrv_') ||
+            !str_starts_with($payment->getMethod(), 'fisrv_') ||
             $view->getOrder()->getStatus() !== Order::STATE_COMPLETE
         ) {
             return;

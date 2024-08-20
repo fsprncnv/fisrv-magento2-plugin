@@ -4,7 +4,6 @@ namespace Fisrv\Payment\Model\Method;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
-use Magento\Framework\App\ScopeInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\PageCache\Model\Cache\Type;
@@ -24,12 +23,6 @@ class ConfigData
     private const PATH_STOREID = 'payment/fisrv_generic/storeid';
 
     private const PATH_GENERIC_ENABLED = 'payment/fisrv_generic/active';
-
-    private const PATH_GOOGLEPAY_ENABLED = 'payment/fisrv_googlepay/active';
-
-    private const PATH_APPLEPAY_ENABLED = 'payment/fisrv_applepay/active';
-
-    private const PATH_CARD_ENABLED = 'payment/fisrv_creditcard/active';
 
     private const PATH_HOST = 'payment/fisrv_generic/host';
 
@@ -97,6 +90,7 @@ class ConfigData
     {
         $this->typeList->cleanType(Config::TYPE_IDENTIFIER);
         $this->typeList->cleanType(Type::TYPE_IDENTIFIER);
+
         return $this->getConfigEntry(0, self::PATH_HOST) ?? self::FALLBACK_HOST;
     }
 
@@ -111,21 +105,6 @@ class ConfigData
         return $this->getConfigEntry($storeId, self::PATH_GENERIC_ENABLED) ?? false;
     }
 
-    public function isGooglepayEnabled(?int $storeId = null): bool
-    {
-        return $this->getConfigEntry($storeId, self::PATH_GENERIC_ENABLED) ?? false;
-    }
-
-    public function isApplepayEnabled(?int $storeId = null): bool
-    {
-        return $this->getConfigEntry($storeId, self::PATH_GENERIC_ENABLED) ?? false;
-    }
-
-    public function isCreditcardEnabled(?int $storeId = null): bool
-    {
-        return $this->getConfigEntry($storeId, self::PATH_GENERIC_ENABLED) ?? false;
-    }
-
     public function isMethodActive(string $method, ?int $storeId = null): bool
     {
         return $this->getConfigEntry($storeId, 'payment/' . $method . '/active') ?? false;
@@ -134,7 +113,7 @@ class ConfigData
     /**
      * Check if config data is complete
      *
-     * @return false if any required field is not set, else true
+     * @return bool if any required field is not set, else true
      */
     public function isConfigDataSet(): bool
     {

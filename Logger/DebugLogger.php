@@ -16,6 +16,7 @@ class DebugLogger extends Zend_Log
 {
     public function __construct()
     {
+        /** @phpstan-ignore constant.notFound */
         $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fisrv-checkout.log');
         $this->addWriter($writer);
         parent::__construct();
@@ -35,7 +36,7 @@ class DebugLogger extends Zend_Log
     {
         try {
             if (is_object($message)) {
-                $message = json_decode(json_encode($message), true);
+                $message = json_decode(json_encode($message, JSON_THROW_ON_ERROR), true);
             }
 
             if (is_array($message)) {

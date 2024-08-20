@@ -2,13 +2,13 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
+use BadFunctionCallException;
 use Exception;
 use Fisrv\Models\TransactionStatus;
 use Fisrv\Models\WebhookEvent\WebhookEvent;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
-use Magento\Framework\App\Request\Http as Request;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
@@ -33,6 +33,11 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
     ) {
         $this->context = $context;
         $this->jsonResultFactory = $jsonResultFactory;
+
+        set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
+            $this->context->getLogger()->write('Fiserv API Client threw notice: ' . $errno . ' ' . $errstr);
+            return true;
+        }, E_USER_NOTICE);
     }
 
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -61,9 +66,10 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
             return $result->setData($event);
         } catch (\Throwable $th) {
             $this->context->getLogger()->write($th->getMessage());
-
-            return $this->context->getResponse()->setContent($th->getMessage());
+            $this->context->getResponse()->setContent($th->getMessage());
         }
+
+        return $this->context->getResponse();
     }
 
     /**
@@ -97,12 +103,7 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
 
         $content = $this->context->getRequest()->getContent();
 
-        try {
-            $event = new WebhookEvent($content);
-        } catch (\Throwable $th) {
-            $this->context->getLogger()->write('Webhook parsing failed: ' . $th->getMessage());
-        }
-
+        $event = new WebhookEvent($content);
         $orderId = $this->context->getRequest()->getParam('order_id', false);
 
         if (!$orderId) {
@@ -110,14 +111,14 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
         }
 
         $order = $this->context->getOrderRepository()->get(intval($orderId));
-        $this->authenticate($order);
 
-        try {
-            $checkoutId = $event->checkoutId;
-        } catch (\Throwable $th) {
-            throw new Exception('Webhook does not contain checkout ID (Probably malformed on parse)');
+        if (!($order instanceof Order)) {
+            throw new Exception('Order could not be retrieved');
         }
 
+        $this->authenticate($order);
+
+        $checkoutId = $event->checkoutId;
         $this->context->getLogger()->write('Webhook event for checkout ID ' . $checkoutId);
         $this->updateOrder($order, $event);
 

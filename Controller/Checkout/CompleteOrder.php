@@ -3,7 +3,6 @@
 namespace Fisrv\Payment\Controller\Checkout;
 
 use Exception;
-use Fisrv\Payment\Model\ConfigProvider;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Framework\DB\TransactionFactory;
@@ -24,8 +23,6 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
     private OrderContext $action;
 
-    private ConfigProvider $configProvider;
-
     public function __construct(
         InvoiceService $invoiceService,
         TransactionFactory $transactionFactory,
@@ -34,17 +31,6 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $this->invoiceService = $invoiceService;
         $this->transactionFactory = $transactionFactory;
         $this->action = $action;
-    }
-
-    /**
-     * Overwrite action invoice flag on order in case
-     * it could not be set properly
-     * 
-     * @param Order $order Order with invoice flag to be set
-     */
-    private function forceInvoicable(Order $order): void
-    {
-        $order->setActionFlag(Order::ACTION_FLAG_INVOICE, true);
     }
 
     /**
@@ -104,7 +90,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             throw new Exception(_('Invoice cannot be created for this order'));
         }
 
-        if (!$order->getState() === ORDER::STATE_NEW) {
+        if ($order->getState() !== ORDER::STATE_NEW) {
             throw new Exception(_('Order has invalid state'));
         }
 
@@ -137,6 +123,10 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             }
 
             $order = $this->action->getOrderRepository()->get($orderId);
+
+            if (!($order instanceof Order)) {
+                throw new Exception('Order could not be retrieved');
+            }
 
             if (!$this->authenticate($order)) {
                 throw new Exception(_('Authorization failed. Could not validate request.'));

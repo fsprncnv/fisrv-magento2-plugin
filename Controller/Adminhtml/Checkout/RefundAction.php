@@ -60,18 +60,31 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
      */
     private function refundOnGateway(Order $order): void
     {
-        $method = $order->getPayment()->getMethod();
+        $payment = $order->getPayment();
+
+        if (is_null($payment)) {
+            return;
+        }
+
+        $method = $payment->getMethod();
 
         if (!str_starts_with($method, 'fisrv_')) {
             throw new Exception(_('Payment was not provided by Fiserv'));
         }
 
+        $response = null;
+
         try {
             $response = $this->checkoutCreator->refundCheckout($order);
         } catch (ErrorResponse $th) {
             $this->context->getLogger()->write('Refund failed server-side:');
-            $this->context->getLogger()->write((string) $th->response);
-            throw new Exception(__('Refund has failed. Contact support with trace ID: %s and client ID %s.', $response->traceId, $response->clientRequestId));
+
+            if (!is_null($response)) {
+                $this->context->getLogger()->write((string) $th->response);
+                throw new Exception(__('Refund has failed. Contact support with trace ID: %s and client ID %s.', $response->traceId, $response->clientRequestId));
+            }
+
+            throw new Exception(_('Payment was not provided by Fiserv'));
         }
 
         $order->addCommentToStatusHistory(__('Fiserv transaction of ID ' . $response->ipgTransactionId . ' has been refunded with amount ' . number_format((float) $response->approvedAmount->total, 2, '.', '') . ' ' . $response->approvedAmount->currency->value));
@@ -106,6 +119,10 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
     {
         $orderId = $this->context->getRequest()->getParam('order_id');
         $order = $this->context->getOrderRepository()->get($orderId);
+
+        if (!($order instanceof Order)) {
+            throw new Exception('Order could not be parsed');
+        }
 
         try {
             $this->refundOnGateway($order);

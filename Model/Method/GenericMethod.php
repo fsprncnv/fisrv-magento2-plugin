@@ -8,8 +8,6 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\Adapter;
 
 use Fisrv\Payment\Logger\DebugLogger;
-use Magento\Framework\UrlInterface;
-use Magento\Framework\App\Response\Http;
 
 /**
  * Payment gateway adapter serving as
@@ -19,10 +17,6 @@ use Magento\Framework\App\Response\Http;
 class GenericMethod extends Adapter
 {
     private DebugLogger $debugLogger;
-
-    private UrlInterface $url;
-
-    private Http $http;
 
     private string $title;
 
@@ -36,8 +30,6 @@ class GenericMethod extends Adapter
         $formBlockType,
         $infoBlockType,
         DebugLogger $debugLogger,
-        UrlInterface $url,
-        Http $http,
         string $title,
         ConfigData $configData
     ) {
@@ -51,8 +43,6 @@ class GenericMethod extends Adapter
         );
 
         $this->debugLogger = $debugLogger;
-        $this->url = $url;
-        $this->http = $http;
         $this->title = $title;
         $this->configData = $configData;
     }
@@ -66,14 +56,7 @@ class GenericMethod extends Adapter
 
     public function isActive($storeId = null): bool
     {
-        return $this->configData->isMethodActive($this->getCode()) ?? false;
-    }
-
-    public function acceptPayment(InfoInterface $payment)
-    {
-        $this->debugLogger->write('--- Fired GenericMethod::acceptPayment ---');
-
-        return $this;
+        return $this->configData->isMethodActive($this->getCode());
     }
 
     public function getTitle(): string

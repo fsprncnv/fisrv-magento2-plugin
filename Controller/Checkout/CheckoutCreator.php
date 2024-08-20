@@ -2,6 +2,7 @@
 
 namespace Fisrv\Payment\Controller\Checkout;
 
+use Exception;
 use Fisrv\Checkout\CheckoutClient;
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\LineItem;
@@ -10,6 +11,7 @@ use Fisrv\Models\PaymentsClientResponse;
 use Fisrv\Models\PreSelectedPaymentMethod;
 use Fisrv\Models\Currency;
 use Fisrv\Models\Locale;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
@@ -65,7 +67,13 @@ class CheckoutCreator
 
         /** Set (preselected) payment method */
         try {
-            $method = $order->getPayment()->getMethod();
+            $payment = $order->getPayment();
+
+            if (is_null($payment)) {
+                throw new Exception('Payment could not be retrieved from order');
+            }
+
+            $method = $payment->getMethod();
             $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
             $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
 
@@ -98,10 +106,10 @@ class CheckoutCreator
     /**
      * Initialize request client
      */
-    private function initClient()
+    private function initClient(): void
     {
         $magentoStoreId = $this->store->getId();
-        $moduleVersion = $this->context->getConfigData()->getModuleVersion();
+        $moduleVersion = $this->context->getConfigData()->getModuleVersion() ?? 'NO_VERSION_FOUND';
 
         self::$client = new CheckoutClient([
             'user' => 'Magento2Plugin/' . $moduleVersion,
@@ -115,12 +123,16 @@ class CheckoutCreator
     /**
      * Refund checkout
      *
-     * @param Order $order Order to be refunded
+     * @param Order|OrderInterface $order Order to be refunded
      * @return PaymentsClientResponse Client response data
      */
-    public function refundCheckout(Order $order): PaymentsClientResponse
+    public function refundCheckout(Order|OrderInterface $order): PaymentsClientResponse
     {
         $this->initClient();
+
+        if (is_null($order->getExtOrderId())) {
+            throw new Exception('Refund failed. Order had no valid Magento ref ID.');
+        }
 
         return self::$client->refundCheckout(new PaymentsClientRequest([
             'transactionAmount' => [

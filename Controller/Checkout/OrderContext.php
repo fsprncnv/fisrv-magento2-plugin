@@ -66,13 +66,6 @@ class OrderContext
         $this->_orderRepository = $_orderRepository;
     }
 
-    public function getRedirect(
-        string $path,
-        array $arguments = []
-    ) {
-        return $this->_redirect($path, $arguments);
-    }
-
     public function getRequest(): Request
     {
         return $this->_request;
@@ -151,8 +144,8 @@ class OrderContext
             'sha256',
             ceil(time() / (self::SIGNATURE_LIFETIME / 2)) . '|' .
             $this->getConfigData()->getApiKey() . '|' .
-            $order->getId(),
-            $order->getProtectCode(),
+            strval($order->getId()),
+            $order->getProtectCode() ?? 'NO_PROTECT_CODE',
             false
         );
     }
