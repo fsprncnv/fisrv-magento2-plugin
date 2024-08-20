@@ -3,13 +3,10 @@
 namespace Fisrv\Payment\Controller\Checkout;
 
 use Exception;
+use Fisrv\Payment\Model\ConfigProvider;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\OrderFactory;
-use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
-use Magento\Sales\Model\Service\OrderService;
 use Magento\Framework\DB\TransactionFactory;
-use Magento\Sales\Model\OrderRepository;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -21,43 +18,31 @@ use Magento\Framework\App\RequestInterface;
  */
 class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
-    private CheckoutCreator $checkoutCreator;
-
     private InvoiceService $invoiceService;
 
     private TransactionFactory $transactionFactory;
 
-    private OrderRepository $orderRepository;
-
-    private OrderFactory $orderFactory;
-
     private OrderContext $action;
 
-    private CreditmemoService $memoService;
-
-    private OrderService $orderService;
-
-    private const REFERRER_URL = 'https://ci.checkout-lane.com/';
+    private ConfigProvider $configProvider;
 
     public function __construct(
-        CheckoutCreator $checkoutCreator,
         InvoiceService $invoiceService,
-        CreditmemoService $memoService,
         TransactionFactory $transactionFactory,
-        OrderRepository $orderRepository,
-        OrderFactory $orderFactory,
-        OrderContext $action
+        OrderContext $action,
     ) {
-        $this->checkoutCreator = $checkoutCreator;
         $this->invoiceService = $invoiceService;
-        $this->memoService = $memoService;
-        $this->orderRepository = $orderRepository;
         $this->transactionFactory = $transactionFactory;
-        $this->orderFactory = $orderFactory;
         $this->action = $action;
     }
 
-    private function forceInvoicable(Order $order)
+    /**
+     * Overwrite action invoice flag on order in case
+     * it could not be set properly
+     * 
+     * @param Order $order Order with invoice flag to be set
+     */
+    private function forceInvoicable(Order $order): void
     {
         $order->setActionFlag(Order::ACTION_FLAG_INVOICE, true);
     }
@@ -73,8 +58,10 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $sign = $this->action->getRequest()->getParam('_nonce', false);
         $referrer = $this->action->getRequest()->getHeader('Referer');
 
-        if (!$referrer || $referrer !== self::REFERRER_URL) {
+        if (!$referrer || $referrer !== $this->action->getConfigData()->getCheckoutHost()) {
             $this->action->getLogger()->write('Bad referrer, cancelling auth.');
+            $this->action->getLogger()->write('REFERRER: ' . $referrer);
+            $this->action->getLogger()->write('STORED HOST: ' . $this->action->getConfigData()->getCheckoutHost());
 
             return false;
         }
@@ -134,7 +121,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             ->addObject($invoice->getOrder());
 
         $transaction->save();
-        $this->orderRepository->save($order);
+        $this->action->getOrderRepository()->save($order);
 
         $this->action->getLogger()->write('Order status is ' . $order->getStatus());
         $this->action->getLogger()->write('Order state is ' . $order->getState());
@@ -149,7 +136,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
                 throw new Exception(_('Order could not be retrieved'));
             }
 
-            $order = $this->orderRepository->get($orderId);
+            $order = $this->action->getOrderRepository()->get($orderId);
 
             if (!$this->authenticate($order)) {
                 throw new Exception(_('Authorization failed. Could not validate request.'));

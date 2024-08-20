@@ -3,8 +3,12 @@
 namespace Fisrv\Payment\Model\Method;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\ScopeInterface;
 use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\PageCache\Model\Cache\Type;
+use Magento\Framework\App\Cache\Type\Config;
 
 /**
  * Helper class to access (and verify) config parameters.
@@ -27,6 +31,10 @@ class ConfigData
 
     private const PATH_CARD_ENABLED = 'payment/fisrv_creditcard/active';
 
+    private const PATH_HOST = 'payment/fisrv_generic/host';
+
+    private const FALLBACK_HOST = 'https://checkout-lane.com/';
+
     private array $requiredXmlPaths = [
         self::PATH_APIKEY,
         self::PATH_APISECRET,
@@ -37,20 +45,26 @@ class ConfigData
 
     private ModuleListInterface $moduleList;
 
+    private WriterInterface $writer;
+
+    private TypeListInterface $typeList;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        ModuleListInterface $moduleList
+        ModuleListInterface $moduleList,
+        WriterInterface $writer,
+        TypeListInterface $typeList
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->moduleList = $moduleList;
+        $this->writer = $writer;
+        $this->typeList = $typeList;
     }
 
     private function getConfigEntry(?int $storeId, string $configXmlPath)
     {
         return $this->scopeConfig->getValue(
             $configXmlPath,
-            ScopeInterface::SCOPE_DEFAULT,
-            $storeId
         );
     }
 
@@ -77,6 +91,19 @@ class ConfigData
     public function getFisrvStoreId(?int $storeId = null): ?string
     {
         return $this->getConfigEntry($storeId, self::PATH_STOREID);
+    }
+
+    public function getCheckoutHost(): string
+    {
+        $this->typeList->cleanType(Config::TYPE_IDENTIFIER);
+        $this->typeList->cleanType(Type::TYPE_IDENTIFIER);
+        return $this->getConfigEntry(0, self::PATH_HOST) ?? self::FALLBACK_HOST;
+    }
+
+    public function setCheckoutHost(string $value): void
+    {
+        $parsed = parse_url($value);
+        $this->writer->save(self::PATH_HOST, $parsed['scheme'] . '://' . $parsed['host'] . '/');
     }
 
     public function isGenericEnabled(?int $storeId = null): bool
@@ -112,10 +139,7 @@ class ConfigData
     public function isConfigDataSet(): bool
     {
         foreach ($this->requiredXmlPaths as $path) {
-            $entry = $this->getConfigEntry(null, $path);
-            if (is_null($entry) ||
-                $entry === ''
-            ) {
+            if (!$this->scopeConfig->isSetFlag($path)) {
                 return false;
             }
         }

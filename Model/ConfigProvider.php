@@ -4,24 +4,25 @@ namespace Fisrv\Payment\Model;
 
 use Fisrv\Payment\Model\Method\ConfigData;
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Backend\Model\Auth\Session;
 use Fisrv\Payment\Logger\DebugLogger;
 
 class ConfigProvider implements ConfigProviderInterface
 {
     private ConfigData $configData;
 
-    private Session $session;
-
     private DebugLogger $logger;
+
+    private static array $configStore = [
+        'payment' => [
+            'fisrv_gateway' => []
+        ]
+    ];
 
     public function __construct(
         ConfigData $configData,
-        Session $session,
         DebugLogger $logger
     ) {
         $this->configData = $configData;
-        $this->session = $session;
         $this->logger = $logger;
     }
 
@@ -33,16 +34,13 @@ class ConfigProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        // @todo Check if current user is admin
-        $this->logger->write($this->session);
+        $this->addConfig('is_available', $this->configData->isConfigDataSet());
+        $this->addConfig('is_admin', false);
+        return self::$configStore;
+    }
 
-        return [
-            'payment' => [
-                'fisrv_gateway' => [
-                    'is_available' => $this->configData->isConfigDataSet(),
-                    'is_admin' => false,
-                ]
-            ]
-        ];
+    private function addConfig(string $key, string|bool $value): void
+    {
+        self::$configStore['payment']['fisrv_gateway'][$key] = $value;
     }
 }

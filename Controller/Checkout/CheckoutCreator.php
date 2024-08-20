@@ -39,7 +39,7 @@ class CheckoutCreator
         Store $store,
         Resolver $resolver,
         OrderRepository $orderRepository,
-        OrderContext $context
+        OrderContext $context,
     ) {
         $this->store = $store;
         $this->resolver = $resolver;
@@ -81,8 +81,9 @@ class CheckoutCreator
         $response = self::$client->createCheckout($request);
 
         $checkoutId = $response->checkout->checkoutId;
-        $checkoutLink = $response->checkout->redirectionUrl;
         $traceId = $response->traceId;
+        $checkoutLink = $response->checkout->redirectionUrl;
+        $this->context->getConfigData()->setCheckoutHost($checkoutLink);
 
         $order->addCommentToStatusHistory(
             __('Fiserv checkout link ' . $checkoutLink . ' created with checkout ID ' . $checkoutId . ' and trace ID ' . $traceId)
