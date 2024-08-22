@@ -2,6 +2,7 @@
 
 namespace Fisrv\Payment\Logger;
 
+use Fisrv\Payment\Model\Method\ConfigData;
 use Laminas\Diactoros\Exception\SerializationException;
 use Magento\Framework\DataObject;
 use Throwable;
@@ -14,10 +15,15 @@ use Zend_Log_Writer_Stream;
  */
 class DebugLogger extends Zend_Log
 {
-    public function __construct()
-    {
+    private ConfigData $configData;
+
+    public function __construct(
+        ConfigData $configData
+    ) {
+        $this->configData = $configData;
+
         /** @phpstan-ignore constant.notFound */
-        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fisrv-checkout.log');
+        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fiserv-checkout.log');
         $this->addWriter($writer);
         parent::__construct();
     }
@@ -34,6 +40,10 @@ class DebugLogger extends Zend_Log
      */
     public function write(mixed $message, string $type = 'info')
     {
+        if (!$this->configData->isLoggingEnabled()) {
+            return;
+        }
+
         try {
             if (is_object($message)) {
                 $message = json_decode(json_encode($message, JSON_THROW_ON_ERROR), true);

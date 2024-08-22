@@ -14,17 +14,19 @@ use Magento\Framework\App\Cache\Type\Config;
  */
 class ConfigData
 {
-    private const PATH_PROD = 'payment/fisrv_generic/production';
+    private const PATH_SANDBOX = 'payment/fisrv/sandbox';
 
-    private const PATH_APIKEY = 'payment/fisrv_generic/apikey';
+    private const PATH_APIKEY = 'payment/fisrv/apikey';
 
-    private const PATH_APISECRET = 'payment/fisrv_generic/apisecret';
+    private const PATH_APISECRET = 'payment/fisrv/apisecret';
 
-    private const PATH_STOREID = 'payment/fisrv_generic/storeid';
+    private const PATH_STOREID = 'payment/fisrv/storeid';
 
-    private const PATH_GENERIC_ENABLED = 'payment/fisrv_generic/active';
+    private const PATH_GENERIC_ENABLED = 'payment/fisrv/active';
 
-    private const PATH_HOST = 'payment/fisrv_generic/host';
+    private const PATH_LOGS_ENABLED = 'payment/fisrv/debug';
+
+    private const PATH_HOST = 'payment/fisrv/host';
 
     private const FALLBACK_HOST = 'https://checkout-lane.com/';
 
@@ -66,9 +68,9 @@ class ConfigData
         return $this->moduleList->getOne('Fisrv_Payment')['setup_version'];
     }
 
-    public function isProductionMode(?int $storeId = null): bool
+    public function isSandboxMode(?int $storeId = null): bool
     {
-        return $this->getConfigEntry($storeId, self::PATH_PROD) ?? false;
+        return $this->getConfigEntry($storeId, self::PATH_SANDBOX) ?? true;
     }
 
     public function getApiKey(?int $storeId = null): ?string
@@ -103,6 +105,11 @@ class ConfigData
     public function isGenericEnabled(?int $storeId = null): bool
     {
         return $this->getConfigEntry($storeId, self::PATH_GENERIC_ENABLED) ?? false;
+    }
+
+    public function isLoggingEnabled(?int $storeId = null): bool
+    {
+        return $this->getConfigEntry($storeId, self::PATH_LOGS_ENABLED) ?? false;
     }
 
     public function isMethodActive(string $method, ?int $storeId = null): bool

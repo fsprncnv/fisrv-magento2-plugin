@@ -7,5 +7,10 @@
                 <value id="checkout-lane" type="host">ci.checkout-lane.com</value>
             </values>
         </policy>
+        <policy id="frame-ancestors">
+            <values>
+                <value id="google" type="host">*.google.com</value>
+            </values>
+        </policy>
     </policies>
 </csp_whitelist>

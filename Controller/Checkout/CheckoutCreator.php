@@ -113,7 +113,7 @@ class CheckoutCreator
 
         self::$client = new CheckoutClient([
             'user' => 'Magento2Plugin/' . $moduleVersion,
-            'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
+            'is_prod' => !($this->context->getConfigData()->isSandboxMode($magentoStoreId)),
             'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
             'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
             'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),

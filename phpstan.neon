@@ -3,3 +3,5 @@ parameters:
   excludePaths:
     - vendor/fisrv/php-client/vendor/*
   phpVersion: 80100
+  ignoreErrors:
+		- identifier: class.notFound
