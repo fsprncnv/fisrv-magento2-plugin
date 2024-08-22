@@ -4,23 +4,12 @@ declare(strict_types=1);
 
 namespace Fisrv\Payment\Block\Adminhtml\Render;
 
-use Fisrv\Payment\Controller\Checkout\OrderContext;
-use Fisrv\Payments\PaymentsClient;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 
 class StatusCheck extends Field
 {
-    private static PaymentsClient $client;
-    private OrderContext $orderContext;
-
-    public function __construct(
-        OrderContext $orderContext,
-    ) {
-        $this->orderContext = $orderContext;
-    }
-
     public function render(AbstractElement $element): string
     {
         return
@@ -62,10 +51,10 @@ class StatusCheck extends Field
                     const status = data["status"];
                     document.getElementById("fisrv-health-text").innerHTML = status;
                     
-                    if(status !== "All good!") {
-                        element.style.background = "red";
+                    if(data["code"] !== 200) {
+                        element.style.background = "OrangeRed";
                     } else {
-                        element.style.background = "green";
+                        element.style.background = "LightGreen";
                     }
                 }
             </script>

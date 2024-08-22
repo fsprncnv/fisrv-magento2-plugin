@@ -27,7 +27,7 @@
 					<label>API Key</label>
 					<config_path>payment/fisrv/apikey</config_path>
 				</field>
-				<field id="apisecret" translate="label" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+				<field id="apisecret" translate="label" type="password" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>API Secret</label>
 					<config_path>payment/fisrv/apisecret</config_path>
 				</field>

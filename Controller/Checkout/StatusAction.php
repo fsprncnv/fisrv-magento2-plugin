@@ -52,8 +52,11 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
             $this->context->getLogger()->write('API health check reported following error response: ' . json_encode($report));
         }
 
-        return $this->context->getResponse()->setContent(json_encode([
-            'status' => $status ?? 'All good!'
+        $this->context->getResponse()->setContent(json_encode([
+            'status' => $status ?? "You're all set!",
+            'code' => $report->httpCode
         ]));
+
+        return $this->context->getResponse();
     }
 }

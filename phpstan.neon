@@ -1,7 +1,7 @@
 parameters:
+  ignoreErrors:
+    - identifier: class.notFound
   level: 5
   excludePaths:
     - vendor/fisrv/php-client/vendor/*
   phpVersion: 80100
-  ignoreErrors:
-		- identifier: class.notFound
