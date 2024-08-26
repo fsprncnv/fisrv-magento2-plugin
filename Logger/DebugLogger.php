@@ -3,7 +3,6 @@
 namespace Fisrv\Payment\Logger;
 
 use Fisrv\Payment\Model\Method\ConfigData;
-use Laminas\Diactoros\Exception\SerializationException;
 use Magento\Framework\DataObject;
 use Throwable;
 use Zend_Log;
@@ -58,7 +57,7 @@ class DebugLogger extends Zend_Log
             }
 
             if (!$message) {
-                throw new SerializationException('Could not parse message object');
+                throw new \Exception('Could not parse message object');
             }
 
             if ($type === 'error') {

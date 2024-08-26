@@ -1,6 +1,5 @@
 parameters:
-  ignoreErrors:
-  level: 5
+  level: 1
   excludePaths:
-    - vendor/fisrv/php-client/vendor/*
+    - vendor/*
   phpVersion: 80100
