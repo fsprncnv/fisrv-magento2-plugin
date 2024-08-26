@@ -53,5 +53,8 @@
   },
   "scripts-descriptions": {
     "build": "Build project artifact."
+  },
+  "require-dev": {
+    "iodigital-com/phpstan-magento2-stubs": "^1.1"
   }
 }
