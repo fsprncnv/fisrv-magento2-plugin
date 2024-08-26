@@ -4,5 +4,3 @@ parameters:
   excludePaths:
     - vendor/fisrv/php-client/vendor/*
   phpVersion: 80100
-  includes:
-    - vendor/iodigital-com/phpstan-magento2-stubfiles/extension.yml
