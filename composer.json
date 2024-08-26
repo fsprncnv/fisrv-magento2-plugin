@@ -8,7 +8,6 @@
     "AFL-3.0"
   ],
   "require": {
-    "php": "~8.2.0",
     "fisrv/php-client": "dev-main"
   },
   "repositories": [
