@@ -47,7 +47,7 @@
       "../../../../vendor/bin/php-cs-fixer fix"
     ],
     "analyse": [
-      "vendor/bin/phpstan analyse . --error-format=prettyJson > phpstan-findings.json"
+      "vendor/bin/phpstan analyse ."
     ]
   },
   "scripts-descriptions": {
