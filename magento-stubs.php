@@ -3,15 +3,17 @@ namespace Magento\Sales\Block\Adminhtml\Order{
 class View{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
 namespace Magento\Sales\Model{
-class Order{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+class Order{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}const STATE_COMPLETE='';const STATE_CANCELED='';const STATE_NEW='';const STATE_PROCESSING='';}
 class OrderRepository{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
 namespace {
-function __($a='',$b='',$c='',$d='',$e=''){}class Zend_Log{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+function __($a='',$b='',$c='',$d='',$e=''){}
+class Zend_Log{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}const ERR='';const DEBUG='';const WARN='';public function addWriter($a='',$b='',$c='',$d='',$e=''){}public function log($a='',$b='',$c='',$d='',$e=''){}}
 class Zend_Log_Writer_Stream{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+
 }
 namespace Magento\Config\Block\System\Config\Form{
-class Field{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+class Field{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}public function toHtml($a='',$b='',$c='',$d='',$e=''){}}
 }
 namespace Magento\Framework\Data\Form\Element{
 class AbstractElement{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
@@ -81,13 +83,14 @@ namespace Magento\Framework\App\Cache{
 class TypeListInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
 namespace Magento\Framework\App\Cache\Type{
-class Config{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+class Config{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}const TYPE_IDENTIFIER='';}
+
 }
 namespace Magento\PageCache\Model\Cache{
-class Type{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+class Type{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}const TYPE_IDENTIFIER='';}
 }
 namespace Magento\Payment\Model\Method{
-class Adapter{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+class Adapter{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}public function getCode($a='',$b='',$c='',$d='',$e=''){}}
 }
 namespace Magento\Framework\Event{
 class ManagerInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
@@ -101,5 +104,3 @@ class PaymentDataObjectFactory{public function __construct($a='', $b='', $c='', 
 namespace Magento\Payment\Model{
 class InfoInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
-
-
