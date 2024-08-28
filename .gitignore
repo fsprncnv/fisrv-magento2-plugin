@@ -40,3 +40,5 @@ contributors.md
 contributors.html
 composer.lock
 auth.json
+
+magento-stubs-generator.php

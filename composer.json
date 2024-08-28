@@ -58,7 +58,6 @@
     "phpstan/phpstan": "^1.11",
     "bitexpert/phpstan-magento": "^0.31.0",
     "iodigital-com/phpstan-magento2-stubs": "^1.1",
-    "magento/community-edition": "*",
     "phpseclib/bcmath_compat": "*"
   },
   "config": {
