@@ -101,3 +101,5 @@ class PaymentDataObjectFactory{public function __construct($a='', $b='', $c='', 
 namespace Magento\Payment\Model{
 class InfoInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
+
+
