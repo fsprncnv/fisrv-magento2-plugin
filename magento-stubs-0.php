@@ -22,6 +22,7 @@ interface HttpPostActionInterface{}
 }
 namespace Magento\Framework\App{
 interface CsrfAwareActionInterface{}
+class RequestInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
 namespace Magento\Sales\Api{
 class RefundInvoiceInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
@@ -45,6 +46,9 @@ class OrderInterface{public function __construct($a='', $b='', $c='', $d='', $e=
 namespace Magento\Sales\Model\Service{
 class InvoiceService{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
+namespace Magento\Framework\DB{
+class TransactionFactory{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+}
 namespace Magento\Checkout\Model{
 class Session{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 interface ConfigProviderInterface{}
@@ -55,6 +59,10 @@ class Http{public function __construct($a='', $b='', $c='', $d='', $e='', $f='')
 }
 namespace Magento\Framework\Message{
 class ManagerInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+}
+namespace Magento\Framework\Controller\Result{
+class RedirectFactory{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+class JsonFactory{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
 namespace Magento\Framework{
 class UrlInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
@@ -86,6 +94,9 @@ class ManagerInterface{public function __construct($a='', $b='', $c='', $d='', $
 }
 namespace Magento\Payment\Gateway\Config{
 class ValueHandlerPoolInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
+}
+namespace Magento\Payment\Gateway\Data{
+class PaymentDataObjectFactory{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}
 }
 namespace Magento\Payment\Model{
 class InfoInterface{public function __construct($a='', $b='', $c='', $d='', $e='', $f='') {echo $a . $b . $c . $d . $e . $f;}}

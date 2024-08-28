@@ -42,3 +42,4 @@ composer.lock
 auth.json
 
 magento-stubs-generator.php
+phpstan-output.json

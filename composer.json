@@ -54,11 +54,7 @@
     "build": "Build project artifact."
   },
   "require-dev": {
-    "phpstan/extension-installer": "^1.4",
-    "phpstan/phpstan": "^1.11",
-    "bitexpert/phpstan-magento": "^0.31.0",
-    "iodigital-com/phpstan-magento2-stubs": "^1.1",
-    "phpseclib/bcmath_compat": "*"
+    "phpstan/phpstan": "^1.11"
   },
   "config": {
     "allow-plugins": true
