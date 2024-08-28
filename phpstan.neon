@@ -2,8 +2,4 @@ parameters:
   level: 1
   excludePaths:
     - vendor/*
-  ignoreErrors:
-    -
-      identifier: variable.undefined
-      path: magento-stubs-generator.php
   phpVersion: 80100
