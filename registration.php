@@ -6,7 +6,7 @@ if (file_exists(__DIR__ . '/magento-stubs-0.php')) {
     include_once __DIR__ . '/magento-stubs-0.php';
 }
 
-if (file_exists(__DIR__ . '/magento-stubs-1php')) {
+if (file_exists(__DIR__ . '/magento-stubs-1.php')) {
     include_once __DIR__ . '/magento-stubs-1.php';
 }
 
