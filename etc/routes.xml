@@ -2,8 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route id="fisrv" frontName="fisrv">
-            <module name="Fisrv_Payment"/>
+        <route id="fiserv" frontName="fiserv">
+            <module name="Fiserv_Checkout"/>
         </route>
     </router>
 </config>

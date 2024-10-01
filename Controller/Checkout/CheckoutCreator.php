@@ -1,16 +1,16 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Checkout;
+namespace Fiserv\Checkout\Controller\Checkout;
 
 use Exception;
 use Fisrv\Checkout\CheckoutClient;
 use Fisrv\Models\CheckoutClientRequest;
+use Fisrv\Models\Currency;
 use Fisrv\Models\LineItem;
+use Fisrv\Models\Locale;
 use Fisrv\Models\PaymentsClientRequest;
 use Fisrv\Models\PaymentsClientResponse;
 use Fisrv\Models\PreSelectedPaymentMethod;
-use Fisrv\Models\Currency;
-use Fisrv\Models\Locale;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
@@ -113,7 +113,7 @@ class CheckoutCreator
 
         self::$client = new CheckoutClient([
             'user' => 'Magento2Plugin/' . $moduleVersion,
-            'is_prod' => !($this->context->getConfigData()->isSandboxMode($magentoStoreId)),
+            'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
             'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
             'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
             'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),

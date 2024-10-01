@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Fisrv\Payment\Model\Method;
+namespace Fiserv\Checkout\Model\Method;
 
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\Adapter;
 
-use Fisrv\Payment\Logger\DebugLogger;
+use Fiserv\Checkout\Logger\DebugLogger;
 
 /**
  * Payment gateway adapter serving as

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fisrv\Payment\Model\Method;
+namespace Fiserv\Checkout\Model\Method;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
@@ -14,27 +14,11 @@ use Magento\Framework\App\Cache\Type\Config;
  */
 class ConfigData
 {
-    private const PATH_SANDBOX = 'payment/fisrv/sandbox';
-
-    private const PATH_APIKEY = 'payment/fisrv/apikey';
-
-    private const PATH_APISECRET = 'payment/fisrv/apisecret';
-
-    private const PATH_STOREID = 'payment/fisrv/storeid';
-
-    private const PATH_GENERIC_ENABLED = 'payment/fisrv/active';
-
-    private const PATH_LOGS_ENABLED = 'payment/fisrv/debug';
+    private array $requiredXmlPaths = [];
 
     private const PATH_HOST = 'payment/fisrv/host';
 
     private const FALLBACK_HOST = 'https://checkout-lane.com/';
-
-    private array $requiredXmlPaths = [
-        self::PATH_APIKEY,
-        self::PATH_APISECRET,
-        self::PATH_STOREID
-    ];
 
     private ScopeConfigInterface $scopeConfig;
 
@@ -65,27 +49,27 @@ class ConfigData
 
     public function getModuleVersion()
     {
-        return $this->moduleList->getOne('Fisrv_Payment')['setup_version'];
+        return $this->moduleList->getOne('Fiserv_Checkout')['setup_version'];
     }
 
-    public function isSandboxMode(?int $storeId = null): bool
+    public function isProductionMode(?int $storeId = null): bool
     {
-        return $this->getConfigEntry($storeId, self::PATH_SANDBOX) ?? true;
+        return $this->getConfigEntry($storeId, 'payment/fisrv/sandbox') ?? false;
     }
 
     public function getApiKey(?int $storeId = null): ?string
     {
-        return $this->getConfigEntry($storeId, self::PATH_APIKEY);
+        return $this->getConfigEntry($storeId, 'payment/fisrv/apikey');
     }
 
     public function getApiSecret(?int $storeId = null): ?string
     {
-        return $this->getConfigEntry($storeId, self::PATH_APISECRET);
+        return $this->getConfigEntry($storeId, 'payment/fisrv/apisecret');
     }
 
     public function getFisrvStoreId(?int $storeId = null): ?string
     {
-        return $this->getConfigEntry($storeId, self::PATH_STOREID);
+        return $this->getConfigEntry($storeId, 'payment/fisrv/storeid');
     }
 
     public function getCheckoutHost(): string
@@ -104,17 +88,17 @@ class ConfigData
 
     public function isGenericEnabled(?int $storeId = null): bool
     {
-        return $this->getConfigEntry($storeId, self::PATH_GENERIC_ENABLED) ?? false;
+        return $this->getConfigEntry($storeId, 'payment/fisrv/active') ?? true;
     }
 
     public function isLoggingEnabled(?int $storeId = null): bool
     {
-        return $this->getConfigEntry($storeId, self::PATH_LOGS_ENABLED) ?? false;
+        return $this->getConfigEntry($storeId, 'payment/fisrv/debug') ?? false;
     }
 
     public function isMethodActive(string $method, ?int $storeId = null): bool
     {
-        return $this->getConfigEntry($storeId, 'payment/' . $method . '/active') ?? false;
+        return $this->getConfigEntry($storeId, 'payment/' . $method . '/active') ?? true;
     }
 
     /**
@@ -124,11 +108,11 @@ class ConfigData
      */
     public function isConfigDataSet(): bool
     {
-        foreach ($this->requiredXmlPaths as $path) {
-            if (!$this->scopeConfig->isSetFlag($path)) {
-                return false;
-            }
-        }
+        // foreach ($this->requiredXmlPaths as $path) {
+        //     if (!$this->scopeConfig->isSetFlag($path)) {
+        //         return false;
+        //     }
+        // }
 
         return true;
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Fisrv\Payment\Block\Adminhtml\Render;
+namespace Fiserv\Checkout\Block\Adminhtml\Render;
 
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;

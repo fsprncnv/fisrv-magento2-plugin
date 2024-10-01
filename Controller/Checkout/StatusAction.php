@@ -1,6 +1,6 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Checkout;
+namespace Fiserv\Checkout\Controller\Checkout;
 
 use Fisrv\Payments\PaymentsClient;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -21,8 +21,6 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         OrderContext $context,
     ) {
         $this->context = $context;
-
-        date_default_timezone_set('Europe/Berlin');
     }
 
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -39,7 +37,7 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
     public function execute()
     {
         $this->client = new PaymentsClient([
-            'is_prod' => !($this->context->getConfigData()->isSandboxMode()),
+            'is_prod' => $this->context->getConfigData()->isProductionMode(),
             'api_key' => $this->context->getConfigData()->getApiKey(),
             'api_secret' => $this->context->getConfigData()->getApiSecret(),
             'store_id' => $this->context->getConfigData()->getFisrvStoreId(),

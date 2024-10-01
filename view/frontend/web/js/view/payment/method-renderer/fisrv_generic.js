@@ -10,7 +10,7 @@ define(['Magento_Checkout/js/view/payment/default', 'mage/url'], function (
     redirectAfterPlaceOrder: false,
 
     defaults: {
-      template: 'Fisrv_Payment/payment/default',
+      template: 'Fiserv_Checkout/payment/default',
     },
 
     afterPlaceOrder: function () {
@@ -53,15 +53,15 @@ define(['Magento_Checkout/js/view/payment/default', 'mage/url'], function (
         return 'You will be redirected to an external checkout page.';
       }
 
-      if (checkoutConfig.fisrv_gateway.is_admin) {
-        return 'Your Fiserv credentials have not been set. Please configure them on the admin dashboard, under Stores->Configuration->Sales->Payment Methods->Other Payment Methods->Fisrv Checkout.';
-      }
-
       return 'Sorry, Fiserv checkout is currently not available. Contact admin of the store to enable this method.'
     },
 
     isPlaceOrderActionAllowed: function () {
       return checkoutConfig.fisrv_gateway.is_available
+    },
+
+    getLogo: function () {
+      return checkoutConfig.fisrv_gateway['fisrv_generic'].logo;
     }
 
   });

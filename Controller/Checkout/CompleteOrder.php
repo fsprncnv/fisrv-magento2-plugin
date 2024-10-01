@@ -1,6 +1,6 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Checkout;
+namespace Fiserv\Checkout\Controller\Checkout;
 
 use Exception;
 use Magento\Sales\Model\Order;

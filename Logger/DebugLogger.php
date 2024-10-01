@@ -1,8 +1,8 @@
 <?php
 
-namespace Fisrv\Payment\Logger;
+namespace Fiserv\Checkout\Logger;
 
-use Fisrv\Payment\Model\Method\ConfigData;
+use Fiserv\Checkout\Model\Method\ConfigData;
 use Magento\Framework\DataObject;
 use Throwable;
 use Zend_Log;

@@ -1,24 +1,27 @@
 <?php
 
-namespace Fisrv\Payment\Model;
+namespace Fiserv\Checkout\Model;
 
-use Fisrv\Payment\Model\Method\ConfigData;
+use Fiserv\Checkout\Model\Method\ConfigData;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\View\Asset\Repository;
 
 class ConfigProvider implements ConfigProviderInterface
 {
     private ConfigData $configData;
-
-    private static array $configStore = [
-        'payment' => [
-            'fisrv_gateway' => []
-        ]
-    ];
+    private Repository $repository;
 
     public function __construct(
         ConfigData $configData,
+        Repository $repository,
     ) {
         $this->configData = $configData;
+        $this->repository = $repository;
+    }
+
+    public function getLogo(string $code): string
+    {
+        return $this->repository->getUrl(sprintf('%s::images/%s.svg', 'Fiserv_Checkout', str_replace('_', '-', $code)));
     }
 
     /**
@@ -29,14 +32,24 @@ class ConfigProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        $this->addConfig('is_available', $this->configData->isConfigDataSet());
-        $this->addConfig('is_admin', false);
-
-        return self::$configStore;
-    }
-
-    private function addConfig(string $key, string|bool $value): void
-    {
-        self::$configStore['payment']['fisrv_gateway'][$key] = $value;
+        return [
+            'payment' => [
+                'fisrv_gateway' => [
+                    'is_available' => true,
+                    'fisrv_generic' => [
+                        'logo' => $this->getLogo('fisrv_generic')
+                    ],
+                    'fisrv_creditcard' => [
+                        'logo' => $this->getLogo('fisrv_creditcard')
+                    ],
+                    'fisrv_applepay' => [
+                        'logo' => $this->getLogo('fisrv_applepay')
+                    ],
+                    'fisrv_googlepay' => [
+                        'logo' => $this->getLogo('fisrv_googlepay')
+                    ],
+                ]
+            ]
+        ];
     }
 }

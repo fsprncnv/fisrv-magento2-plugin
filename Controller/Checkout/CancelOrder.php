@@ -1,6 +1,6 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Checkout;
+namespace Fiserv\Checkout\Controller\Checkout;
 
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;

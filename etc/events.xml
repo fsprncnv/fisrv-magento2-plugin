@@ -3,6 +3,6 @@
     <!-- <event name="controller_action_predispatch_cms_index_index"> -->
     <!-- <event name="checkout_onepage_controller_success_action"> -->
     <!-- <event name="sales_order_place_before"> -->
-        <!-- <observer name="order_result_observer_after" instance="Fisrv\Payment\Observer\OrderResultObserver" /> -->
+        <!-- <observer name="order_result_observer_after" instance="Fiserv\Checkout\Observer\OrderResultObserver" /> -->
     <!-- </event> -->
 </config>

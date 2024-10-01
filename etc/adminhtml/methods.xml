@@ -28,7 +28,7 @@
         </field>
         <field id="title" translate="label" type="select" showInDefault="1" showInWebsite="1"
                showInStore="0">
-            <label>Enabled</label>
+            <label>Custom Title</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/fisrv_applepay/title</config_path>
         </field>

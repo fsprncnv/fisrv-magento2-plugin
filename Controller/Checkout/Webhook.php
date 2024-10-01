@@ -1,8 +1,7 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Checkout;
+namespace Fiserv\Checkout\Controller\Checkout;
 
-use BadFunctionCallException;
 use Exception;
 use Fisrv\Models\TransactionStatus;
 use Fisrv\Models\WebhookEvent\WebhookEvent;

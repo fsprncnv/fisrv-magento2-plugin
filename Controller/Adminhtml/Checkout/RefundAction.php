@@ -1,11 +1,11 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Adminhtml\Checkout;
+namespace Fiserv\Checkout\Controller\Adminhtml\Checkout;
 
 use Exception;
 use Fisrv\Exception\ErrorResponse;
-use Fisrv\Payment\Controller\Checkout\CheckoutCreator;
-use Fisrv\Payment\Controller\Checkout\OrderContext;
+use Fiserv\Checkout\Controller\Checkout\CheckoutCreator;
+use Fiserv\Checkout\Controller\Checkout\OrderContext;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;

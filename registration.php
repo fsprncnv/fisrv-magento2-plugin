@@ -10,6 +10,6 @@ if (file_exists(__DIR__ . '/magento-stubs-1.php')) {
     include_once __DIR__ . '/magento-stubs-1.php';
 }
 
-// use Magento\Framework\Component\ComponentRegistrar;
+use Magento\Framework\Component\ComponentRegistrar;
 
-// ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Fisrv_Payment', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Fiserv_Checkout', __DIR__);

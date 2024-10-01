@@ -2,10 +2,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Config Repository -->
-    <preference for="Fisrv\Payment\Api\Config\RepositoryInterface"
-                type="Fisrv\Payment\Model\Config\Repository"/>
+    <preference for="Fiserv\Checkout\Api\Config\RepositoryInterface"
+                type="Fiserv\Checkout\Model\Config\Repository"/>
     <!-- Payment Adapter -->
-    <type name="Fisrv\Payment\Model\Method\GenericMethod">
+    <type name="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="valueHandlerPool" xsi:type="object">FisrvValueHandlerPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
@@ -14,13 +14,13 @@
             <argument name="title" xsi:type="string">Generic Checkout (Fiserv Checkout)</argument>
         </arguments>
     </type>
-    <virtualType name="FisrvApplepay" type="Fisrv\Payment\Model\Method\GenericMethod">
+    <virtualType name="FisrvApplepay" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_applepay</argument>
             <argument name="title" xsi:type="string">Apple Pay (Fiserv Checkout)</argument>
         </arguments>
     </virtualType>
-    <virtualType name="FisrvCreditcard" type="Fisrv\Payment\Model\Method\GenericMethod">
+    <virtualType name="FisrvCreditcard" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_creditcard</argument>
             <argument name="title" xsi:type="string" translate="true">
@@ -28,13 +28,13 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="FisrvGeneric" type="Fisrv\Payment\Model\Method\GenericMethod">
+    <virtualType name="FisrvGeneric" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_generic</argument>
             <argument name="title" xsi:type="string">Generic Checkout (Fiserv Checkout)</argument>
         </arguments>
     </virtualType>
-    <virtualType name="FisrvGooglepay" type="Fisrv\Payment\Model\Method\GenericMethod">
+    <virtualType name="FisrvGooglepay" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_googlepay</argument>
             <argument name="title" xsi:type="string">Google Pay (Fiserv Checkout)</argument>

@@ -1,9 +1,9 @@
 <?php
 
-namespace Fisrv\Payment\Controller\Checkout;
+namespace Fiserv\Checkout\Controller\Checkout;
 
-use Fisrv\Payment\Logger\DebugLogger;
-use Fisrv\Payment\Model\Method\ConfigData;
+use Fiserv\Checkout\Logger\DebugLogger;
+use Fiserv\Checkout\Model\Method\ConfigData;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Response\Http as Response;
 use Magento\Framework\App\Request\Http as Request;
@@ -112,7 +112,7 @@ class OrderContext
     /**
      * Url builder for magento routes and action endpoints
      * This method is a shorthand for internal action routes e.g.:
-     * getUrl('statusaction', true, [id => 3]) -> {magento site url}/fisrv/checkout/statusaction?id=3
+     * getUrl('statusaction', true, [id => 3]) -> {magento site url}/fiserv/checkout/statusaction?id=3
      *
      * Otherwise a standard URL builder for magento routes and pages e.g.:
      * getUrl('checkout/cart) -> {magento site url}/checkout/cart
@@ -124,7 +124,7 @@ class OrderContext
      */
     public function getUrl(string $path, bool $internal = false, array $query = []): string
     {
-        return $this->url->getUrl(($internal ? 'fisrv/checkout/' : '') . $path, [
+        return $this->url->getUrl(($internal ? 'fiserv/checkout/' : '') . $path, [
             '_query' => $query
         ]);
     }

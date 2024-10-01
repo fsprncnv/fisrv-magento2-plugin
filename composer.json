@@ -1,5 +1,5 @@
 {
-  "name": "fisrv/payment",
+  "name": "fiserv/checkout",
   "description": "Official Fisrv Payment Gateway for Magento",
   "type": "magento2-module",
   "version": "1.0.0",
@@ -8,7 +8,8 @@
     "AFL-3.0"
   ],
   "require": {
-    "fisrv/php-client": "dev-main"
+    "fisrv/php-client": "dev-main",
+    "symfony/polyfill-mbstring": "^1.31"
   },
   "repositories": [
     {
@@ -21,7 +22,7 @@
       "registration.php"
     ],
     "psr-4": {
-      "Fisrv\\Payment\\": ""
+      "Fiserv\\Checkout\\": ""
     }
   },
   "archive": {

@@ -6,7 +6,7 @@
                 <adminhtml>
                     <args>
                         <modules>
-                           <module name="Fisrv_Payment"/>
+                           <module name="Fiserv_Checkout"/>
                         </modules>
                     </args>
                 </adminhtml>

@@ -11,7 +11,7 @@ define([
   'use strict';
 
   const component =
-    'Fisrv_Payment/js/view/payment/method-renderer/fisrv_generic';
+    'Fiserv_Checkout/js/view/payment/method-renderer/fisrv_generic';
 
   const renderObjects = [
     {

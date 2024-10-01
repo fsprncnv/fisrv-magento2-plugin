@@ -4,7 +4,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="fisrvConfigProvider" xsi:type="object">Fisrv\Payment\Model\ConfigProvider</item>
+                <item name="fisrvConfigProvider" xsi:type="object">Fiserv\Checkout\Model\ConfigProvider</item>
             </argument>
         </arguments>
     </type>

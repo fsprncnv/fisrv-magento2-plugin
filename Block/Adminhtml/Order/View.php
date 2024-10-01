@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Fisrv\Payment\Block\Adminhtml\Order;
+namespace Fiserv\Checkout\Block\Adminhtml\Order;
 
-use Fisrv\Payment\Controller\Checkout\OrderContext;
+use Fiserv\Checkout\Controller\Checkout\OrderContext;
 use Magento\Sales\Block\Adminhtml\Order\View as CoreView;
 use Magento\Sales\Model\Order;
 

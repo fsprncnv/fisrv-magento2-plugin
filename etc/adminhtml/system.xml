@@ -6,7 +6,7 @@
 				<label>Fiserv General Settings</label>
 				<group id="branding" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Branding</label>
-					<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Header</frontend_model>
+					<frontend_model>Fiserv\Checkout\Block\Adminhtml\Render\Header</frontend_model>
 				</group>
 				<field id="enabled" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Enabled</label>
@@ -14,13 +14,13 @@
 					<config_path>payment/fisrv/enabled</config_path>
 				</field>
 				<field id="sandbox" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Sandbox Mode</label>
+					<label>Production Mode</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 					<config_path>payment/fisrv/sandbox</config_path>
 				</field>
 				<field id="heading_api" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
 						<label>API Details</label>
-						<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\Heading</frontend_model>
+						<frontend_model>Fiserv\Checkout\Block\Adminhtml\Render\Heading</frontend_model>
 						<comment><![CDATA[Fill in your API Key below.]]></comment>
 					</field>
 				<field id="apikey" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -32,21 +32,21 @@
 					<config_path>payment/fisrv/apisecret</config_path>
 				</field>
 				<field id="storeid" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Fiserv Store ID</label>
+					<label>Store ID</label>
 					<config_path>payment/fisrv/storeid</config_path>
 				</field>
 				<group id="health" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Fiserv API Check</label>
-					<frontend_model>Fisrv\Payment\Block\Adminhtml\Render\StatusCheck</frontend_model>
+					<label>API Health Check</label>
+					<frontend_model>Fiserv\Checkout\Block\Adminhtml\Render\StatusCheck</frontend_model>
 				</group>
 				<field id="debug" translate="label" type="select" sortOrder="81" showInDefault="1" showInWebsite="0" showInStore="0">
-					<label>Enable debug logs</label>
+					<label>Enable Debug Logs</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 					<config_path>payment/fisrv/debug</config_path>
 					<comment>When activated the debug file will be located in: var/log/fiserv-checkout.log</comment>
 				</field>
 			</group>
-			<include path="Fisrv_Payment::methods.xml"/>
+			<include path="Fiserv_Checkout::methods.xml"/>
 		</section>
 	</system>
 </config>
