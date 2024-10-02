@@ -134,23 +134,27 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
             $this->completeOrder($order);
 
-            return $this->action->_redirect('checkout/onepage/success', [
+            return $this->action->_redirect(
+                'checkout/onepage/success', [
                 '_query' => [
                     '_secure' => 'true',
                     'utm_nooverride' => 'true'
                 ]
-            ]);
+                ]
+            );
 
         } catch (\Throwable $th) {
             $this->action->messageManager->addErrorMessage($th->getMessage());
             $this->action->getLogger()->write('Order completion failed: ' . $th->getMessage());
 
-            return $this->action->_redirect('checkout/cart', [
+            return $this->action->_redirect(
+                'checkout/cart', [
                 '_query' => [
                     '_secure' => 'true',
                     'order_cancelled' => 'true'
                 ]
-            ]);
+                ]
+            );
         }
     }
 }

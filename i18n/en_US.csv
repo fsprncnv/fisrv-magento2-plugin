@@ -21,3 +21,5 @@
 "Webhook event is invalid","Webhook Event ist ungültig"
 "Payment will be processed by Fiserv. You will be redirected to an external checkout page.","Die Zahlung wird von Fiserv verarbeitet. Sie werden auf eine externe Kassenseite weitergeleitet."
 "Sorry, Fiserv Checkout is currently not available.","Sorry, Fiserv Checkout ist derzeit nicht verfügbar."
+"Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal.","Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal."
+"Visit developer.fiserv.com","Visit developer.fiserv.com"

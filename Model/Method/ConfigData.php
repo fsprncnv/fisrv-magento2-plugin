@@ -108,11 +108,11 @@ class ConfigData
      */
     public function isConfigDataSet(): bool
     {
-        // foreach ($this->requiredXmlPaths as $path) {
-        //     if (!$this->scopeConfig->isSetFlag($path)) {
-        //         return false;
-        //     }
-        // }
+        foreach ($this->requiredXmlPaths as $path) {
+            if (!$this->scopeConfig->isSetFlag($path)) {
+                return false;
+            }
+        }
 
         return true;
     }

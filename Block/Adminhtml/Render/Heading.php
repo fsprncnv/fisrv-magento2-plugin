@@ -21,17 +21,25 @@ class Heading extends Field
      */
     public function render(AbstractElement $element): string
     {
-        $html = '<tr id="row_' . $element->getHtmlId() . '">';
-        $html .= '  <td class="label"></td>';
-        $html .= '  <td class="value">';
-        $html .= '    <div class="mm-heading-ginger">' . $element->getData('label') . '</div>';
-        $html .= '	  <div class="mm-comment-ginger">';
-        $html .= '        <div id="content">' . $element->getData('comment') . '</div>';
-        $html .= '    </div>';
-        $html .= '  </td>';
-        $html .= '  <td></td>';
-        $html .= '</tr>';
+        ob_start();
 
-        return $html;
+        ?>
+        <tr id=<?php echo 'row_' . $element->getHtmlId() ?>>
+            <td class="label"></td>
+            <td class="value">
+                <div class="mm-heading-ginger">
+                    <?php echo $element->getData('label') ?>
+                </div>
+                <div class="mm-comment-ginger">
+                    <div id="content">
+                        <?php echo $element->getData('comment') ?>
+                    </div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+        <?php
+
+        return ob_get_clean();
     }
 }

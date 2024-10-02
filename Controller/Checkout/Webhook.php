@@ -13,7 +13,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
 
 if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    require_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
+    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
 }
 
 /**
@@ -33,10 +33,12 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
         $this->context = $context;
         $this->jsonResultFactory = $jsonResultFactory;
 
-        set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
-            $this->context->getLogger()->write('Fiserv API Client threw notice: ' . $errno . ' ' . $errstr);
-            return true;
-        }, E_USER_NOTICE);
+        set_error_handler(
+            function (int $errno, string $errstr, string $errfile, int $errline): bool {
+                $this->context->getLogger()->write('Fiserv API Client threw notice: ' . $errno . ' ' . $errstr);
+                return true;
+            }, E_USER_NOTICE
+        );
     }
 
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -127,7 +129,7 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
     /**
      * Update magento order according to webhook event
      *
-     * @param \Fisrv\Models\WebhookEvent\WebhookEvent $event
+     * @param  \Fisrv\Models\WebhookEvent\WebhookEvent $event
      * @return void
      */
     private function updateOrder(Order $order, WebhookEvent $event)
@@ -135,26 +137,26 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
         $status = Order::STATE_PROCESSING;
 
         switch ($event->transactionStatus) {
-            case TransactionStatus::WAITING:
-                $status = Order::STATE_NEW;
+        case TransactionStatus::WAITING:
+            $status = Order::STATE_NEW;
 
-                break;
-            case TransactionStatus::PARTIAL:
-                $status = Order::STATE_PROCESSING;
+            break;
+        case TransactionStatus::PARTIAL:
+            $status = Order::STATE_PROCESSING;
 
-                break;
-            case TransactionStatus::APPROVED:
-                $status = Order::STATE_COMPLETE;
+            break;
+        case TransactionStatus::APPROVED:
+            $status = Order::STATE_COMPLETE;
 
-                break;
-            case TransactionStatus::PROCESSING_FAILED:
-            case TransactionStatus::VALIDATION_FAILED:
-            case TransactionStatus::DECLINED:
-                $status = Order::STATE_CANCELED;
+            break;
+        case TransactionStatus::PROCESSING_FAILED:
+        case TransactionStatus::VALIDATION_FAILED:
+        case TransactionStatus::DECLINED:
+            $status = Order::STATE_CANCELED;
 
-                break;
-            default:
-                return;
+            break;
+        default:
+            return;
         }
 
         $this->context->getLogger()->write('Changing order status of order ' . $order->getId() . ' from ' . $order->getStatus() . ' to ' . $status);

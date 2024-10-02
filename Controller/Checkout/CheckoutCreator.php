@@ -18,7 +18,7 @@ use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
 if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    require_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
+    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
 }
 
 /**
@@ -65,7 +65,9 @@ class CheckoutCreator
         $this->initClient();
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
-        /** Set (preselected) payment method */
+        /**
+ * Set (preselected) payment method 
+*/
         try {
             $payment = $order->getPayment();
 
@@ -111,19 +113,21 @@ class CheckoutCreator
         $magentoStoreId = $this->store->getId();
         $moduleVersion = $this->context->getConfigData()->getModuleVersion() ?? 'NO_VERSION_FOUND';
 
-        self::$client = new CheckoutClient([
+        self::$client = new CheckoutClient(
+            [
             'user' => 'Magento2Plugin/' . $moduleVersion,
             'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
             'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
             'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
             'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
-        ]);
+            ]
+        );
     }
 
     /**
      * Refund checkout
      *
-     * @param Order|OrderInterface $order Order to be refunded
+     * @param  Order|OrderInterface $order Order to be refunded
      * @return PaymentsClientResponse Client response data
      */
     public function refundCheckout(Order|OrderInterface $order): PaymentsClientResponse
@@ -134,58 +138,87 @@ class CheckoutCreator
             throw new Exception('Refund failed. Order had no valid Magento ref ID.');
         }
 
-        return self::$client->refundCheckout(new PaymentsClientRequest([
-            'transactionAmount' => [
+        return self::$client->refundCheckout(
+            new PaymentsClientRequest(
+                [
+                'transactionAmount' => [
                 'total' => floatval($order->getGrandTotal()),
                 'currency' => $this->store->getBaseCurrencyCode()
-            ],
-        ]), $order->getExtOrderId());
+                ],
+                ]
+            ), $order->getExtOrderId()
+        );
     }
 
     /**
      * Pass checkout data (totals, redirects, language etc.) to request object of checkout
      *
-     * @param \Fisrv\Models\CheckoutClientRequest $request
-     * @param \Magento\Sales\Model\Order $order
+     * @param  \Fisrv\Models\CheckoutClientRequest $request
+     * @param  \Magento\Sales\Model\Order          $order
      * @return \Fisrv\Models\CheckoutClientRequest
      */
     private function transferBaseData(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
-        /** Locale */
+        /**
+ * Locale 
+*/
         $request->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
 
-        /** Currency */
+        /**
+ * Currency 
+*/
         $request->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
 
-        /** Order numbers, IDs */
+        /**
+ * Order numbers, IDs 
+*/
         $request->merchantTransactionId = strval($order->getId());
         $request->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
 
-        /** Order totals */
+        /**
+ * Order totals 
+*/
         $request->transactionAmount->total = floatval($order->getGrandTotal());
         $request->transactionAmount->components->subtotal = floatval($order->getSubtotal());
         $request->transactionAmount->components->vatAmount = floatval($order->getBaseTaxAmount());
         $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
-        /** Redirect URLs */
-        $request->checkoutSettings->redirectBackUrls->failureUrl = $this->context->getUrl('cancelorder', true, [
-            'order_id' => $order->getId(),
-        ]);
-        $request->checkoutSettings->redirectBackUrls->successUrl = $this->context->getUrl('completeorder', true, [
+        /**
+ * Redirect URLs 
+*/
+        $FORCE_SUCCESS_REDIRECT = true;
+
+        $completeOrderUrl = $this->context->getUrl(
+            'completeorder', true, [
             'order_id' => $order->getId(),
             '_nonce' => base64_encode($this->context->createSignature($order)),
             '_secure' => 'true'
-        ]);
+            ]
+        );
 
-        /** Append ampersand to allow checkout solution to append query params */
+        $request->checkoutSettings->redirectBackUrls->successUrl = $completeOrderUrl;
+
+        $request->checkoutSettings->redirectBackUrls->failureUrl = $FORCE_SUCCESS_REDIRECT ? $completeOrderUrl : $this->context->getUrl(
+            'cancelorder', true, [
+            'order_id' => $order->getId(),
+            ]
+        );
+
+        /**
+ * Append ampersand to allow checkout solution to append query params 
+*/
         $request->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
-        /** Webhook consumer route */
-        $request->checkoutSettings->webHooksUrl = $this->context->getUrl('webhook', true, [
+        /**
+ * Webhook consumer route 
+*/
+        $request->checkoutSettings->webHooksUrl = $this->context->getUrl(
+            'webhook', true, [
             'order_id' => $order->getId(),
             '_nonce' => base64_encode($this->context->createSignature($order)),
             '_secure' => 'true',
-        ]);
+            ]
+        );
 
         return $request;
     }
@@ -193,8 +226,8 @@ class CheckoutCreator
     /**
      * Pass cart (line) items to checkout
      *
-     * @param \Fisrv\Models\CheckoutClientRequest $request
-     * @param \Magento\Sales\Model\Order $order
+     * @param  \Fisrv\Models\CheckoutClientRequest $request
+     * @param  \Magento\Sales\Model\Order          $order
      * @return \Fisrv\Models\CheckoutClientRequest
      */
     private function transferCartItems(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
@@ -204,7 +237,8 @@ class CheckoutCreator
 
         foreach ($items as $item) {
             try {
-                $request->order->basket->lineItems[] = new LineItem([
+                $request->order->basket->lineItems[] = new LineItem(
+                    [
                     'itemIdentifier' => strval($item->getItemId()),
                     'name' => $item->getName(),
                     'quantity' => intval($item->getQtyOrdered()),
@@ -213,7 +247,8 @@ class CheckoutCreator
                     'shippingCost' => 0,
                     'valueAddedTax' => 0,
                     'miscellaneousFee' => 0,
-                ]);
+                    ]
+                );
             } catch (\Throwable $th) {
                 $this->context->getLogger()->write('Could not transfer cart item: ' . $item->getName() . ' ' . $th->getMessage());
             }
@@ -225,8 +260,8 @@ class CheckoutCreator
     /**
      * Pass acount information like billing data to checkout
      *
-     * @param \Fisrv\Models\CheckoutClientRequest $request
-     * @param \Magento\Sales\Model\Order $order
+     * @param  \Fisrv\Models\CheckoutClientRequest $request
+     * @param  \Magento\Sales\Model\Order          $order
      * @return \Fisrv\Models\CheckoutClientRequest
      */
     private function transferAccountPerson(CheckoutClientRequest $request, Order $order): CheckoutClientRequest

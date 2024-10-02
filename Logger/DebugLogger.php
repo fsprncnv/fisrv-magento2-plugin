@@ -21,7 +21,9 @@ class DebugLogger extends Zend_Log
     ) {
         $this->configData = $configData;
 
-        /** @phpstan-ignore constant.notFound */
+        /**
+ * @phpstan-ignore constant.notFound 
+*/
         $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fiserv-checkout.log');
         $this->addWriter($writer);
         parent::__construct();
@@ -33,8 +35,8 @@ class DebugLogger extends Zend_Log
      * If of array type, convert to Magento DataObject.
      * if DataObject, parse to JSON string.
      *
-     * @param mixed $message Message data
-     * @param string $type Error log on 'error', info log on anything else
+     * @param  mixed  $message Message data
+     * @param  string $type    Error log on 'error', info log on anything else
      * @return void
      */
     public function write(mixed $message, string $type = 'info')

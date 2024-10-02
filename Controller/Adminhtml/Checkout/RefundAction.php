@@ -55,7 +55,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
      * Refund transaction on payment gateway. Transaction that was created by Fiserv Checkout
      * is returned.
      *
-     * @param Order $order Order to be refundend
+     * @param  Order $order Order to be refundend
      * @throws Exception When payment method is not Fiserv or refund flow has failed (server-side)
      */
     private function refundOnGateway(Order $order): void
@@ -95,7 +95,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
      * order refund and make it reviewable on store front.
      * Does not actually refund the Fiserv transaction.
      *
-     * @param Order $order Order to be refundend
+     * @param  Order $order Order to be refundend
      * @throws Exception When order is not invoiceable and thus not refundable. This happens if order state was not
      * properly configured
      */
@@ -133,8 +133,10 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
         $this->context->messageManager->addSuccessMessage('Order refunded');
 
-        return $this->context->_redirect('sales/order/view/', [
+        return $this->context->_redirect(
+            'sales/order/view/', [
             'order_id' => $orderId
-        ]);
+            ]
+        );
     }
 }

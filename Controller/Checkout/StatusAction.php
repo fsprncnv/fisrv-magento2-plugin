@@ -9,7 +9,7 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\RequestInterface;
 
 if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    require_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
+    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
 }
 
 class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
@@ -36,12 +36,14 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
 
     public function execute()
     {
-        $this->client = new PaymentsClient([
+        $this->client = new PaymentsClient(
+            [
             'is_prod' => $this->context->getConfigData()->isProductionMode(),
             'api_key' => $this->context->getConfigData()->getApiKey(),
             'api_secret' => $this->context->getConfigData()->getApiSecret(),
             'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
-        ]);
+            ]
+        );
 
         $report = $this->client->reportHealthCheck();
 
@@ -50,10 +52,14 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
             $this->context->getLogger()->write('API health check reported following error response: ' . json_encode($report));
         }
 
-        $this->context->getResponse()->setContent(json_encode([
-            'status' => $status ?? "You're all set!",
-            'code' => $report->httpCode
-        ]));
+        $this->context->getResponse()->setContent(
+            json_encode(
+                [
+                'status' => $status ?? "You're all set!",
+                'code' => $report->httpCode
+                ]
+            )
+        );
 
         return $this->context->getResponse();
     }

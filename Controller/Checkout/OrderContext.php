@@ -100,7 +100,7 @@ class OrderContext
      * Set redirect into response
      *
      * @param string $path
-     * @param array $arguments
+     * @param array  $arguments
      */
     public function _redirect($path, $arguments = [])
     {
@@ -117,16 +117,18 @@ class OrderContext
      * Otherwise a standard URL builder for magento routes and pages e.g.:
      * getUrl('checkout/cart) -> {magento site url}/checkout/cart
      *
-     * @param string $path URL path
-     * @param bool $internal If true, appends default plugin action route before path parameter
-     * @param array $query URL query parameters as list
+     * @param  string $path     URL path
+     * @param  bool   $internal If true, appends default plugin action route before path parameter
+     * @param  array  $query    URL query parameters as list
      * @return string Full URL path with root and queries
      */
     public function getUrl(string $path, bool $internal = false, array $query = []): string
     {
-        return $this->url->getUrl(($internal ? 'fiserv/checkout/' : '') . $path, [
+        return $this->url->getUrl(
+            ($internal ? 'fiserv/checkout/' : '') . $path, [
             '_query' => $query
-        ]);
+            ]
+        );
     }
 
     /**
@@ -135,7 +137,7 @@ class OrderContext
      * The lifetime of a signature is one day.
      * Removed session ID as not compatible with external POST.
      *
-     * @param Order $order Order to be created a signature for
+     * @param  Order $order Order to be created a signature for
      * @return string SHA256 hash from session identifiers
      */
     public function createSignature(Order $order)

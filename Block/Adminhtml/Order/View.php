@@ -28,9 +28,11 @@ class View
     public function beforeSetLayout(CoreView $view): void
     {
         $message = _('Do you want to refund this order?');
-        $url = $this->context->getUrl('refundaction', true, [
+        $url = $this->context->getUrl(
+            'refundaction', true, [
             'order_id' => $view->getOrderId()
-        ]);
+            ]
+        );
 
         $payment = $view->getOrder()->getPayment();
 
@@ -38,9 +40,8 @@ class View
             return;
         }
 
-        if (
-            !str_starts_with($payment->getMethod(), 'fisrv_') ||
-            $view->getOrder()->getStatus() !== Order::STATE_COMPLETE
+        if (!str_starts_with($payment->getMethod(), 'fisrv_') 
+            || $view->getOrder()->getStatus() !== Order::STATE_COMPLETE
         ) {
             return;
         }

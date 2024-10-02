@@ -53,12 +53,14 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
                 'Sorry something went wrong. Try another payment method.'
             );
 
-            return $this->context->_redirect('checkout/cart', [
+            return $this->context->_redirect(
+                'checkout/cart', [
                 '_query' => [
                     '_secure' => 'true',
                     'order_cancelled' => 'true'
                 ]
-            ]);
+                ]
+            );
         }
 
         $resultRedirect = $this->context->resultRedirectFactory->create();
