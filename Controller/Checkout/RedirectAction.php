@@ -54,7 +54,8 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
             );
 
             return $this->context->_redirect(
-                'checkout/cart', [
+                'checkout/cart',
+                [
                 '_query' => [
                     '_secure' => 'true',
                     'order_cancelled' => 'true'

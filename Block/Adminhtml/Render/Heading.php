@@ -24,15 +24,15 @@ class Heading extends Field
         ob_start();
 
         ?>
-        <tr id=<?php echo 'row_' . $element->getHtmlId() ?>>
+        <tr id=<?= 'row_' . $element->getHtmlId() ?>>
             <td class="label"></td>
             <td class="value">
                 <div class="mm-heading-ginger">
-                    <?php echo $element->getData('label') ?>
+                    <?= $element->getData('label') ?>
                 </div>
                 <div class="mm-comment-ginger">
                     <div id="content">
-                        <?php echo $element->getData('comment') ?>
+                        <?= $element->getData('comment') ?>
                     </div>
                 </div>
             </td>

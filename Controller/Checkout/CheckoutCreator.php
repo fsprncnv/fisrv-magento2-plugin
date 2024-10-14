@@ -66,7 +66,7 @@ class CheckoutCreator
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
         /**
- * Set (preselected) payment method 
+ * Set (preselected) payment method
 */
         try {
             $payment = $order->getPayment();
@@ -146,7 +146,8 @@ class CheckoutCreator
                 'currency' => $this->store->getBaseCurrencyCode()
                 ],
                 ]
-            ), $order->getExtOrderId()
+            ),
+            $order->getExtOrderId()
         );
     }
 
@@ -160,23 +161,23 @@ class CheckoutCreator
     private function transferBaseData(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
         /**
- * Locale 
+ * Locale
 */
         $request->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
 
         /**
- * Currency 
+ * Currency
 */
         $request->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
 
         /**
- * Order numbers, IDs 
+ * Order numbers, IDs
 */
         $request->merchantTransactionId = strval($order->getId());
         $request->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
 
         /**
- * Order totals 
+ * Order totals
 */
         $request->transactionAmount->total = floatval($order->getGrandTotal());
         $request->transactionAmount->components->subtotal = floatval($order->getSubtotal());
@@ -184,12 +185,14 @@ class CheckoutCreator
         $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
         /**
- * Redirect URLs 
+ * Redirect URLs
 */
         $FORCE_SUCCESS_REDIRECT = true;
 
         $completeOrderUrl = $this->context->getUrl(
-            'completeorder', true, [
+            'completeorder',
+            true,
+            [
             'order_id' => $order->getId(),
             '_nonce' => base64_encode($this->context->createSignature($order)),
             '_secure' => 'true'
@@ -199,21 +202,25 @@ class CheckoutCreator
         $request->checkoutSettings->redirectBackUrls->successUrl = $completeOrderUrl;
 
         $request->checkoutSettings->redirectBackUrls->failureUrl = $FORCE_SUCCESS_REDIRECT ? $completeOrderUrl : $this->context->getUrl(
-            'cancelorder', true, [
+            'cancelorder',
+            true,
+            [
             'order_id' => $order->getId(),
             ]
         );
 
         /**
- * Append ampersand to allow checkout solution to append query params 
+ * Append ampersand to allow checkout solution to append query params
 */
         $request->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
         /**
- * Webhook consumer route 
+ * Webhook consumer route
 */
         $request->checkoutSettings->webHooksUrl = $this->context->getUrl(
-            'webhook', true, [
+            'webhook',
+            true,
+            [
             'order_id' => $order->getId(),
             '_nonce' => base64_encode($this->context->createSignature($order)),
             '_secure' => 'true',

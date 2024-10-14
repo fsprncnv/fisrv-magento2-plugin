@@ -125,7 +125,8 @@ class OrderContext
     public function getUrl(string $path, bool $internal = false, array $query = []): string
     {
         return $this->url->getUrl(
-            ($internal ? 'fiserv/checkout/' : '') . $path, [
+            ($internal ? 'fiserv/checkout/' : '') . $path,
+            [
             '_query' => $query
             ]
         );

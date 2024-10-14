@@ -72,7 +72,8 @@ class CancelOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $this->context->getLogger()->write($messageToDisplay, 'error');
 
         return $this->context->_redirect(
-            'checkout/cart', [
+            'checkout/cart',
+            [
             '_query' => [
                 '_secure' => 'true',
                 'order_cancelled' => 'true'

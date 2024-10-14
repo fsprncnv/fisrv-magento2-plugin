@@ -29,7 +29,9 @@ class View
     {
         $message = _('Do you want to refund this order?');
         $url = $this->context->getUrl(
-            'refundaction', true, [
+            'refundaction',
+            true,
+            [
             'order_id' => $view->getOrderId()
             ]
         );
@@ -40,7 +42,7 @@ class View
             return;
         }
 
-        if (!str_starts_with($payment->getMethod(), 'fisrv_') 
+        if (!str_starts_with($payment->getMethod(), 'fisrv_')
             || $view->getOrder()->getStatus() !== Order::STATE_COMPLETE
         ) {
             return;

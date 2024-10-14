@@ -134,7 +134,8 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $this->context->messageManager->addSuccessMessage('Order refunded');
 
         return $this->context->_redirect(
-            'sales/order/view/', [
+            'sales/order/view/',
+            [
             'order_id' => $orderId
             ]
         );

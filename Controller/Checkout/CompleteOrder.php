@@ -135,7 +135,8 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             $this->completeOrder($order);
 
             return $this->action->_redirect(
-                'checkout/onepage/success', [
+                'checkout/onepage/success',
+                [
                 '_query' => [
                     '_secure' => 'true',
                     'utm_nooverride' => 'true'
@@ -148,7 +149,8 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             $this->action->getLogger()->write('Order completion failed: ' . $th->getMessage());
 
             return $this->action->_redirect(
-                'checkout/cart', [
+                'checkout/cart',
+                [
                 '_query' => [
                     '_secure' => 'true',
                     'order_cancelled' => 'true'
