@@ -17,9 +17,9 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
-}
+// if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
+//     include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
+// }
 
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
@@ -66,8 +66,8 @@ class CheckoutCreator
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
 
         /**
- * Set (preselected) payment method
-*/
+         * Set (preselected) payment method
+         */
         try {
             $payment = $order->getPayment();
 
@@ -115,11 +115,11 @@ class CheckoutCreator
 
         self::$client = new CheckoutClient(
             [
-            'user' => 'Magento2Plugin/' . $moduleVersion,
-            'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
-            'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
-            'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
-            'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
+                'user' => 'Magento2Plugin/' . $moduleVersion,
+                'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
+                'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
+                'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
+                'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
             ]
         );
     }
@@ -141,10 +141,10 @@ class CheckoutCreator
         return self::$client->refundCheckout(
             new PaymentsClientRequest(
                 [
-                'transactionAmount' => [
-                'total' => floatval($order->getGrandTotal()),
-                'currency' => $this->store->getBaseCurrencyCode()
-                ],
+                    'transactionAmount' => [
+                        'total' => floatval($order->getGrandTotal()),
+                        'currency' => $this->store->getBaseCurrencyCode()
+                    ],
                 ]
             ),
             $order->getExtOrderId()
@@ -161,41 +161,41 @@ class CheckoutCreator
     private function transferBaseData(CheckoutClientRequest $request, Order $order): CheckoutClientRequest
     {
         /**
- * Locale
-*/
+         * Locale
+         */
         $request->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
 
         /**
- * Currency
-*/
+         * Currency
+         */
         $request->transactionAmount->currency = Currency::tryFrom($this->store->getBaseCurrencyCode()) ?? Currency::EUR;
 
         /**
- * Order numbers, IDs
-*/
+         * Order numbers, IDs
+         */
         $request->merchantTransactionId = strval($order->getId());
         $request->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
 
         /**
- * Order totals
-*/
+         * Order totals
+         */
         $request->transactionAmount->total = floatval($order->getGrandTotal());
         $request->transactionAmount->components->subtotal = floatval($order->getSubtotal());
         $request->transactionAmount->components->vatAmount = floatval($order->getBaseTaxAmount());
         $request->transactionAmount->components->shipping = floatval($order->getShippingAmount());
 
         /**
- * Redirect URLs
-*/
+         * Redirect URLs
+         */
         $FORCE_SUCCESS_REDIRECT = true;
 
         $completeOrderUrl = $this->context->getUrl(
             'completeorder',
             true,
             [
-            'order_id' => $order->getId(),
-            '_nonce' => base64_encode($this->context->createSignature($order)),
-            '_secure' => 'true'
+                'order_id' => $order->getId(),
+                '_nonce' => base64_encode($this->context->createSignature($order)),
+                '_secure' => 'true'
             ]
         );
 
@@ -205,25 +205,25 @@ class CheckoutCreator
             'cancelorder',
             true,
             [
-            'order_id' => $order->getId(),
+                'order_id' => $order->getId(),
             ]
         );
 
         /**
- * Append ampersand to allow checkout solution to append query params
-*/
+         * Append ampersand to allow checkout solution to append query params
+         */
         $request->checkoutSettings->redirectBackUrls->failureUrl .= '&';
 
         /**
- * Webhook consumer route
-*/
+         * Webhook consumer route
+         */
         $request->checkoutSettings->webHooksUrl = $this->context->getUrl(
             'webhook',
             true,
             [
-            'order_id' => $order->getId(),
-            '_nonce' => base64_encode($this->context->createSignature($order)),
-            '_secure' => 'true',
+                'order_id' => $order->getId(),
+                '_nonce' => base64_encode($this->context->createSignature($order)),
+                '_secure' => 'true',
             ]
         );
 
@@ -246,14 +246,14 @@ class CheckoutCreator
             try {
                 $request->order->basket->lineItems[] = new LineItem(
                     [
-                    'itemIdentifier' => strval($item->getItemId()),
-                    'name' => $item->getName(),
-                    'quantity' => intval($item->getQtyOrdered()),
-                    'price' => $item->getPrice(),
-                    'total' => $item->getPrice(),
-                    'shippingCost' => 0,
-                    'valueAddedTax' => 0,
-                    'miscellaneousFee' => 0,
+                        'itemIdentifier' => strval($item->getItemId()),
+                        'name' => $item->getName(),
+                        'quantity' => intval($item->getQtyOrdered()),
+                        'price' => $item->getPrice(),
+                        'total' => $item->getPrice(),
+                        'shippingCost' => 0,
+                        'valueAddedTax' => 0,
+                        'miscellaneousFee' => 0,
                     ]
                 );
             } catch (\Throwable $th) {

@@ -12,6 +12,8 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
  */
 class Heading extends Field
 {
+    protected $_template = 'Fiserv_Checkout::system/config/fieldset/heading.phtml';
+
     /**
      * Render block: table heading
      *
@@ -21,25 +23,6 @@ class Heading extends Field
      */
     public function render(AbstractElement $element): string
     {
-        ob_start();
-
-        ?>
-        <tr id=<?= 'row_' . $element->getHtmlId() ?>>
-            <td class="label"></td>
-            <td class="value">
-                <div class="mm-heading-ginger">
-                    <?= $element->getData('label') ?>
-                </div>
-                <div class="mm-comment-ginger">
-                    <div id="content">
-                        <?= $element->getData('comment') ?>
-                    </div>
-                </div>
-            </td>
-            <td></td>
-        </tr>
-        <?php
-
-        return ob_get_clean();
+        return $this->toHtml();
     }
 }
