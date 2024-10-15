@@ -21,9 +21,6 @@ class DebugLogger extends Zend_Log
     ) {
         $this->configData = $configData;
 
-        /**
- * @phpstan-ignore constant.notFound
-*/
         $writer = new Zend_Log_Writer_Stream(BP . '/var/log/fiserv-checkout.log');
         $this->addWriter($writer);
         parent::__construct();

@@ -2,11 +2,11 @@
     <td class="label"></td>
     <td class="value">
         <div class="mm-heading-ginger">
-            <?= $element->getData('label') ?>
+            <?= $escaper->escapeHtml(__($element->getData('label'))) ?>
         </div>
         <div class="mm-comment-ginger">
             <div id="content">
-                <?= $element->getData('comment') ?>
+                <?= $escaper->escapeHtml(__($element->getData('comment'))) ?>
             </div>
         </div>
     </td>

@@ -2,4 +2,4 @@ parameters:
   level: 1
   excludePaths:
     - vendor/*
-  phpVersion: 80100
+  phpVersion: 70400
