@@ -27,9 +27,16 @@ class View
      */
     public function beforeSetLayout(CoreView $view): void
     {
-        $message = _('Do you want to refund this order?');
-        $url = $this->context->getUrl(
+        $refundRoute = $this->context->getUrl(
             'refundaction',
+            true,
+            [
+            'order_id' => $view->getOrderId()
+            ]
+        );
+
+        $detailsRoute = $this->context->getUrl(
+            'detailsaction',
             true,
             [
             'order_id' => $view->getOrderId()
@@ -48,11 +55,22 @@ class View
             return;
         }
 
+        $refundMessage = _('Do you want to refund this order?');
         $view->addButton(
-            'order_myaction',
+            'refundaction',
             [
                 'label' => __('Refund'),
-                'onclick' => "confirmSetLocation('{$message}', '{$url}')"
+                'onclick' => "confirmSetLocation('{$refundMessage}', '{$refundRoute}')"
+                ]
+            );
+            
+
+        $detailsMessage = _('Checkout Details: ');
+        $view->addButton(
+            'detailsaction',
+            [
+                'label' => __('Checkout Details'),
+                'onclick' => "confirmSetLocation('{$detailsMessage}', '{$detailsRoute}')"
             ]
         );
     }

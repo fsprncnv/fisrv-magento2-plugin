@@ -8,6 +8,11 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/fisrv_generic/active</config_path>
         </field>
+        <field id="title" translate="label" type="text" showInDefault="1" showInWebsite="1"
+               showInStore="0">
+            <label>Custom Method Name</label>
+            <config_path>payment/fisrv_generic/title</config_path>
+        </field>
     </group>
     <group id="fisrv_methods_googlepay" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Fiserv Google Pay</label>
@@ -16,6 +21,11 @@
             <label>Enabled</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/fisrv_googlepay/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" showInDefault="1" showInWebsite="1"
+               showInStore="0">
+            <label>Custom Method Name</label>
+            <config_path>payment/fisrv_googlepay/title</config_path>
         </field>
     </group>
     <group id="fisrv_methods_applepay" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -26,10 +36,9 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/fisrv_applepay/active</config_path>
         </field>
-        <field id="title" translate="label" type="select" showInDefault="1" showInWebsite="1"
+        <field id="title" translate="label" type="text" showInDefault="1" showInWebsite="1"
                showInStore="0">
-            <label>Custom Title</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <label>Custom Method Name</label>
             <config_path>payment/fisrv_applepay/title</config_path>
         </field>
     </group>
@@ -40,6 +49,11 @@
             <label>Enabled</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/fisrv_creditcard/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" showInDefault="1" showInWebsite="1"
+               showInStore="0">
+            <label>Custom Method Name</label>
+            <config_path>payment/fisrv_creditcard/title</config_path>
         </field>
     </group>
 </include>

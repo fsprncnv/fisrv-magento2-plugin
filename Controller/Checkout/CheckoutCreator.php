@@ -17,9 +17,9 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-// if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-//     include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
-// }
+if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
+    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
+}
 
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
@@ -83,13 +83,16 @@ class CheckoutCreator
         } catch (\Throwable $th) {
             $this->context->getLogger()->write('Creating generic checkout.');
         }
-
+        $this->context->getLogger()->write('Mapping data from web shopt to API...');
         $request = self::transferBaseData($request, $order);
         $request = self::transferCartItems($request, $order);
         $request = self::transferAccountPerson($request, $order);
 
+        $this->context->getLogger()->write('Creating checkout URL...');
+        $this->context->getLogger()->write($request->__toString());
         $response = self::$client->createCheckout($request);
 
+        $this->context->getLogger()->write('Retrieving response fields...');
         $checkoutId = $response->checkout->checkoutId;
         $traceId = $response->traceId;
         $checkoutLink = $response->checkout->redirectionUrl;
@@ -137,6 +140,8 @@ class CheckoutCreator
         if (is_null($order->getExtOrderId())) {
             throw new Exception('Refund failed. Order had no valid Magento ref ID.');
         }
+
+        $this->context->getLogger()->write('External checkout ID: ' . $order->getExtOrderId());
 
         return self::$client->refundCheckout(
             new PaymentsClientRequest(
@@ -187,7 +192,7 @@ class CheckoutCreator
         /**
          * Redirect URLs
          */
-        $FORCE_SUCCESS_REDIRECT = true;
+        $FORCE_SUCCESS_REDIRECT = false;
 
         $completeOrderUrl = $this->context->getUrl(
             'completeorder',

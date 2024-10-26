@@ -23,6 +23,11 @@ class Heading extends Field
      */
     public function render(AbstractElement $element): string
     {
-        return $this->toHtml();
+        // return $this->toHtml(
+        //     $element->getHtmlId(),
+        //     $element->getData('label'),
+        //     $element->getData('comment'),
+        // );
+        return "";
     }
 }

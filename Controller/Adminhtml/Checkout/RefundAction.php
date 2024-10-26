@@ -69,6 +69,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $method = $payment->getMethod();
 
         if (!str_starts_with($method, 'fisrv_')) {
+            $this->context->getLogger()->write($method);
             throw new Exception(_('Payment was not provided by Fiserv'));
         }
 
@@ -77,7 +78,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         try {
             $response = $this->checkoutCreator->refundCheckout($order);
         } catch (ErrorResponse $th) {
-            $this->context->getLogger()->write('Refund failed server-side:');
+            $this->context->getLogger()->write('Refund failed server-side: ' . $th->getMessage());
 
             if (!is_null($response)) {
                 $this->context->getLogger()->write((string) $th->response);
