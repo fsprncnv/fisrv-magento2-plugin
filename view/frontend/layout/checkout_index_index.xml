@@ -22,10 +22,19 @@
                                                     <item name="children" xsi:type="array">
                                                         <item name="renders" xsi:type="array">
                                                             <item name="children" xsi:type="array">
-                                                                <item name="fisrv_generic" xsi:type="array">
+                                                                <item name="fisrv_gateway" xsi:type="array">
                                                                     <item name="component" xsi:type="string">Fiserv_Checkout/js/view/payment/method-renderer</item>
                                                                     <item name="methods" xsi:type="array">
+                                                                        <item name="fisrv_applepay" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="fisrv_creditcard" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
                                                                         <item name="fisrv_generic" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="fisrv_googlepay" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>

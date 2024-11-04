@@ -10,7 +10,7 @@
             <argument name="valueHandlerPool" xsi:type="object">FisrvValueHandlerPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form\Cc</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="code" xsi:type="string">fisrv_generic</argument>
+            <argument name="code" xsi:type="string">fisrv_gateway</argument>
             <argument name="title" xsi:type="string">Generic Checkout (Fiserv Checkout)</argument>
         </arguments>
     </type>

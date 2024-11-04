@@ -86,14 +86,14 @@ class ConfigData
         $this->writer->save(self::PATH_HOST, $parsed['scheme'] . '://' . $parsed['host'] . '/');
     }
 
-    public function isGenericEnabled(?int $storeId = null): bool
-    {
-        return $this->getConfigEntry($storeId, 'payment/fisrv/active') ?? true;
-    }
-
     public function isLoggingEnabled(?int $storeId = null): bool
     {
         return $this->getConfigEntry($storeId, 'payment/fisrv/debug') ?? false;
+    }
+
+    public function isGatewayEnabled(?int $storeId = null): bool
+    {
+        return $this->getConfigEntry($storeId, 'payment/fisrv/enabled') ?? true;
     }
 
     public function isMethodActive(string $method, ?int $storeId = null): bool
