@@ -8,15 +8,9 @@
     "AFL-3.0"
   ],
   "require": {
-    "fisrv/php-client": "dev-main",
-    "php": "^8.1.0"
+    "php": "^8.1.0",
+    "fiserv-ipg/php-client": "^0.0.5"
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://gitlab.mherrm.de/api/v4/group/80/-/packages/composer/packages.json"
-    }
-  ],
   "autoload": {
     "files": [
       "registration.php"

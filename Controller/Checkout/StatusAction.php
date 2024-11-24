@@ -8,10 +8,6 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\RequestInterface;
 
-if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
-}
-
 class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private OrderContext $context;

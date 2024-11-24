@@ -6,6 +6,7 @@ use Exception;
 use Fisrv\Checkout\CheckoutClient;
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\Currency;
+use Fisrv\Models\GetCheckoutIdResponse;
 use Fisrv\Models\LineItem;
 use Fisrv\Models\Locale;
 use Fisrv\Models\PaymentsClientRequest;
@@ -16,10 +17,6 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
-
-if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
-}
 
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
@@ -99,7 +96,7 @@ class CheckoutCreator
         $this->context->getConfigData()->setCheckoutHost($checkoutLink);
 
         $order->addCommentToStatusHistory(
-            __('Fiserv checkout link ' . $checkoutLink . ' created with checkout ID ' . $checkoutId . ' and trace ID ' . $traceId)
+            _("Fiserv checkout link $checkoutLink created with checkout ID $checkoutId and trace ID $traceId")
         );
 
         $order->setExtOrderId($checkoutId);
@@ -178,8 +175,11 @@ class CheckoutCreator
         /**
          * Order numbers, IDs
          */
-        $request->merchantTransactionId = strval($order->getId());
         $request->order->orderDetails->purchaseOrderNumber = strval($order->getIncrementId());
+
+        if ($order->getCustomerId() !== null) {
+            $request->order->orderDetails->customerId = strval($order->getCustomerId());
+        }
 
         /**
          * Order totals
@@ -291,5 +291,11 @@ class CheckoutCreator
         $request->order->billing->address->postalCode = $order->getBillingAddress()->getPostcode();
 
         return $request;
+    }
+
+    public function getCheckoutDetails(string $checkoutId): GetCheckoutIdResponse
+    {
+        $this->initClient();
+        return self::$client->getCheckoutById($checkoutId);
     }
 }

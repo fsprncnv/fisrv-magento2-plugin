@@ -12,10 +12,6 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
 
-if (file_exists(__DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php')) {
-    include_once __DIR__ . '/../../vendor/fisrv/php-client/vendor/autoload.php';
-}
-
 /**
  * POST rest route.
  * Handling consumption of webhook events.
