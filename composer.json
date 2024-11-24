@@ -26,8 +26,10 @@
       "/*.*",
       "/.*",
       "!/*.php",
+      "!composer.json",
       ".idea",
       "tests",
+      "vendor",
       "docker"
     ]
   },
