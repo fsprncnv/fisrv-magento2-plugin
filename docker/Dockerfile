@@ -1,19 +1,7 @@
 # ---------------------------------------------------
 # Global Arguments
 # ---------------------------------------------------
-FROM registry.gitlab.mherrm.de/default/base:latest
-
-# ---------------------------------------------------
-# Configure Database
-# ---------------------------------------------------
-#RUN mysql -V
-#RUN mysqld
-#RUN mysql -e "UPDATE mysql.user SET Password = PASSWORD('test') WHERE User = 'root'"
-#RUN mysql -e "DROP USER ''@'localhost'"
-#RUN mysql -e "DROP DATABASE test"
-#RUN mysql -e "FLUSH PRIVILEGES"
-#RUN mysql -e "CREATE USER 'magento2'@'localhost' IDENTIFIED BY 'test';
-#RUN mysql -e "CREATE DATABASE magento2';
+FROM registry.gitlab.mherrm.de/default/docker/apache:latest
 
 # ---------------------------------------------------
 # Install Magento Open Source
