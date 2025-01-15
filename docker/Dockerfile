@@ -14,3 +14,4 @@ RUN composer create-project --repository-url=https://repo.magento.com/ magento/p
 
 CMD php bin/magento module:disable Magento_Elasticsearch Magento_InventoryElasticsearch Magento_OpenSearch Magento_Elasticsearch7 Magento_ElasticsearchCatalogPermissions
 CMD php bin/magento sampledata:deploy
+CMD php bin/magento setup:upgrade
