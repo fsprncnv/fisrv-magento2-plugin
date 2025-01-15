@@ -17,7 +17,7 @@ services:
     volumes:
       - db:/var/lib/mysql
   opensearch:
-    image: markoshust/magento-opensearch:2.5-1.4.0
+    image: markoshust/magento-opensearch:2.5-1
     container_name: fisrv-opensearch
     hostname: opensearch
     environment:
