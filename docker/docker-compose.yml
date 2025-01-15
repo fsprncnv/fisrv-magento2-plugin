@@ -19,7 +19,7 @@ services:
   magento:
     image: registry.gitlab.mherrm.de/cgi/fisrv-magento2-plugin:latest
     container_name: fisrv-magento-apache
-    mem_limit: "256M"
+    mem_limit: "512M"
     restart: always
     labels:
       - "traefik.enable=true"
