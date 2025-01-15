@@ -16,6 +16,18 @@ services:
       - default
     volumes:
       - db:/var/lib/mysql
+  opensearch:
+    image: markoshust/magento-opensearch:2.5-1.4.0
+    container_name: fisrv-opensearch
+    hostname: opensearch
+    env_file: env/opensearch.env
+    environment:
+      - "discovery.type=single-node"
+      - "cluster.routing.allocation.disk.threshold_enabled=false"
+      - "index.blocks.read_only_allow_delete"
+      - DISABLE_SECURITY_PLUGIN=true
+      - OPENSEARCH_HOST=opensearch
+      - OPENSEARCH_PORT=9200
   magento:
     image: registry.gitlab.mherrm.de/cgi/fisrv-magento2-plugin:latest
     container_name: fisrv-magento-apache
