@@ -36,6 +36,8 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
+    depends:
+      - database
     networks:
       - default
       - traefik
