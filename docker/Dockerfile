@@ -11,7 +11,7 @@ RUN composer config --global http-basic.repo.magento.com ec47b6a9766ce31c2111ee5
 RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition .
 
 COPY docker/auth.json .
-CMD php bin/magento module:disable Magento_Elasticsearch Magento_InventoryElasticsearch Magento_Elasticsearch7 Magento_OpenSearch
+#CMD php bin/magento module:disable Magento_Elasticsearch Magento_InventoryElasticsearch Magento_Elasticsearch7 Magento_OpenSearch
 #CMD php -dmemory_limit=-1 bin/magento setup:install --base-url=https://magento2.fisv.mherrm.de --db-host=fisrv-magento-db --db-name=magento2 --db-user=magento2 --db-password="magento2" --admin-firstname=bob --admin-lastname=smith --admin-email=email@example.com --admin-user=bob --admin-password="admin1234" --language=en_US --currency=EUR --timezone=Europe/Berlin --use-rewrites=1
 #CMD php bin/magento sampledata:deploy
 #CMD php bin/magento setup:upgrade
