@@ -20,7 +20,6 @@ services:
     image: markoshust/magento-opensearch:2.5-1.4.0
     container_name: fisrv-opensearch
     hostname: opensearch
-    env_file: env/opensearch.env
     environment:
       - "discovery.type=single-node"
       - "cluster.routing.allocation.disk.threshold_enabled=false"
