@@ -5,7 +5,7 @@ services:
     image: mariadb:10.6.20-ubi9
     container_name: fisrv-magento-db
     command: '--default-authentication-plugin=mysql_native_password'
-    mem_limit: "128M"
+    mem_limit: "256M"
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=magento2
@@ -19,7 +19,7 @@ services:
   magento:
     image: registry.gitlab.mherrm.de/cgi/fisrv-magento2-plugin:latest
     container_name: fisrv-magento-apache
-    mem_limit: "512M"
+    mem_limit: "1024M"
     restart: always
     labels:
       - "traefik.enable=true"
