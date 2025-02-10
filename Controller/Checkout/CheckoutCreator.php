@@ -17,6 +17,11 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManagerInterface;
+
+if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
+    include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
+}
 
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
@@ -28,6 +33,8 @@ class CheckoutCreator
 
     private Store $store;
 
+    private StoreManagerInterface $storeManager;
+
     private Resolver $resolver;
 
     private OrderRepository $orderRepository;
@@ -36,6 +43,7 @@ class CheckoutCreator
 
     public function __construct(
         Store $store,
+        StoreManagerInterface $storeManager,
         Resolver $resolver,
         OrderRepository $orderRepository,
         OrderContext $context,
@@ -166,6 +174,7 @@ class CheckoutCreator
          * Locale
          */
         $request->checkoutSettings->locale = Locale::tryFrom($this->resolver->getLocale()) ?? Locale::en_GB;
+        $this->context->getLogger()->write($this->resolver->getLocale());
 
         /**
          * Currency
@@ -295,7 +304,12 @@ class CheckoutCreator
 
     public function getCheckoutDetails(string $checkoutId): GetCheckoutIdResponse
     {
+        error_reporting(E_ALL & ~E_WARNING);
         $this->initClient();
         return self::$client->getCheckoutById($checkoutId);
+        // try {
+        // } catch() {
+
+        // }
     }
 }

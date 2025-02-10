@@ -24,7 +24,7 @@
         <arguments>
             <argument name="code" xsi:type="string">fisrv_creditcard</argument>
             <argument name="title" xsi:type="string" translate="true">
-                Credit Card (Fiserv Checkout)
+                Credit / Debit Card (Fiserv Checkout)
             </argument>
         </arguments>
     </virtualType>

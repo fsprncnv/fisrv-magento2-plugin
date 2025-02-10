@@ -101,6 +101,12 @@ class ConfigData
         return $this->getConfigEntry($storeId, 'payment/' . $method . '/active') ?? true;
     }
 
+    public function getCustomPaymentMethodName(string $method, ?int $storeId = null): ?string
+    {
+        return $this->getConfigEntry($storeId, 'payment/' . $method . '/title');
+    }
+
+
     /**
      * Check if config data is complete
      *
