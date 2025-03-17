@@ -1,5 +1,5 @@
-"Credit Card Number","Kreditkartennummer"
-"Credit card","Kreditkarte"
+"Credit / Debit Card Number","Kredit-/Debitkartennummer"
+"Credit / Debit Card","Kredit-/Debitkarte"
 "Card Verification Number","Kartenprüfwert"
 "What is this","Was ist das"
 "Place Order","Bestellen"
@@ -23,3 +23,4 @@
 "Sorry, Fiserv Checkout is currently not available.","Sorry, Fiserv Checkout ist derzeit nicht verfügbar."
 "Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal.","Sicheres Bezahlen mit Fiserv Checkout. Erwerben Sie API-Zugangsdaten auf unserem Entwicklerportal."
 "Visit Fiserv developer guide","Besuchen Sie das Fiserv Developer Guide"
+"Nicht verfügbar","Nicht verfügbar"

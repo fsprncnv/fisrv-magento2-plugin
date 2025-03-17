@@ -16,8 +16,10 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
+use Magento\Setup\Module\Di\Compiler\Log\Log;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
+use Throwable;
 
 if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
     include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
@@ -52,6 +54,8 @@ class CheckoutCreator
         $this->resolver = $resolver;
         $this->orderRepository = $orderRepository;
         $this->context = $context;
+
+        set_error_handler([$this, 'noticeErrorHandler'], E_NOTICE | E_STRICT);
     }
 
     private const PAYMENT_METHOD_MAP = [
@@ -302,14 +306,25 @@ class CheckoutCreator
         return $request;
     }
 
-    public function getCheckoutDetails(string $checkoutId): GetCheckoutIdResponse
+    public function noticeErrorHandler($code, $err_msg, $err_file, $err_line, array $err_context)
     {
-        error_reporting(E_ALL & ~E_WARNING);
+        $error = $log = null;
+        switch ($code) {
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                $error = 'Notice';
+                break;
+            case E_STRICT:
+                $error = 'Strict';
+                break;
+        }
+
+        $this->context->getLogger()->write($error . ": " . $err_msg . " in " . $err_file . " on line " . $err_line);
+    }
+
+    public function getCheckoutDetails(string $checkoutId): ?GetCheckoutIdResponse
+    {
         $this->initClient();
         return self::$client->getCheckoutById($checkoutId);
-        // try {
-        // } catch() {
-
-        // }
     }
 }

@@ -1,5 +1,5 @@
-"Credit Card Number","Credit Card Number"
-"Credit card","Credit card"
+"Credit / Debit Card Number","Credit / Debit Card Number"
+"Credit / Debit Card","Credit / Debit Card"
 "Card Verification Number","Card Verification Number"
 "What is this","What is this"
 "Place Order","Place Order"
@@ -23,3 +23,4 @@
 "Sorry, Fiserv Checkout is currently not available.","Sorry, Fiserv Checkout is currently not available."
 "Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal.","Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal."
 "Visit Fiserv developer guidem","Visit Fiserv developer guide"
+"Not Available","Not Available"

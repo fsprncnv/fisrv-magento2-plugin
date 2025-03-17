@@ -1,0 +1,23 @@
+# ChangeLog
+
+All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
+
+## [1.0.3] - 2025-17-03
+
+* Use latest stable version of fiserv-ipg/php-client
+* Improve Fiserv Checkout info modal UI component  
+* Improve Fiserv Checkout info modal to fetch only when called (when modal is opened)  
+* Fix Fiserv Checkout info modal bug when PHP client throws warning
+* Overwrite warning exception handler
+* Change wording "Credit Card" to "Credit / Debit Card" and corresponding i18n
+* Remove credit / debit card name changing field
+* Add i18n for nl, fr and es
+* Add this changelog
+
+## [1.0.2] - 2024-11-04
+
+* Fix failed refund message
+* Fix checkout index renderer and active method selection
+* Remove stub files and change build files
+
+

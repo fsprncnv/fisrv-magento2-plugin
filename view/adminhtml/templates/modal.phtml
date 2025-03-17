@@ -1,0 +1,103 @@
+<?php
+/**
+ * @var \Fiserv\Checkout\Block\Adminhtml\Order\View\ModalContent $block
+ */
+$orderData = $block->getOrderData();
+?>
+<div id="fiserv-checkout-modal" style="display:none;">
+    <div class="fiserv-checkout-content">
+        <?php if (!empty($orderData)): ?>
+            <table class="admin__table-secondary">
+                <tbody>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Order #')) ?></th>
+                        <td><?= $block->escapeHtml($orderData['increment_id']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Customer Name')) ?></th>
+                        <td><?= $block->escapeHtml($orderData['customer_name']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Status')) ?></th>
+                        <td><?= $block->escapeHtml($orderData['status']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Payment Method')) ?></th>
+                        <td><?= $block->escapeHtml($orderData['payment_method']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Created At')) ?></th>
+                        <td><?= $block->escapeHtml($orderData['created_at']) ?></td>
+                    </tr>
+                </tbody>
+            </table>
+            <?php if (!empty($orderData['orderId'])): ?>
+                <table class="admin__table-secondary">
+                    <tbody>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Fiserv Order ID')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['orderId']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Trace ID')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['traceId']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Store ID')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['storeId']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Checkout Payment Method')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['paymentMethodUsed']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Checkout ID')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['checkoutId']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Transaction Type')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['transactionType']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Transaction Status')) ?></th>
+                            <td><?= $block->escapeHtml($orderData['transactionStatus']) ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="message message-error"><?= $block->escapeHtml(__('Order information not available.')) ?></div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, modal) {
+        'use strict';
+
+        // Initialize modal
+        var options = {
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            title: $.mage.__('Fiserv Checkout Information'),
+            buttons: [{
+                text: $.mage.__('Close'),
+                class: 'action-primary',
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        };
+
+        var popup = modal(options, $('#fiserv-checkout-modal'));
+
+        // Define global function to open modal
+        window.showFiservCheckoutModal = function () {
+            $('#fiserv-checkout-modal').modal('openModal');
+        };
+    });
+</script>

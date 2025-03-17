@@ -4,40 +4,17 @@ declare(strict_types=1);
 
 namespace Fiserv\Checkout\Block\Adminhtml\Order;
 
-use BackedEnum;
-use Fiserv\Checkout\Controller\Checkout\CheckoutCreator;
 use Fiserv\Checkout\Controller\Checkout\OrderContext;
-use Fisrv\Models\GetCheckoutIdResponse;
-use Fisrv\Models\TransactionType;
 use Magento\Sales\Block\Adminhtml\Order\View as CoreView;
 use Magento\Sales\Model\Order;
 
 class View
 {
     private OrderContext $context;
-    private CheckoutCreator $checkoutCreator;
 
-    public function __construct(
-        OrderContext $context,
-        CheckoutCreator $checkoutCreator
-    ) {
-        $this->context = $context;
-        $this->checkoutCreator = $checkoutCreator;
-    }
-
-    private function renderCheckoutDetails(GetCheckoutIdResponse $checkout): string
+    public function __construct(OrderContext $context)
     {
-        $template = "<strong>Fiserv Checkout Details</strong>";
-        foreach ($checkout as $key => $value) {
-            if (!in_array($key, ['orderId', 'traceId', 'storeId', 'checkoutId', 'transactionType', 'transactionStatus'])) {
-                continue;
-            }
-            if ($value instanceof BackedEnum) {
-                $value = $value->name;
-            }
-            $template .= "<div><strong>" . ucwords($key) . ": </strong>$value</div>";
-        }
-        return $template;
+        $this->context = $context;
     }
 
     /**
@@ -87,18 +64,15 @@ class View
             ]
         );
 
-
-        $checkoutId = $view->getOrder()->getExtOrderId();
-        $checkoutDetails = $this->checkoutCreator->getCheckoutDetails($checkoutId);
-        $message = $this->renderCheckoutDetails($checkoutDetails);
-        $message =
-            $view->addButton(
-                'detailsaction',
-                [
-                    'label' => _('Checkout Details'),
-                    'onclick' => "confirmSetLocation('{$message}', '#')"
-                ]
-            );
+        $view->addButton(
+            'fiserv_checkout_button',
+            [
+                'label' => __('Fiserv Checkout Info'),
+                'class' => 'fiserv-checkout-button',
+                'id' => 'fiserv-checkout-button',
+                'onclick' => 'showFiservCheckoutModal()'
+            ]
+        );
     }
 
 
