@@ -28,6 +28,9 @@ class ConfigData
 
     private TypeListInterface $typeList;
 
+    public const METHOD_CARD = 'fisrv_creditcard';
+    public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         ModuleListInterface $moduleList,

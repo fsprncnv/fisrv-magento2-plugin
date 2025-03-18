@@ -33,47 +33,30 @@ class View
                 'order_id' => $view->getOrderId()
             ]
         );
-
-        $detailsRoute = $this->context->getUrl(
-            'detailsaction',
-            true,
-            [
-                'order_id' => $view->getOrderId()
-            ]
-        );
-
         $payment = $view->getOrder()->getPayment();
-
         if (is_null($payment)) {
             return;
         }
-
-        if (
-            !str_starts_with($payment->getMethod(), 'fisrv_')
-            || $view->getOrder()->getStatus() !== Order::STATE_COMPLETE
-        ) {
-            return;
+        if (str_starts_with($payment->getMethod(), 'fisrv_') && $view->getOrder()->getStatus() === Order::STATE_COMPLETE) {
+            $refundMessage = _('Do you want to refund this order?');
+            $view->addButton(
+                'refundaction',
+                [
+                    'label' => _('Refund'),
+                    'class' => 'fiserv-refund-button',
+                    'id' => 'fiserv-refund-button',
+                    'onclick' => "confirmSetLocation('{$refundMessage}', '{$refundRoute}')"
+                ]
+            );
         }
-
-        $refundMessage = _('Do you want to refund this order?');
-        $view->addButton(
-            'refundaction',
-            [
-                'label' => _('Refund'),
-                'onclick' => "confirmSetLocation('{$refundMessage}', '{$refundRoute}')"
-            ]
-        );
-
         $view->addButton(
             'fiserv_checkout_button',
             [
-                'label' => __('Fiserv Checkout Info'),
+                'label' => _('Fiserv Checkout Info'),
                 'class' => 'fiserv-checkout-button',
                 'id' => 'fiserv-checkout-button',
                 'onclick' => 'showFiservCheckoutModal()'
             ]
         );
     }
-
-
 }
