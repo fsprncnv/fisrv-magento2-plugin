@@ -16,14 +16,13 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
-use Magento\Setup\Module\Di\Compiler\Log\Log;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
 
-if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
-    include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
-}
+// if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
+//     include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
+// }
 
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
@@ -123,7 +122,7 @@ class CheckoutCreator
     private function initClient(): void
     {
         $magentoStoreId = $this->store->getId();
-        $moduleVersion = $this->context->getConfigData()->getModuleVersion() ?? 'NO_VERSION_FOUND';
+        $moduleVersion = $this->context->getConfigData()->getModuleVersion();
 
         self::$client = new CheckoutClient(
             [

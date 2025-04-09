@@ -30,6 +30,7 @@ class ConfigData
 
     public const METHOD_CARD = 'fisrv_creditcard';
     public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
+    public const PLUGIN_VERSION = '1.0.3-p';
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -50,9 +51,16 @@ class ConfigData
         );
     }
 
+    private function getModuleVersionFromComposer(): string|null
+    {
+        $content = file_get_contents(__DIR__ . '/../composer.json');
+        $json = json_decode($content, true);
+        return $json['version'];
+    }
+
     public function getModuleVersion()
     {
-        return $this->moduleList->getOne('Fiserv_Checkout')['setup_version'];
+        return $this->moduleList->getOne('Fiserv_Checkout')['setup_version'] ?? $this->getModuleVersionFromComposer() ?? self::PLUGIN_VERSION;
     }
 
     public function isProductionMode(?int $storeId = null): bool
