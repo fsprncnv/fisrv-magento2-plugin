@@ -2,22 +2,18 @@
   "name": "fiserv-ipg/checkout",
   "description": "Official Fisrv Payment Gateway for Magento",
   "type": "magento2-module",
-  "version": "1.0.3-p",
+  "version": "1.0.4",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
   ],
   "require": {
-    "php": "^8.1.0",
-    "fiserv-ipg/php-client": "@stable"
+    "fiserv-ipg/php-client": "1.0.2"
   },
   "autoload": {
     "files": [
       "registration.php"
-    ],
-    "psr-4": {
-      "Fiserv\\Checkout\\": ""
-    }
+    ]
   },
   "archive": {
     "exclude": [

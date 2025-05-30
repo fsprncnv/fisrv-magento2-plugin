@@ -20,10 +20,6 @@ use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
 
-// if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
-//     include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
-// }
-
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
  * Middleware for Fiserv client related processes.

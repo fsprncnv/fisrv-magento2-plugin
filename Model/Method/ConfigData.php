@@ -30,7 +30,7 @@ class ConfigData
 
     public const METHOD_CARD = 'fisrv_creditcard';
     public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
-    public const PLUGIN_VERSION = '1.0.3-p';
+    public const PLUGIN_VERSION = '1.0.4';
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
