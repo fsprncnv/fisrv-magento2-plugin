@@ -17,7 +17,6 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
 
 /**
@@ -30,8 +29,6 @@ class CheckoutCreator
 
     private Store $store;
 
-    private StoreManagerInterface $storeManager;
-
     private Resolver $resolver;
 
     private OrderRepository $orderRepository;
@@ -40,7 +37,6 @@ class CheckoutCreator
 
     public function __construct(
         Store $store,
-        StoreManagerInterface $storeManager,
         Resolver $resolver,
         OrderRepository $orderRepository,
         OrderContext $context,

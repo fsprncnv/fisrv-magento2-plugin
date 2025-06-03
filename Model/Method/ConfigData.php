@@ -51,16 +51,9 @@ class ConfigData
         );
     }
 
-    private function getModuleVersionFromComposer(): string|null
-    {
-        $content = file_get_contents(__DIR__ . '/../composer.json');
-        $json = json_decode($content, true);
-        return $json['version'];
-    }
-
     public function getModuleVersion()
     {
-        return $this->moduleList->getOne('Fiserv_Checkout')['setup_version'] ?? $this->getModuleVersionFromComposer() ?? self::PLUGIN_VERSION;
+        return $this->moduleList->getOne('Fiserv_Checkout')['setup_version'] ?? self::PLUGIN_VERSION;
     }
 
     public function isProductionMode(?int $storeId = null): bool
