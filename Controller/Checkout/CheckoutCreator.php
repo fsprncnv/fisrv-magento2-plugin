@@ -46,7 +46,7 @@ class CheckoutCreator
         $this->orderRepository = $orderRepository;
         $this->context = $context;
 
-        set_error_handler([$this, 'noticeErrorHandler'], E_NOTICE | E_STRICT);
+        set_error_handler([$this, 'noticeErrorHandler'], E_NOTICE);
     }
 
     private const PAYMENT_METHOD_MAP = [
@@ -317,6 +317,26 @@ class CheckoutCreator
     public function getCheckoutDetails(string $checkoutId): ?GetCheckoutIdResponse
     {
         $this->initClient();
-        return self::$client->getCheckoutById($checkoutId);
+        return $this->suppressOutput([self::$client, 'getCheckoutById'], $checkoutId);
     }
+
+    /**
+     * Executes a callback while suppressing any output (e.g., echo, var_dump).
+     *
+     * @param callable $callback The function to execute.
+     * @param mixed ...$args Arguments to pass to the callback.
+     * @return mixed The return value of the callback.
+     */
+    private function suppressOutput(callable $callback, ...$args)
+    {
+        ob_start(); // Start output buffering
+        try {
+            error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+            $result = call_user_func_array($callback, $args);
+        } finally {
+            ob_end_clean(); // Always clean the buffer, even if an exception is thrown
+        }
+        return $result;
+    }
+
 }
