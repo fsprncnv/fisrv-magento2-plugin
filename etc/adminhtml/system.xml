@@ -9,7 +9,7 @@
 					<frontend_model>Fiserv\Checkout\Block\Adminhtml\Render\Header</frontend_model>
 				</group>
 				<field id="enabled" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Enabled</label>
+					<label>Enable Module on Store</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 					<config_path>payment/fisrv/enabled</config_path>
 				</field>

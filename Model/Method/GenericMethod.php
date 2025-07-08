@@ -56,7 +56,7 @@ class GenericMethod extends Adapter
 
     public function isActive($storeId = null): bool
     {
-        return $this->configData->isGatewayEnabled() && $this->configData->isMethodActive($this->getCode());
+        return $this->configData->isModuleEnabled($storeId) && $this->configData->isMethodActive($this->getCode());
     }
 
     public function getTitle(): string

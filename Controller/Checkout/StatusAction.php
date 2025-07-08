@@ -30,6 +30,16 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         return null;
     }
 
+    private function getStringAfterWord($string, $word): string|null
+    {
+        $pos = strpos($string, $word);
+        if ($pos === false) {
+            return null;
+        }
+        return substr($string, $pos + strlen($word));
+    }
+
+
     public function execute()
     {
         $this->client = new PaymentsClient(
@@ -40,23 +50,35 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
                 'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
             ]
         );
-
-        $report = $this->client->reportHealthCheck();
-
-        if ($report->httpCode != 200) {
-            $status = $report->error->message;
-            $this->context->getLogger()->write('API health check reported following error response: ' . json_encode($report));
+        ob_start();
+        $status = "You're all set!";
+        $defaultFailureStatus = "Something went wrong";
+        try {
+            $report = $this->client->reportHealthCheck();
+            if ($report->httpCode != 200) {
+                $status = $report->error->message;
+                $this->context->getLogger()->write('API health check reported following error response: ' . json_encode($report));
+            }
+        } catch (\Throwable $th) {
+            $bufferCapture = ob_get_contents();
+            $rawError = $this->getStringAfterWord($bufferCapture, "JSON content:");
+            if (is_null($rawError)) {
+                $status = $defaultFailureStatus;
+            } else {
+                $parsedError = json_decode($rawError);
+                $status = isset($parsedError->details[0]->message) ? $parsedError->details[0]->message : $defaultFailureStatus;
+            }
         }
-
         $this->context->getResponse()->setContent(
             json_encode(
                 [
-                    'status' => $status ?? "You're all set!",
+                    'status' => $status,
                     'code' => $report->httpCode
                 ]
             )
         );
-
+        // Clean possible non-JSON response data (caused by PHP dumps like exception messages) 
+        ob_end_clean();
         return $this->context->getResponse();
     }
 }

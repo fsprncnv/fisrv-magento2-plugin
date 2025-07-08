@@ -64,17 +64,14 @@ class CheckoutCreator
     {
         $this->initClient();
         $request = self::$client->createBasicCheckoutRequest(0, '', '');
+        unset($request->paymentMethodDetails->cards->createToken);
 
-        /**
-         * Set (preselected) payment method
-         */
+        // Set (preselected) payment method
         try {
             $payment = $order->getPayment();
-
             if (is_null($payment)) {
                 throw new Exception('Payment could not be retrieved from order');
             }
-
             $method = $payment->getMethod();
             $selectedMethod = self::PAYMENT_METHOD_MAP[$method];
             $request->checkoutSettings->preSelectedPaymentMethod = $selectedMethod;
@@ -90,8 +87,12 @@ class CheckoutCreator
 
         $this->context->getLogger()->write('Creating checkout URL...');
         $this->context->getLogger()->write($request->__toString());
-        $response = self::$client->createCheckout($request);
-
+        try {
+            $response = self::$client->createCheckout($request);
+        } catch (\Throwable $th) {
+            $this->context->getLogger()->write('Checkout link creation failed.');
+            $this->context->getLogger()->write($th->getMessage());
+        }
         $this->context->getLogger()->write('Retrieving response fields...');
         $checkoutId = $response->checkout->checkoutId;
         $traceId = $response->traceId;
@@ -113,18 +114,18 @@ class CheckoutCreator
      */
     private function initClient(): void
     {
-        $magentoStoreId = $this->store->getId();
         $moduleVersion = $this->context->getConfigData()->getModuleVersion();
-
         self::$client = new CheckoutClient(
             [
                 'user' => 'Magento2Plugin/' . $moduleVersion,
-                'is_prod' => $this->context->getConfigData()->isProductionMode($magentoStoreId),
-                'api_key' => $this->context->getConfigData()->getApiKey($magentoStoreId),
-                'api_secret' => $this->context->getConfigData()->getApiSecret($magentoStoreId),
-                'store_id' => $this->context->getConfigData()->getFisrvStoreId($magentoStoreId),
+                'is_prod' => $this->context->getConfigData()->isProductionMode(),
+                'api_key' => $this->context->getConfigData()->getApiKey(),
+                'api_secret' => $this->context->getConfigData()->getApiSecret(),
+                'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
             ]
         );
+        $this->context->getLogger()->write('api_key: ' . $this->context->getConfigData()->getApiKey());
+        $this->context->getLogger()->write('store_id: ' . $this->context->getConfigData()->getFisrvStoreId());
     }
 
     /**
