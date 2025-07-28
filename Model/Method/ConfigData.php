@@ -26,7 +26,7 @@ class ConfigData
 
     public const METHOD_CARD = 'fisrv_creditcard';
     public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
-    public const PLUGIN_VERSION = '1.0.5';
+    public const PLUGIN_VERSION = '1.0.6';
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -53,7 +53,7 @@ class ConfigData
 
     public function getModuleVersion(): string
     {
-        return $this->moduleList->getOne('Fiserv_Checkout')['setup_version'] ?? self::PLUGIN_VERSION;
+        return self::PLUGIN_VERSION;
     }
 
     public function isProductionMode(): bool

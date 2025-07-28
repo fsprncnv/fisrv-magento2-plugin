@@ -42,25 +42,12 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
     private function authenticate(Order $order): bool
     {
         $sign = $this->action->getRequest()->getParam('_nonce', false);
-        $referrer = $this->action->getRequest()->getHeader('Referer');
-
-        if (!$referrer || $referrer !== $this->action->getConfigData()->getCheckoutHost()) {
-            $this->action->getLogger()->write('Bad referrer, cancelling auth.');
-            $this->action->getLogger()->write('REFERRER: ' . $referrer);
-            $this->action->getLogger()->write('STORED HOST: ' . $this->action->getConfigData()->getCheckoutHost());
-
-            return false;
-        }
-
         if (!$sign) {
             $this->action->getLogger()->write('No signature given, cancelling auth.');
-
             return false;
         }
-
         $sign = base64_decode($sign);
         $digest = $this->action->createSignature($order);
-
         return hash_equals($digest, $sign);
     }
 
@@ -117,30 +104,24 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
     {
         try {
             $orderId = $this->action->getRequest()->getParam('order_id', false);
-
             if (!$orderId) {
                 throw new Exception(_('Order could not be retrieved'));
             }
-
             $order = $this->action->getOrderRepository()->get($orderId);
-
             if (!($order instanceof Order)) {
                 throw new Exception('Order could not be retrieved');
             }
-
             if (!$this->authenticate($order)) {
                 throw new Exception(_('Authorization failed. Could not validate request.'));
             }
-
             $this->completeOrder($order);
-
             return $this->action->_redirect(
                 'checkout/onepage/success',
                 [
-                '_query' => [
-                    '_secure' => 'true',
-                    'utm_nooverride' => 'true'
-                ]
+                    '_query' => [
+                        '_secure' => 'true',
+                        'utm_nooverride' => 'true'
+                    ]
                 ]
             );
 
@@ -151,10 +132,10 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             return $this->action->_redirect(
                 'checkout/cart',
                 [
-                '_query' => [
-                    '_secure' => 'true',
-                    'order_cancelled' => 'true'
-                ]
+                    '_query' => [
+                        '_secure' => 'true',
+                        'order_cancelled' => 'true'
+                    ]
                 ]
             );
         }

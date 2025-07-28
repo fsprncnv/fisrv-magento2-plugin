@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [1.0.6] - 2025-30-05
+
+- Remove referer-based authentication
+
 ## [1.0.5] - 2025-30-05
 
 - Add support for multi-store setups
