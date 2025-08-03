@@ -8,10 +8,3 @@ variables:
 
 build:
   extends: .base_build
-
-docker:
-  extends: .base_docker
-  needs: ["build"]
-  variables:
-    IMAGE_NAME: "fisrv-magento2"
-    IMAGE_FILE: "docker/Dockerfile"
