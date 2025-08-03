@@ -1,7 +1,7 @@
 # ---------------------------------------------------
 # Global Arguments
 # ---------------------------------------------------
-FROM registry.gitlab.mherrm.de/default/docker/apache:latest
+FROM registry.gitlab.mherrm.de/default/docker/apache/apache:latest AS main
 
 # ---------------------------------------------------
 # Install & Configure Magento2 Community Edition
