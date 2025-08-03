@@ -4,8 +4,6 @@ include:
     file: '.php.gitlab-ci.yml'
 
 variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
-  DOCKERFILE: "docker/Dockerfile"
   SKIP_PHPUNIT: 'true'
 
 build:
@@ -13,3 +11,7 @@ build:
 
 docker:
   extends: .base_docker
+  needs: ["build"]
+  variables:
+    IMAGE_NAME: "fisrv-magento2"
+    IMAGE_FILE: "docker/Dockerfile"
