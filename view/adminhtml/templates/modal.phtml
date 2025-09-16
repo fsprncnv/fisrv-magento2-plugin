@@ -3,7 +3,21 @@
  * @var \Fiserv\Checkout\Block\Adminhtml\Order\View\ModalContent $block
  */
 $orderData = $block->getOrderData();
+
+function writeRow($block, $description, $field) {
+    $orderData = $block->getOrderData();
+    
+    if(property_exists($orderData, $field)) {
+        ?>
+        <tr>
+            <th><?= $block->escapeHtml(__($description)) ?></th>
+            <td><?= $block->escapeHtml($orderData[$field]) ?></td>
+        </tr>
+        <?php
+    }
+}
 ?>
+
 <div id="fiserv-checkout-modal" style="display:none;">
     <div class="fiserv-checkout-content">
         <?php if (!empty($orderData)): ?>
@@ -29,11 +43,7 @@ $orderData = $block->getOrderData();
                         <th><?= $block->escapeHtml(__('Created At')) ?></th>
                         <td><?= $block->escapeHtml($orderData['created_at']) ?></td>
                     </tr>
-                </tbody>
-            </table>
-            <?php if (!empty($orderData['orderId'])): ?>
-                <table class="admin__table-secondary">
-                    <tbody>
+                    <?php if (!empty($orderData['orderId'])) { ?>
                         <tr>
                             <th><?= $block->escapeHtml(__('Fiserv Order ID')) ?></th>
                             <td><?= $block->escapeHtml($orderData['orderId']) ?></td>
@@ -46,10 +56,7 @@ $orderData = $block->getOrderData();
                             <th><?= $block->escapeHtml(__('Store ID')) ?></th>
                             <td><?= $block->escapeHtml($orderData['storeId']) ?></td>
                         </tr>
-                        <tr>
-                            <th><?= $block->escapeHtml(__('Checkout Payment Method')) ?></th>
-                            <td><?= $block->escapeHtml($orderData['paymentMethodUsed']) ?></td>
-                        </tr>
+                        <?php writeRow($block, 'Checkout Payment Method', 'paymentMethodUsed' ); ?>
                         <tr>
                             <th><?= $block->escapeHtml(__('Checkout ID')) ?></th>
                             <td><?= $block->escapeHtml($orderData['checkoutId']) ?></td>
@@ -62,12 +69,12 @@ $orderData = $block->getOrderData();
                             <th><?= $block->escapeHtml(__('Transaction Status')) ?></th>
                             <td><?= $block->escapeHtml($orderData['transactionStatus']) ?></td>
                         </tr>
-                    </tbody>
-                </table>
-            <?php endif; ?>
-        <?php else: ?>
-            <div class="message message-error"><?= $block->escapeHtml(__('Order information not available.')) ?></div>
-        <?php endif; ?>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <?php if (empty($orderData['orderId'])) { ?>
+                <div class="message message-error"><?= $block->escapeHtml(__('Order information not available.')) ?></div>
+            <?php } ?>
     </div>
 </div>
 
