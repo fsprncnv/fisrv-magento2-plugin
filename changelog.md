@@ -1,5 +1,13 @@
 # ChangeLog
 
+## [1.0.7] - 2025-30-05
+
+- Remove brand references from copy
+- Update Fiserv checkout service library
+- Change default order status after payment (processing)
+- Add option to enable auto-completion
+- Add option to add custom payment method icons
+
 ## [1.0.6] - 2025-30-05
 
 - Remove referer-based authentication

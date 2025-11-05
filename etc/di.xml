@@ -14,27 +14,27 @@
     <virtualType name="FisrvApplepay" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_applepay</argument>
-            <argument name="title" xsi:type="string">Apple Pay (Fiserv Checkout)</argument>
+            <argument name="title" xsi:type="string">Apple Pay</argument>
         </arguments>
     </virtualType>
     <virtualType name="FisrvCreditcard" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_creditcard</argument>
             <argument name="title" xsi:type="string" translate="true">
-                Credit / Debit Card (Fiserv Checkout)
+                Credit / Debit Card
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="FisrvGeneric" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_generic</argument>
-            <argument name="title" xsi:type="string">Fiserv Checkout</argument>
+            <argument name="title" xsi:type="string">Generic Checkout</argument>
         </arguments>
     </virtualType>
     <virtualType name="FisrvGooglepay" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_googlepay</argument>
-            <argument name="title" xsi:type="string">Google Pay (Fiserv Checkout)</argument>
+            <argument name="title" xsi:type="string">Google Pay</argument>
         </arguments>
     </virtualType>
     <!-- Value Handler Pool -->

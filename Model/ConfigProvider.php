@@ -37,7 +37,7 @@ class ConfigProvider implements ConfigProviderInterface
                 'fisrv_gateway' => [
                     'is_available' => true,
                     'fisrv_generic' => [
-                        'logo' => $this->getLogo('fisrv_generic')
+                        'logo' => $this->configData->getCustomPaymentMethodIcon() ?? $this->getLogo('fisrv_generic')
                     ],
                     'fisrv_creditcard' => [
                         'logo' => $this->getLogo('fisrv_creditcard')

@@ -4,10 +4,11 @@
  */
 $orderData = $block->getOrderData();
 
-function writeRow($block, $description, $field) {
+function writeRow($block, $description, $field)
+{
     $orderData = $block->getOrderData();
-    
-    if(property_exists($orderData, $field)) {
+
+    if (is_array($orderData) && array_key_exists($field, $orderData)) {
         ?>
         <tr>
             <th><?= $block->escapeHtml(__($description)) ?></th>
@@ -20,7 +21,7 @@ function writeRow($block, $description, $field) {
 
 <div id="fiserv-checkout-modal" style="display:none;">
     <div class="fiserv-checkout-content">
-        <?php if (!empty($orderData)): ?>
+        <?php if (!empty($orderData)) { ?>
             <table class="admin__table-secondary">
                 <tbody>
                     <tr>
@@ -56,7 +57,7 @@ function writeRow($block, $description, $field) {
                             <th><?= $block->escapeHtml(__('Store ID')) ?></th>
                             <td><?= $block->escapeHtml($orderData['storeId']) ?></td>
                         </tr>
-                        <?php writeRow($block, 'Checkout Payment Method', 'paymentMethodUsed' ); ?>
+                        <?php writeRow($block, 'Checkout Payment Method', 'paymentMethodUsed'); ?>
                         <tr>
                             <th><?= $block->escapeHtml(__('Checkout ID')) ?></th>
                             <td><?= $block->escapeHtml($orderData['checkoutId']) ?></td>
@@ -75,6 +76,7 @@ function writeRow($block, $description, $field) {
             <?php if (empty($orderData['orderId'])) { ?>
                 <div class="message message-error"><?= $block->escapeHtml(__('Order information not available.')) ?></div>
             <?php } ?>
+        <?php } ?>
     </div>
 </div>
 

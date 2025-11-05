@@ -19,7 +19,7 @@
 "Authorization failed. Could not validate request.","Authorization failed. Could not validate request."
 "Your Fiserv API Credentials are invalid. Please reconfigure them.","Your Fiserv API Credentials are invalid. Please reconfigure them."
 "Webhook event is invalid","Webhook event is invalid"
-"Payment will be processed by Fiserv. You will be redirected to an external checkout page.","Payment will be processed by Fiserv. You will be redirected to an external checkout page."
+"You will be redirected to an external checkout page.","You will be redirected to an external checkout page."
 "Sorry, Fiserv Checkout is currently not available.","Sorry, Fiserv Checkout is currently not available."
 "Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal.","Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal."
 "Visit Fiserv developer guidem","Visit Fiserv developer guide"

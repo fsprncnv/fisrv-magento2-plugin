@@ -52,7 +52,7 @@ define(['Magento_Checkout/js/view/payment/default', 'mage/url', 'jquery', 'mage/
 
     getConfigData: function () {
       if (this.isPlaceOrderActionAllowed()) {
-        return $.mage.__('Payment will be processed by Fiserv. You will be redirected to an external checkout page.');
+        return $.mage.__('You will be redirected to an external checkout page.');
       }
 
       return $.mage.__('Sorry, Fiserv Checkout is currently not available.');

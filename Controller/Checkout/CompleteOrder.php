@@ -3,6 +3,7 @@
 namespace Fiserv\Checkout\Controller\Checkout;
 
 use Exception;
+use Fiserv\Checkout\Model\Method\ConfigData;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Framework\DB\TransactionFactory;
@@ -23,14 +24,18 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
     private OrderContext $action;
 
+    private ConfigData $configData;
+
     public function __construct(
         InvoiceService $invoiceService,
         TransactionFactory $transactionFactory,
         OrderContext $action,
+        ConfigData $configData
     ) {
         $this->invoiceService = $invoiceService;
         $this->transactionFactory = $transactionFactory;
         $this->action = $action;
+        $this->configData = $configData;
     }
 
     /**
@@ -85,9 +90,11 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $invoice->register();
         $invoice->capture();
 
-        $order
-            ->setState(Order::STATE_COMPLETE)
-            ->setStatus(Order::STATE_COMPLETE);
+        if ($this->configData->isAutoCompletionEnabled()) {
+            $order->setState(Order::STATE_COMPLETE);
+        } else {
+            $order->setState(Order::STATE_PROCESSING);
+        }
 
         $transaction = $this->transactionFactory->create()
             ->addObject($invoice)

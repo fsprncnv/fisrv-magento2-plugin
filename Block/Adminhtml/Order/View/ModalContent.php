@@ -9,12 +9,10 @@ use Exception;
 use Fiserv\Checkout\Controller\Checkout\CheckoutCreator;
 use Fiserv\Checkout\Controller\Checkout\OrderContext;
 use Fisrv\Models\GetCheckoutIdResponse;
-use Fisrv\Models\TransactionStatus;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Throwable;
-use UnitEnum;
 
 class ModalContent extends Template
 {

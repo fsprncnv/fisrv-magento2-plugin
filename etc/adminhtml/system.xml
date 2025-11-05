@@ -19,8 +19,8 @@
 					<config_path>payment/fisrv/sandbox</config_path>
 				</field>
 				<field id="heading_api" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-						<frontend_model>Fiserv\Checkout\Block\Adminhtml\Render\Heading</frontend_model>
-					</field>
+					<frontend_model>Fiserv\Checkout\Block\Adminhtml\Render\Heading</frontend_model>
+				</field>
 				<field id="apikey" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>API Key</label>
 					<config_path>payment/fisrv/apikey</config_path>
@@ -42,6 +42,17 @@
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 					<config_path>payment/fisrv/debug</config_path>
 					<comment>When activated the debug file will be located in: var/log/fiserv-checkout.log</comment>
+				</field>
+				<field id="autocompletion" translate="label" type="select" sortOrder="82" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Enable Auto-Completion</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<config_path>payment/fisrv/autocompletion</config_path>
+					<comment>If enabled orders will be flagged as completed after payment</comment>
+				</field>
+				<field id="customicon" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Custom Icon</label>
+					<config_path>payment/fisrv/customicon</config_path>
+					<comment>Add an image URL for a custom payment method icon</comment>
 				</field>
 			</group>
 			<include path="Fiserv_Checkout::methods.xml"/>

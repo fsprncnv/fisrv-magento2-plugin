@@ -37,7 +37,8 @@ class View
         if (is_null($payment)) {
             return;
         }
-        if (str_starts_with($payment->getMethod(), 'fisrv_') && $view->getOrder()->getStatus() === Order::STATE_COMPLETE) {
+        $status = $view->getOrder()->getStatus();
+        if (str_starts_with($payment->getMethod(), 'fisrv_') && ($status === Order::STATE_COMPLETE || $status === Order::STATE_PROCESSING)) {
             $refundMessage = _('Do you want to refund this order?');
             $view->addButton(
                 'refundaction',

@@ -19,7 +19,7 @@
 "Authorization failed. Could not validate request.","Autorisatie mislukt. Kon verzoek niet valideren."
 "Your Fiserv API Credentials are invalid. Please reconfigure them.","Uw Fiserv API-gegevens zijn ongeldig. Gelieve ze opnieuw te configureren."
 "Webhook event is invalid","Webhook-gebeurtenis is ongeldig"
-"Payment will be processed by Fiserv. You will be redirected to an external checkout page.","Betaling wordt verwerkt door Fiserv. U wordt doorgestuurd naar een externe afrekenpagina."
+"You will be redirected to an external checkout page.","U wordt doorgestuurd naar een externe afrekenpagina."
 "Sorry, Fiserv Checkout is currently not available.","Sorry, Fiserv Checkout is momenteel niet beschikbaar."
 "Pay securely with Fiserv Checkout. Acquire API credentials on our developer portal.","Betaal veilig met Fiserv Checkout. Verkrijg API-gegevens op ons ontwikkelaarsportaal."
 "Visit Fiserv developer guide","Bezoek de Fiserv ontwikkelaarsgids"

@@ -26,7 +26,7 @@ class ConfigData
 
     public const METHOD_CARD = 'fisrv_creditcard';
     public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
-    public const PLUGIN_VERSION = '1.0.6';
+    public const PLUGIN_VERSION = '1.0.7';
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -107,6 +107,16 @@ class ConfigData
     public function getCustomPaymentMethodName(string $method): ?string
     {
         return $this->getConfigEntry('payment/' . $method . '/title');
+    }
+
+    public function isAutoCompletionEnabled(): bool
+    {
+        return $this->getConfigEntry('payment/fisrv/autocompletion') ?? false;
+    }
+
+    public function getCustomPaymentMethodIcon(): ?string
+    {
+        return $this->getConfigEntry('payment/fisrv/customicon');
     }
 
 
