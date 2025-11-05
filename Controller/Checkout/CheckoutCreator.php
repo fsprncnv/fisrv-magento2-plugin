@@ -17,7 +17,6 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
-use Throwable;
 
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
@@ -53,6 +52,7 @@ class CheckoutCreator
         'fisrv_creditcard' => PreSelectedPaymentMethod::CARDS,
         'fisrv_applepay' => PreSelectedPaymentMethod::APPLE,
         'fisrv_googlepay' => PreSelectedPaymentMethod::GOOGLEPAY,
+        'fisrv_bizum' => PreSelectedPaymentMethod::BIZUM,
     ];
 
     /**
@@ -305,18 +305,21 @@ class CheckoutCreator
             case E_NOTICE:
             case E_USER_NOTICE:
                 $error = 'Notice';
+
                 break;
             case E_STRICT:
                 $error = 'Strict';
+
                 break;
         }
 
-        $this->context->getLogger()->write($error . ": " . $err_msg . " in " . $err_file . " on line " . $err_line);
+        $this->context->getLogger()->write($error . ': ' . $err_msg . ' in ' . $err_file . ' on line ' . $err_line);
     }
 
     public function getCheckoutDetails(string $checkoutId): ?GetCheckoutIdResponse
     {
         $this->initClient();
+
         return $this->suppressOutput([self::$client, 'getCheckoutById'], $checkoutId);
     }
 
@@ -336,7 +339,7 @@ class CheckoutCreator
         } finally {
             ob_end_clean(); // Always clean the buffer, even if an exception is thrown
         }
+
         return $result;
     }
-
 }

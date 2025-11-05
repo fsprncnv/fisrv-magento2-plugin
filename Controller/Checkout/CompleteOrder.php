@@ -49,10 +49,12 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
         $sign = $this->action->getRequest()->getParam('_nonce', false);
         if (!$sign) {
             $this->action->getLogger()->write('No signature given, cancelling auth.');
+
             return false;
         }
         $sign = base64_decode($sign);
         $digest = $this->action->createSignature($order);
+
         return hash_equals($digest, $sign);
     }
 
@@ -122,6 +124,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
                 throw new Exception(_('Authorization failed. Could not validate request.'));
             }
             $this->completeOrder($order);
+
             return $this->action->_redirect(
                 'checkout/onepage/success',
                 [

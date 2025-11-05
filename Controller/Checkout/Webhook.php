@@ -32,6 +32,7 @@ class Webhook implements HttpPostActionInterface, CsrfAwareActionInterface
         set_error_handler(
             function (int $errno, string $errstr, string $errfile, int $errline): bool {
                 $this->context->getLogger()->write('Fiserv API Client threw notice: ' . $errno . ' ' . $errstr);
+
                 return true;
             },
             E_USER_NOTICE

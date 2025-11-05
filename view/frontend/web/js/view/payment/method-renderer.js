@@ -30,6 +30,10 @@ define(
                 type: 'fisrv_googlepay',
                 component,
             },
+            {
+                type: 'fisrv_bizum',
+                component,
+            },
         ];
 
         rendererList.push(...renderObjects);

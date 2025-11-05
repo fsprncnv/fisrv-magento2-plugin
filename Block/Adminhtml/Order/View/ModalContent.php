@@ -22,6 +22,7 @@ class ModalContent extends Template
     protected $orderRepository;
 
     private CheckoutCreator $checkoutCreator;
+
     private OrderContext $orderContext;
 
     /**
@@ -72,16 +73,20 @@ class ModalContent extends Template
                     case 'Fisrv\Models\TransactionType':
                     case 'Fisrv\Models\TransactionStatus':
                         $value = $value->name;
+
                         break;
                     case 'Fisrv\Models\PaymentMethodUsed':
                         $value = $value->paymentMethodType;
+
                         break;
                     default:
-                        $value = __("Not Available");
+                        $value = __('Not Available');
+
                         break;
                 }
             },
         );
+
         return $filtered;
     }
 
@@ -103,7 +108,7 @@ class ModalContent extends Template
                     $checkoutDetails = $this->checkoutCreator->getCheckoutDetails($checkoutId);
                     $fiservData = $this->renderFiservCheckoutDetails($checkoutDetails);
                 } catch (Throwable $error) {
-                    $this->orderContext->getLogger()->write("Failed to fetch Fiserv checkout data: " . $error);
+                    $this->orderContext->getLogger()->write('Failed to fetch Fiserv checkout data: ' . $error);
                 }
                 $this->orderContext->getLogger()->write($fiservData);
 
@@ -119,9 +124,10 @@ class ModalContent extends Template
                     )
                 ], $fiservData);
             } catch (Exception $error) {
-                $this->orderContext->getLogger()->write("Failed to prepare Magento order data: " . $error);
+                $this->orderContext->getLogger()->write('Failed to prepare Magento order data: ' . $error);
             }
         }
+
         return $data;
     }
 }

@@ -9,6 +9,7 @@ use Magento\Framework\View\Asset\Repository;
 class ConfigProvider implements ConfigProviderInterface
 {
     private ConfigData $configData;
+
     private Repository $repository;
 
     public function __construct(
@@ -47,6 +48,9 @@ class ConfigProvider implements ConfigProviderInterface
                     ],
                     'fisrv_googlepay' => [
                         'logo' => $this->getLogo('fisrv_googlepay')
+                    ],
+                    'fisrv_bizum' => [
+                        'logo' => $this->getLogo('fisrv_bizum')
                     ],
                 ]
             ]

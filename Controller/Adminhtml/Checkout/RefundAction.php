@@ -122,6 +122,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         } catch (\Throwable $th) {
             $this->context->messageManager->addErrorMessage($th->getMessage());
         }
+
         return $this->context->_redirect(
             'sales/order/view/',
             [

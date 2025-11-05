@@ -37,6 +37,12 @@
             <argument name="title" xsi:type="string">Google Pay</argument>
         </arguments>
     </virtualType>
+    <virtualType name="FisrvBizum" type="Fiserv\Checkout\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_bizum</argument>
+            <argument name="title" xsi:type="string">Bizum</argument>
+        </arguments>
+    </virtualType>
     <!-- Value Handler Pool -->
     <virtualType name="FisrvValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>

@@ -16,17 +16,26 @@ use Magento\Store\Model\StoreManager;
 class ConfigData
 {
     private array $requiredXmlPaths = [];
+
     private const PATH_HOST = 'payment/fisrv/host';
+
     private const FALLBACK_HOST = 'https://checkout-lane.com/';
+
     private ScopeConfigInterface $scopeConfig;
+
     private ModuleListInterface $moduleList;
+
     private WriterInterface $writer;
+
     private TypeListInterface $typeList;
+
     private StoreManager $storeManager;
 
     public const METHOD_CARD = 'fisrv_creditcard';
+
     public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
-    public const PLUGIN_VERSION = '1.0.7';
+
+    public const PLUGIN_VERSION = '1.0.8';
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -80,6 +89,7 @@ class ConfigData
     {
         $this->typeList->cleanType(Config::TYPE_IDENTIFIER);
         $this->typeList->cleanType(Type::TYPE_IDENTIFIER);
+
         return $this->getConfigEntry(self::PATH_HOST) ?? self::FALLBACK_HOST;
     }
 
@@ -119,7 +129,6 @@ class ConfigData
         return $this->getConfigEntry('payment/fisrv/customicon');
     }
 
-
     /**
      * Check if config data is complete
      *
@@ -132,6 +141,7 @@ class ConfigData
                 return false;
             }
         }
+
         return true;
     }
 }

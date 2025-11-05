@@ -11,6 +11,7 @@ use Magento\Framework\App\RequestInterface;
 class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private OrderContext $context;
+
     private PaymentsClient $client;
 
     public function __construct(
@@ -36,9 +37,9 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         if ($pos === false) {
             return null;
         }
+
         return substr($string, $pos + strlen($word));
     }
-
 
     public function execute()
     {
@@ -52,7 +53,7 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         );
         ob_start();
         $status = "You're all set!";
-        $defaultFailureStatus = "Something went wrong";
+        $defaultFailureStatus = 'Something went wrong';
         try {
             $report = $this->client->reportHealthCheck();
             if ($report->httpCode != 200) {
@@ -61,7 +62,7 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
             }
         } catch (\Throwable $th) {
             $bufferCapture = ob_get_contents();
-            $rawError = $this->getStringAfterWord($bufferCapture, "JSON content:");
+            $rawError = $this->getStringAfterWord($bufferCapture, 'JSON content:');
             if (is_null($rawError)) {
                 $status = $defaultFailureStatus;
             } else {
@@ -77,8 +78,9 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
                 ]
             )
         );
-        // Clean possible non-JSON response data (caused by PHP dumps like exception messages) 
+        // Clean possible non-JSON response data (caused by PHP dumps like exception messages)
         ob_end_clean();
+
         return $this->context->getResponse();
     }
 }

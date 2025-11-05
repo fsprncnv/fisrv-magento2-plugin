@@ -1,6 +1,10 @@
 # ChangeLog
 
-## [1.0.7] - 2025-30-05
+## [1.0.8] - 2025-08-11
+
+- Add support for Bizum
+
+## [1.0.7] - 2025-04-11
 
 - Remove brand references from copy
 - Update Fiserv checkout service library
