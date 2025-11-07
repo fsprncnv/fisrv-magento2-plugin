@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="fisrv_methods_generic" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fiserv Generic</label>
+        <label>Generic Checkout</label>
         <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1"
                showInStore="0">
             <label>Enabled</label>
@@ -15,7 +15,7 @@
         </field>
     </group>
     <group id="fisrv_methods_googlepay" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fiserv Google Pay</label>
+        <label>Google Pay</label>
         <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1"
                showInStore="0">
             <label>Enabled</label>
@@ -29,7 +29,7 @@
         </field>
     </group>
     <group id="fisrv_methods_applepay" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fiserv Apple Pay</label>
+        <label>Apple Pay</label>
         <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1"
                showInStore="0">
             <label>Enabled</label>
@@ -43,7 +43,7 @@
         </field>
     </group>
     <group id="fisrv_methods_creditcard" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fiserv Credit / Debit Card</label>
+        <label>Credit / Debit Card</label>
         <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1"
                showInStore="0">
             <label>Enabled</label>
@@ -52,7 +52,7 @@
         </field>
     </group>
     <group id="fisrv_methods_bizum" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Fiserv Bizum</label>
+        <label>Bizum</label>
         <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1"
                showInStore="0">
             <label>Enabled</label>

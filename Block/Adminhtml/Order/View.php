@@ -39,11 +39,11 @@ class View
         }
         $status = $view->getOrder()->getStatus();
         if (str_starts_with($payment->getMethod(), 'fisrv_') && ($status === Order::STATE_COMPLETE || $status === Order::STATE_PROCESSING)) {
-            $refundMessage = _('Do you want to refund this order?');
+            $refundMessage = (string) __('Do you want to refund this order?');
             $view->addButton(
                 'refundaction',
                 [
-                    'label' => _('Refund'),
+                    'label' => (string) __('Refund'),
                     'class' => 'fiserv-refund-button',
                     'id' => 'fiserv-refund-button',
                     'onclick' => "confirmSetLocation('{$refundMessage}', '{$refundRoute}')"
@@ -53,7 +53,7 @@ class View
         $view->addButton(
             'fiserv_checkout_button',
             [
-                'label' => _('Fiserv Checkout Info'),
+                'label' => (string) __('Fiserv Checkout Info'),
                 'class' => 'fiserv-checkout-button',
                 'id' => 'fiserv-checkout-button',
                 'onclick' => 'showFiservCheckoutModal()'

@@ -77,15 +77,15 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
     private function completeOrder(Order $order)
     {
         if (!$order instanceof Order) {
-            throw new Exception(_('Order could not be retrieved'));
+            throw new Exception((string) __('Order could not be retrieved'));
         }
 
         if (!$order->canInvoice()) {
-            throw new Exception(_('Invoice cannot be created for this order'));
+            throw new Exception((string) __('Invoice cannot be created for this order'));
         }
 
         if ($order->getState() !== ORDER::STATE_NEW) {
-            throw new Exception(_('Order has invalid state'));
+            throw new Exception((string) __('Order has invalid state'));
         }
 
         $invoice = $this->invoiceService->prepareInvoice($order);

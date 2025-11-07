@@ -61,7 +61,8 @@ class GenericMethod extends Adapter
 
     public function getTitle(): string
     {
-        return $this->configData->getCustomPaymentMethodName($this->getCode()) ?? $this->title;
+        $title = $this->configData->getCustomPaymentMethodName($this->getCode()) ?? $this->title;
+        return (string) __($title);
     }
 
     public function canRefund(): bool

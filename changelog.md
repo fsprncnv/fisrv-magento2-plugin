@@ -3,6 +3,7 @@
 ## [1.0.8] - 2025-08-11
 
 - Add support for Bizum
+- Improve i18n
 
 ## [1.0.7] - 2025-04-11
 
