@@ -52,6 +52,13 @@
                 <can_capture>1</can_capture>
                 <can_authorize>1</can_authorize>
             </fisrv_bizum>
+            <fisrv_ideal>
+                <active>1</active>
+                <model>FisrvIdeal</model>
+                <can_use_checkout>1</can_use_checkout>
+                <can_capture>1</can_capture>
+                <can_authorize>1</can_authorize>
+            </fisrv_ideal>
         </payment>
         <csp>
             <mode>

@@ -52,6 +52,9 @@ class ConfigProvider implements ConfigProviderInterface
                     'fisrv_bizum' => [
                         'logo' => $this->getLogo('fisrv_bizum')
                     ],
+                    'fisrv_ideal' => [
+                        'logo' => $this->getLogo('fisrv_ideal')
+                    ],
                 ]
             ]
         ];

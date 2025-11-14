@@ -7,22 +7,28 @@ use Fisrv\Checkout\CheckoutClient;
 use Fisrv\Models\CheckoutClientRequest;
 use Fisrv\Models\Currency;
 use Fisrv\Models\GetCheckoutIdResponse;
+use Fisrv\Models\HealthCheckResponse;
 use Fisrv\Models\LineItem;
 use Fisrv\Models\Locale;
 use Fisrv\Models\PaymentsClientRequest;
 use Fisrv\Models\PaymentsClientResponse;
 use Fisrv\Models\PreSelectedPaymentMethod;
+use Fisrv\Payments\PaymentsClient;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
+if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
+    include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
+}
+
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
  * Middleware for Fiserv client related processes.
  */
-class CheckoutCreator
+class FiservApiService
 {
     private static CheckoutClient $client;
 
@@ -53,6 +59,7 @@ class CheckoutCreator
         'fisrv_applepay' => PreSelectedPaymentMethod::APPLE,
         'fisrv_googlepay' => PreSelectedPaymentMethod::GOOGLEPAY,
         'fisrv_bizum' => PreSelectedPaymentMethod::BIZUM,
+        'fisrv_ideal' => PreSelectedPaymentMethod::IDEAL,
     ];
 
     /**
@@ -80,7 +87,7 @@ class CheckoutCreator
         } catch (\Throwable $th) {
             $this->context->getLogger()->write('Creating generic checkout.');
         }
-        $this->context->getLogger()->write('Mapping data from web shopt to API...');
+        $this->context->getLogger()->write('Mapping data from web shop to API...');
         $request = self::transferBaseData($request, $order);
         $request = self::transferCartItems($request, $order);
         $request = self::transferAccountPerson($request, $order);
@@ -124,8 +131,6 @@ class CheckoutCreator
                 'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
             ]
         );
-        $this->context->getLogger()->write('api_key: ' . $this->context->getConfigData()->getApiKey());
-        $this->context->getLogger()->write('store_id: ' . $this->context->getConfigData()->getFisrvStoreId());
     }
 
     /**
@@ -341,5 +346,17 @@ class CheckoutCreator
         }
 
         return $result;
+    }
+
+    public function reportHealthCheck(): HealthCheckResponse
+    {
+        return new PaymentsClient(
+            [
+                'is_prod' => $this->context->getConfigData()->isProductionMode(),
+                'api_key' => $this->context->getConfigData()->getApiKey(),
+                'api_secret' => $this->context->getConfigData()->getApiSecret(),
+                'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
+            ]
+        )->reportHealthCheck();
     }
 }

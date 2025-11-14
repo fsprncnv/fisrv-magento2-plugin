@@ -94,6 +94,7 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 
         if ($this->configData->isAutoCompletionEnabled()) {
             $order->setState(Order::STATE_COMPLETE);
+            $order->setStatus(Order::STATE_COMPLETE);
         } else {
             $order->setState(Order::STATE_PROCESSING);
         }

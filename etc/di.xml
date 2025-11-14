@@ -43,6 +43,12 @@
             <argument name="title" xsi:type="string">Bizum</argument>
         </arguments>
     </virtualType>
+     <virtualType name="FisrvIdeal" type="Fiserv\Checkout\Model\Method\GenericMethod">
+        <arguments>
+            <argument name="code" xsi:type="string">fisrv_ideal</argument>
+            <argument name="title" xsi:type="string">Ideal</argument>
+        </arguments>
+    </virtualType>
     <!-- Value Handler Pool -->
     <virtualType name="FisrvValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>

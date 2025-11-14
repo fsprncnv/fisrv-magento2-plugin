@@ -6,7 +6,7 @@
 namespace Fiserv\Checkout\Block\Adminhtml\Order\View;
 
 use Exception;
-use Fiserv\Checkout\Controller\Checkout\CheckoutCreator;
+use Fiserv\Checkout\Controller\Checkout\FiservApiService;
 use Fiserv\Checkout\Controller\Checkout\OrderContext;
 use Fisrv\Models\GetCheckoutIdResponse;
 use Magento\Backend\Block\Template;
@@ -21,7 +21,7 @@ class ModalContent extends Template
      */
     protected $orderRepository;
 
-    private CheckoutCreator $checkoutCreator;
+    private FiservApiService $checkoutCreator;
 
     private OrderContext $orderContext;
 
@@ -33,7 +33,7 @@ class ModalContent extends Template
     public function __construct(
         Context $context,
         OrderRepositoryInterface $orderRepository,
-        CheckoutCreator $checkoutCreator,
+        FiservApiService $checkoutCreator,
         OrderContext $orderContext,
         array $data = []
     ) {

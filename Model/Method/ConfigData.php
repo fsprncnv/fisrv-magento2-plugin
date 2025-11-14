@@ -35,7 +35,7 @@ class ConfigData
 
     public const METHOD_GOOGLE_PAY = 'fisrv_creditcard';
 
-    public const PLUGIN_VERSION = '1.0.8';
+    public const PLUGIN_VERSION = '1.0.9';
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -111,7 +111,7 @@ class ConfigData
 
     public function isMethodActive(string $method): bool
     {
-        return $this->getConfigEntry('payment/' . $method . '/active') ?? true;
+        return $this->getConfigEntry('payment/' . $method . '/active') ?? false;
     }
 
     public function getCustomPaymentMethodName(string $method): ?string

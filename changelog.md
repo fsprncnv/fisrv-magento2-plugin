@@ -1,5 +1,10 @@
 # ChangeLog
 
+## [1.0.9] - 2025-08-11
+
+- Add support for Ideal
+- Add compatibility for standalone version (non-composer)
+
 ## [1.0.8] - 2025-08-11
 
 - Add support for Bizum

@@ -34,6 +34,10 @@ define(
                 type: 'fisrv_bizum',
                 component,
             },
+            {
+                type: 'fisrv_ideal',
+                component,
+            },
         ];
 
         rendererList.push(...renderObjects);

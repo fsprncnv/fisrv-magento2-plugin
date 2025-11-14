@@ -14,12 +14,12 @@ use Magento\Framework\App\RequestInterface;
  */
 class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
-    private CheckoutCreator $checkoutCreator;
+    private FiservApiService $checkoutCreator;
 
     private OrderContext $context;
 
     public function __construct(
-        CheckoutCreator $checkoutCreator,
+        FiservApiService $checkoutCreator,
         OrderContext $context
     ) {
         $this->checkoutCreator = $checkoutCreator;
@@ -56,10 +56,10 @@ class RedirectAction implements HttpGetActionInterface, CsrfAwareActionInterface
             return $this->context->_redirect(
                 'checkout/cart',
                 [
-                '_query' => [
-                    '_secure' => 'true',
-                    'order_cancelled' => 'true'
-                ]
+                    '_query' => [
+                        '_secure' => 'true',
+                        'order_cancelled' => 'true'
+                    ]
                 ]
             );
         }

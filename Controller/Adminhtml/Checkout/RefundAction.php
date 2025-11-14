@@ -4,7 +4,7 @@ namespace Fiserv\Checkout\Controller\Adminhtml\Checkout;
 
 use Exception;
 use Fisrv\Exception\ErrorResponse;
-use Fiserv\Checkout\Controller\Checkout\CheckoutCreator;
+use Fiserv\Checkout\Controller\Checkout\FiservApiService;
 use Fiserv\Checkout\Controller\Checkout\OrderContext;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\Action\HttpGetActionInterface;
@@ -19,7 +19,7 @@ use Magento\Sales\Model\Order\Invoice;
  */
 class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
-    private CheckoutCreator $checkoutCreator;
+    private FiservApiService $checkoutCreator;
 
     private OrderContext $context;
 
@@ -31,7 +31,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
      * Store backend refund registration is handled via RefundInvoiceInterface.
      */
     public function __construct(
-        CheckoutCreator $checkoutCreator,
+        FiservApiService $checkoutCreator,
         OrderContext $context,
         RefundInvoiceInterface $refundOrder
     ) {
@@ -67,7 +67,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
         $method = $payment->getMethod();
         if (!str_starts_with($method, 'fisrv_')) {
             $this->context->getLogger()->write($method);
-            throw new Exception(_('Payment was not provided by Fiserv'));
+            throw new Exception(__('Payment was not provided by Fiserv'));
         }
         $response = null;
         try {
@@ -78,7 +78,7 @@ class RefundAction implements HttpGetActionInterface, CsrfAwareActionInterface
                 $this->context->getLogger()->write((string) $th->response);
                 throw new Exception(__('Refund has failed. Contact support with trace ID: %s and client ID %s.', $response->traceId, $response->clientRequestId));
             }
-            throw new Exception(_('Payment was not provided by Fiserv'));
+            throw new Exception(__('Payment was not provided by Fiserv'));
         }
         $this->context->getLogger()->write('Refund completed on Fiserv Gateway');
         $order->addCommentToStatusHistory(__('Fiserv transaction of ID ' . $response->ipgTransactionId . ' has been refunded with amount ' . number_format((float) $response->approvedAmount->total, 2, '.', '') . ' ' . $response->approvedAmount->currency->value));

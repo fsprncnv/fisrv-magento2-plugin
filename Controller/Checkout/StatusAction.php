@@ -2,7 +2,6 @@
 
 namespace Fiserv\Checkout\Controller\Checkout;
 
-use Fisrv\Payments\PaymentsClient;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -12,12 +11,14 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
 {
     private OrderContext $context;
 
-    private PaymentsClient $client;
+    private FiservApiService $fiservApiService;
 
     public function __construct(
         OrderContext $context,
+        FiservApiService $fiservApiService,
     ) {
         $this->context = $context;
+        $this->fiservApiService = $fiservApiService;
     }
 
     public function validateForCsrf(RequestInterface $request): ?bool
@@ -37,30 +38,24 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         if ($pos === false) {
             return null;
         }
-
         return substr($string, $pos + strlen($word));
     }
 
     public function execute()
     {
-        $this->client = new PaymentsClient(
-            [
-                'is_prod' => $this->context->getConfigData()->isProductionMode(),
-                'api_key' => $this->context->getConfigData()->getApiKey(),
-                'api_secret' => $this->context->getConfigData()->getApiSecret(),
-                'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
-            ]
-        );
+        $this->context->getLogger()->write('Starting API health check');
         ob_start();
-        $status = "You're all set!";
-        $defaultFailureStatus = 'Something went wrong';
+        $status = __("You're all set!");
+        $defaultFailureStatus = __('Something went wrong');
         try {
-            $report = $this->client->reportHealthCheck();
+            $report = $this->fiservApiService->reportHealthCheck();
+            $this->context->getLogger()->write('API health check was successful: ' . json_encode($report));
             if ($report->httpCode != 200) {
                 $status = $report->error->message;
                 $this->context->getLogger()->write('API health check reported following error response: ' . json_encode($report));
             }
         } catch (\Throwable $th) {
+            $this->context->getLogger()->write('API health check had following failure: ' . json_encode($report));
             $bufferCapture = ob_get_contents();
             $rawError = $this->getStringAfterWord($bufferCapture, 'JSON content:');
             if (is_null($rawError)) {
@@ -80,7 +75,6 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         );
         // Clean possible non-JSON response data (caused by PHP dumps like exception messages)
         ob_end_clean();
-
         return $this->context->getResponse();
     }
 }
