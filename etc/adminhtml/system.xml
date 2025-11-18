@@ -41,12 +41,6 @@
 					<config_path>payment/fisrv/debug</config_path>
 					<comment>When activated the debug file will be located in: var/log/fiserv-checkout.log</comment>
 				</field>
-				<field id="autocompletion" translate="label comment" type="select" sortOrder="82" showInDefault="1" showInWebsite="0" showInStore="0">
-					<label>Enable Auto-Completion</label>
-					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-					<config_path>payment/fisrv/autocompletion</config_path>
-					<comment>If enabled orders will be flagged as completed after payment</comment>
-				</field>
 				<field id="customicon" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
 					<label>Custom Icon</label>
 					<config_path>payment/fisrv/customicon</config_path>

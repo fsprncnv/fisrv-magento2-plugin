@@ -5,8 +5,6 @@ namespace Fiserv\Checkout\Controller\Checkout;
 use Exception;
 use Fiserv\Checkout\Model\Method\ConfigData;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Service\InvoiceService;
-use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -18,22 +16,14 @@ use Magento\Framework\App\RequestInterface;
  */
 class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
 {
-    private InvoiceService $invoiceService;
-
-    private TransactionFactory $transactionFactory;
-
     private OrderContext $action;
 
     private ConfigData $configData;
 
     public function __construct(
-        InvoiceService $invoiceService,
-        TransactionFactory $transactionFactory,
         OrderContext $action,
         ConfigData $configData
     ) {
-        $this->invoiceService = $invoiceService;
-        $this->transactionFactory = $transactionFactory;
         $this->action = $action;
         $this->configData = $configData;
     }
@@ -80,32 +70,12 @@ class CompleteOrder implements HttpGetActionInterface, CsrfAwareActionInterface
             throw new Exception((string) __('Order could not be retrieved'));
         }
 
-        if (!$order->canInvoice()) {
-            throw new Exception((string) __('Invoice cannot be created for this order'));
-        }
-
         if ($order->getState() !== ORDER::STATE_NEW) {
             throw new Exception((string) __('Order has invalid state'));
         }
-
-        $invoice = $this->invoiceService->prepareInvoice($order);
-        $invoice->register();
-        $invoice->capture();
-
-        if ($this->configData->isAutoCompletionEnabled()) {
-            $order->setState(Order::STATE_COMPLETE);
-            $order->setStatus(Order::STATE_COMPLETE);
-        } else {
-            $order->setState(Order::STATE_PROCESSING);
-        }
-
-        $transaction = $this->transactionFactory->create()
-            ->addObject($invoice)
-            ->addObject($invoice->getOrder());
-
-        $transaction->save();
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus(Order::STATE_PROCESSING);
         $this->action->getOrderRepository()->save($order);
-
         $this->action->getLogger()->write('Order status is ' . $order->getStatus());
         $this->action->getLogger()->write('Order state is ' . $order->getState());
     }
