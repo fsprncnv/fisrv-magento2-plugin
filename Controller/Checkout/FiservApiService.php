@@ -20,8 +20,9 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-if (file_exists(__DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php')) {
-    include_once __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
+$autoloader = __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
+if (file_exists($autoloader)) {
+    include_once $autoloader;
 }
 
 /**
@@ -350,13 +351,14 @@ class FiservApiService
 
     public function reportHealthCheck(): HealthCheckResponse
     {
-        return new PaymentsClient(
+        $client = new PaymentsClient(
             [
                 'is_prod' => $this->context->getConfigData()->isProductionMode(),
                 'api_key' => $this->context->getConfigData()->getApiKey(),
                 'api_secret' => $this->context->getConfigData()->getApiSecret(),
                 'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
             ]
-        )->reportHealthCheck();
+        );
+        return $client->reportHealthCheck();
     }
 }
