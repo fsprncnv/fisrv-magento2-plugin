@@ -26,6 +26,41 @@
       <!-- /ko -->
       <!--/ko-->
     </div>
+    <div class="checkout-agreements-block">
+      <!-- ko foreach: $parent.getRegion('before-place-order') -->
+      <!-- ko template: getTemplate() -->
+      <!-- ko foreach: { data: elems, as: 'element' } -->
+      <!-- ko if: hasTemplate() -->
+      <!-- ko template: getTemplate() -->
+      <div data-role="checkout-agreements">
+        <div class="checkout-agreements fieldset" data-bind="visible: isVisible">
+          <!-- ko foreach: agreements -->
+          <!-- ko if: ($parent.isAgreementRequired($data)) -->
+          <div class="checkout-agreement field choice required">
+            <input type="checkbox" class="required-entry" data-bind="attr: {
+                                    'id': $parent.getCheckboxId($parentContext, agreementId),
+                                    'name': 'agreement[' + agreementId + ']',
+                                    'value': agreementId
+                                    }" id="agreement_checkmo_1" name="agreement[1]" value="1">
+            <label class="label" data-bind="attr: {'for': $parent.getCheckboxId($parentContext, agreementId)}"
+              for="agreement_checkmo_1">
+              <button type="button" class="action action-show"
+                data-bind="click: function(data, event) { return $parent.showContent(data, event) }">
+                <span data-bind="html: checkboxText">Please agree</span>
+              </button>
+            </label>
+          </div>
+          <!-- /ko -->
+          <!-- ko ifnot: ($parent.isAgreementRequired($data)) --><!-- /ko -->
+          <!-- /ko -->
+        </div>
+      </div>
+      <!-- /ko -->
+      <!-- /ko -->
+      <!-- /ko -->
+      <!-- /ko -->
+      <!--/ko-->
+    </div>
     <div class="actions-toolbar">
       <div class="primary">
         <button class="action primary checkout" type="submit" data-bind="

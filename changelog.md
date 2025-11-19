@@ -4,6 +4,9 @@
 
 - Add support for Ideal
 - Add compatibility for standalone version (non-composer)
+- Remove invoice restrictions
+- Remove auto-completion feature
+- Add T&C compatibility
 
 ## [1.0.8] - 2025-08-11
 

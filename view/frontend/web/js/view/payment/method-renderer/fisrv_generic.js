@@ -1,8 +1,7 @@
-define(['Magento_Checkout/js/view/payment/default', 'mage/url', 'jquery', 'mage/translate'], function (
+define(['Magento_Checkout/js/view/payment/default', 'mage/url', 'jquery'], function (
   Component,
   url,
   $,
-  translate,
 ) {
   'use strict';
 
@@ -21,14 +20,11 @@ define(['Magento_Checkout/js/view/payment/default', 'mage/url', 'jquery', 'mage/
 
     placeOrder: function (data, event) {
       var self = this;
-
       if (event) {
         event.preventDefault();
       }
-
       if (this.validate() && this.isPlaceOrderActionAllowed() === true) {
         this.isPlaceOrderActionAllowed(false);
-
         this.getPlaceOrderDeferredObject()
           .done(function () {
             self.afterPlaceOrder();
@@ -39,10 +35,8 @@ define(['Magento_Checkout/js/view/payment/default', 'mage/url', 'jquery', 'mage/
           .always(function () {
             self.isPlaceOrderActionAllowed(true);
           });
-
         return true;
       }
-
       return false;
     },
 
@@ -54,7 +48,6 @@ define(['Magento_Checkout/js/view/payment/default', 'mage/url', 'jquery', 'mage/
       if (this.isPlaceOrderActionAllowed()) {
         return $.mage.__('You will be redirected to an external checkout page.');
       }
-
       return $.mage.__('Sorry, Fiserv Checkout is currently not available.');
     },
 
