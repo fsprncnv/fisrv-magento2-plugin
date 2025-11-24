@@ -260,16 +260,14 @@ class FiservApiService
 
         foreach ($items as $item) {
             try {
+                $quantity = intval($item->getQtyOrdered());
                 $request->order->basket->lineItems[] = new LineItem(
                     [
                         'itemIdentifier' => strval($item->getItemId()),
                         'name' => $item->getName(),
-                        'quantity' => intval($item->getQtyOrdered()),
+                        'quantity' => $quantity,
                         'price' => $item->getPrice(),
-                        'total' => $item->getPrice(),
-                        'shippingCost' => 0,
-                        'valueAddedTax' => 0,
-                        'miscellaneousFee' => 0,
+                        'total' => $item->getPrice() * $quantity
                     ]
                 );
             } catch (\Throwable $th) {
