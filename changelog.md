@@ -1,9 +1,13 @@
 # ChangeLog
 
+## [1.0.10] - 2026-01-22
+
+- Update meta data header
+
 ## [1.0.9] - 2025-08-11
 
 - Add support for Ideal
-- Add compatibility for standalone version (non-composer)
+- Fix line item validation
 - Remove invoice restrictions
 - Remove auto-completion feature
 - Add T&C compatibility

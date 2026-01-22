@@ -14,6 +14,7 @@ use Fisrv\Models\PaymentsClientRequest;
 use Fisrv\Models\PaymentsClientResponse;
 use Fisrv\Models\PreSelectedPaymentMethod;
 use Fisrv\Payments\PaymentsClient;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Locale\Resolver;
@@ -41,16 +42,20 @@ class FiservApiService
 
     private OrderContext $context;
 
+    private ProductMetadataInterface $productMetadataInterface;
+
     public function __construct(
         Store $store,
         Resolver $resolver,
         OrderRepository $orderRepository,
         OrderContext $context,
+        ProductMetadataInterface $productMetadataInterface,
     ) {
         $this->store = $store;
         $this->resolver = $resolver;
         $this->orderRepository = $orderRepository;
         $this->context = $context;
+        $this->productMetadataInterface = $productMetadataInterface;
 
         set_error_handler([$this, 'noticeErrorHandler'], E_NOTICE);
     }
@@ -123,9 +128,12 @@ class FiservApiService
     private function initClient(): void
     {
         $moduleVersion = $this->context->getConfigData()->getModuleVersion();
+
         self::$client = new CheckoutClient(
             [
-                'user' => 'Magento2Plugin/' . $moduleVersion,
+                'pluginversion' => $moduleVersion,
+                'shopsystem' => 'Magento2',
+                'shopversion' => $this->productMetadataInterface->getVersion(),
                 'is_prod' => $this->context->getConfigData()->isProductionMode(),
                 'api_key' => $this->context->getConfigData()->getApiKey(),
                 'api_secret' => $this->context->getConfigData()->getApiSecret(),
