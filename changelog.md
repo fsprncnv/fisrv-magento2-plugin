@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [1.1.0] - 2026-01-22
+
+- Update iDEAL branding
+
 ## [1.0.10] - 2026-01-22
 
 - Update meta data header

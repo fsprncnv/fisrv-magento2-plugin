@@ -46,7 +46,7 @@
      <virtualType name="FisrvIdeal" type="Fiserv\Checkout\Model\Method\GenericMethod">
         <arguments>
             <argument name="code" xsi:type="string">fisrv_ideal</argument>
-            <argument name="title" xsi:type="string">Ideal</argument>
+            <argument name="title" xsi:type="string">iDEAL | Wero</argument>
         </arguments>
     </virtualType>
     <!-- Value Handler Pool -->

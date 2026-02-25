@@ -132,7 +132,7 @@ class FiservApiService
         self::$client = new CheckoutClient(
             [
                 'pluginversion' => $moduleVersion,
-                'shopsystem' => 'Magento2',
+                'shopsystem' => 'magento2',
                 'shopversion' => $this->productMetadataInterface->getVersion(),
                 'is_prod' => $this->context->getConfigData()->isProductionMode(),
                 'api_key' => $this->context->getConfigData()->getApiKey(),
