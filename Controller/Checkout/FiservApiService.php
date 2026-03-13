@@ -21,11 +21,6 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-$autoloader = __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
-if (file_exists($autoloader)) {
-    include_once $autoloader;
-}
-
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
  * Middleware for Fiserv client related processes.
