@@ -26,6 +26,7 @@ if (file_exists($autoloader)) {
     include_once $autoloader;
 }
 
+
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
  * Middleware for Fiserv client related processes.
