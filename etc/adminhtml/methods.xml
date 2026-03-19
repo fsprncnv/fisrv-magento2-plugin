@@ -73,10 +73,5 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/fisrv_ideal/active</config_path>
         </field>
-         <field id="title" translate="label" type="text" showInDefault="1" showInWebsite="1"
-               showInStore="0">
-            <label>Custom Method Name</label>
-            <config_path>payment/fisrv_ideal/title</config_path>
-        </field>
     </group>
 </include>
