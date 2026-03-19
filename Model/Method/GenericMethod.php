@@ -22,7 +22,6 @@ class GenericMethod extends Adapter
 
     private ConfigData $configData;
 
-
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Payment\Gateway\Config\ValueHandlerPoolInterface $valueHandlerPool,
