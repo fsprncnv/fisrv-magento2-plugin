@@ -22,6 +22,7 @@ class GenericMethod extends Adapter
 
     private ConfigData $configData;
 
+
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Payment\Gateway\Config\ValueHandlerPoolInterface $valueHandlerPool,
@@ -62,6 +63,10 @@ class GenericMethod extends Adapter
     public function getTitle(): string
     {
         $title = $this->configData->getCustomPaymentMethodName($this->getCode()) ?? $this->title;
+        //but if its iDEAL or credit card, use the default title
+        if (in_array($this->getCode(), ['fisrv_ideal', 'fisrv_creditcard'])) {
+            $title = $this->title;
+        }
         return (string) __($title);
     }
 
