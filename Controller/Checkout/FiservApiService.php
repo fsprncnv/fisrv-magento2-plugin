@@ -21,10 +21,6 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-$autoloader = __DIR__ . '/../../vendor/fiserv-ipg/php-client/vendor/autoload.php';
-if (file_exists($autoloader)) {
-    include_once $autoloader;
-}
 
 
 /**
