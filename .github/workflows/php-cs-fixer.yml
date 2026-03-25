@@ -2,10 +2,8 @@ name: PHP CS Fixer
 
 on:
   push:
-    paths:
-      - '**/*.php'
-      - '.php-cs-fixer.php'
-      - 'composer.json'
+    # run on pushes to branches so you can observe the check before PRs
+    branches: ['**']
 
 jobs:
   php-cs-fixer:
