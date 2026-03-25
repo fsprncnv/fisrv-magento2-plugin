@@ -118,7 +118,7 @@ class ConfigData
     {
         return $this->getConfigEntry('payment/' . $method . '/title');
     }
-    
+
     public function getCustomPaymentMethodIcon(): ?string
     {
         return $this->getConfigEntry('payment/fisrv/customicon');

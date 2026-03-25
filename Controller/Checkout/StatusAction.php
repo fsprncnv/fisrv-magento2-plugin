@@ -38,7 +38,7 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         if ($pos === false) {
             return null;
         }
-        
+
         return substr($string, $pos + strlen($word));
     }
 
