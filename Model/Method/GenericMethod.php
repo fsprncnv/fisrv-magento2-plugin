@@ -66,6 +66,7 @@ class GenericMethod extends Adapter
         if (in_array($this->getCode(), ['fisrv_ideal', 'fisrv_creditcard'])) {
             $title = $this->title;
         }
+
         return (string) __($title);
     }
 

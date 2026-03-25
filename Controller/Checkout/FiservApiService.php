@@ -21,8 +21,6 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 
-
-
 /**
  * Creates instance (checkout ID or URL) of hosted payment page.
  * Middleware for Fiserv client related processes.
@@ -362,6 +360,7 @@ class FiservApiService
                 'store_id' => $this->context->getConfigData()->getFisrvStoreId(),
             ]
         );
+
         return $client->reportHealthCheck();
     }
 }

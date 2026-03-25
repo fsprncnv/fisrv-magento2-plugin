@@ -38,6 +38,7 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         if ($pos === false) {
             return null;
         }
+
         return substr($string, $pos + strlen($word));
     }
 
@@ -75,6 +76,7 @@ class StatusAction implements HttpGetActionInterface, CsrfAwareActionInterface
         );
         // Clean possible non-JSON response data (caused by PHP dumps like exception messages)
         ob_end_clean();
+
         return $this->context->getResponse();
     }
 }
