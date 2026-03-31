@@ -1,0 +1,36 @@
+name: PHP CS Fixer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  php-cs-fixer:
+    name: Run php-cs-fixer
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [8.1, 8.2]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Download php-cs-fixer
+        run: |
+          curl -LsS -o php-cs-fixer.phar https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/latest/download/php-cs-fixer.phar
+          chmod +x php-cs-fixer.phar
+
+      - name: Check Code Style (php-cs-fixer)
+        run: |
+          php php-cs-fixer.phar --version
+          php php-cs-fixer.phar fix --dry-run --diff --config=.php-cs-fixer.php
