@@ -15,20 +15,24 @@ namespace {
 
         public const DEBUG = 7;
 
-        public function __construct() 
+        public function __construct()
         {
         }
-        public function addWriter(object $writer): void 
+
+        public function addWriter(object $writer): void
         {
         }
-        public function log(string $message, int $priority): void 
+
+        public function log(string $message, int $priority): void
         {
         }
     }
 
     class Zend_Log_Writer_Stream
     {
-        public function __construct(string $streamOrUrl, ?string $mode = null) {}
+        public function __construct(string $streamOrUrl, ?string $mode = null)
+        {
+        }
     }
 }
 
@@ -40,7 +44,8 @@ namespace Magento\Framework\Component {
     class ComponentRegistrar
     {
         public const MODULE = 'Module';
-        public static function register(string $type, string $componentName, string $componentPath): void 
+
+        public static function register(string $type, string $componentName, string $componentPath): void
         {
         }
     }
@@ -79,10 +84,10 @@ namespace Magento\Framework\App {
 }
 
 namespace Magento\Framework\App\Action {
-    interface HttpGetActionInterface 
+    interface HttpGetActionInterface
     {
     }
-    interface HttpPostActionInterface 
+    interface HttpPostActionInterface
     {
     }
 }
@@ -90,34 +95,39 @@ namespace Magento\Framework\App\Action {
 namespace Magento\Framework\App\Request {
     class Http
     {
-        public function getParam(string $key, mixed $default = null): mixed 
-        { 
-            return null; 
+        public function getParam(string $key, mixed $default = null): mixed
+        {
+            return null;
         }
-        public function getContent(): string 
-        { 
-            return ''; 
+
+        public function getContent(): string
+        {
+            return '';
         }
+
         /** @return array<string, mixed> */
-        public function getParams(): array 
-        { 
-            return []; 
+        public function getParams(): array
+        {
+            return [];
         }
     }
 
-    class InvalidRequestException extends \Exception {}
+    class InvalidRequestException extends \Exception
+    {
+    }
 }
 
 namespace Magento\Framework\App\Response {
     class Http
     {
-        public function setContent(string $content): static 
-        { 
-            return $this; 
+        public function setContent(string $content): static
+        {
+            return $this;
         }
-        public function setHeader(string $name, string $value, bool $replace = false): static 
-        { 
-            return $this; 
+
+        public function setHeader(string $name, string $value, bool $replace = false): static
+        {
+            return $this;
         }
     }
 
@@ -172,26 +182,27 @@ namespace Magento\Framework {
     class DataObject
     {
         /** @param array<string, mixed> $data */
-        public function __construct(array $data = []) 
+        public function __construct(array $data = [])
         {
         }
-        public function toJson(): string 
-        { 
-            return ''; 
+
+        public function toJson(): string
+        {
+            return '';
         }
     }
 
     class Authorization
     {
-        public function isAllowed(string $resource): bool 
-        { 
-            return false; 
+        public function isAllowed(string $resource): bool
+        {
+            return false;
         }
     }
 }
 
 namespace Magento\Framework\Event {
-    interface ManagerInterface 
+    interface ManagerInterface
     {
     }
 }
@@ -206,7 +217,7 @@ namespace Magento\Framework\Message {
 }
 
 namespace Magento\Framework\Module {
-    interface ModuleListInterface 
+    interface ModuleListInterface
     {
     }
 }
@@ -214,42 +225,44 @@ namespace Magento\Framework\Module {
 namespace Magento\Framework\Controller\Result {
     class RedirectFactory
     {
-        public function create(): Redirect 
-        { 
-            return new Redirect(); 
+        public function create(): Redirect
+        {
+            return new Redirect();
         }
     }
 
     class Redirect
     {
-        public function setUrl(string $url): static 
-        { 
-            return $this; 
+        public function setUrl(string $url): static
+        {
+            return $this;
         }
+
         /** @param array<string, mixed> $params */
-        public function setPath(string $path, array $params = []): static 
-        { 
-            return $this; 
+        public function setPath(string $path, array $params = []): static
+        {
+            return $this;
         }
     }
 
     class JsonFactory
     {
-        public function create(): Json 
-        { 
-            return new Json(); 
+        public function create(): Json
+        {
+            return new Json();
         }
     }
 
     class Json
     {
-        public function setData(mixed $data): static 
-        { 
-            return $this; 
+        public function setData(mixed $data): static
+        {
+            return $this;
         }
-        public function setHeader(string $name, string $value, bool $replace = false): static 
-        { 
-            return $this; 
+
+        public function setHeader(string $name, string $value, bool $replace = false): static
+        {
+            return $this;
         }
     }
 }
@@ -257,9 +270,9 @@ namespace Magento\Framework\Controller\Result {
 namespace Magento\Framework\Locale {
     class Resolver
     {
-        public function getLocale(): string 
-        { 
-            return ''; 
+        public function getLocale(): string
+        {
+            return '';
         }
     }
 }
@@ -273,7 +286,9 @@ namespace Magento\Framework\View\Asset {
 }
 
 namespace Magento\Framework\View\Element {
-    abstract class AbstractBlock {}
+    abstract class AbstractBlock
+    {
+    }
 }
 
 namespace Magento\Framework\Stdlib\DateTime {
@@ -286,19 +301,22 @@ namespace Magento\Framework\Stdlib\DateTime {
 namespace Magento\Framework\Data\Form\Element {
     abstract class AbstractElement
     {
-        public function getHtmlId(): string 
-        { 
-            return ''; 
+        public function getHtmlId(): string
+        {
+            return '';
         }
-        public function getData(string $key = '', mixed $index = null): mixed 
-        { 
-            return null; 
+
+        public function getData(string $key = '', mixed $index = null): mixed
+        {
+            return null;
         }
     }
 }
 
 namespace Magento\Framework\Exception {
-    class NoSuchEntityException extends \Exception {}
+    class NoSuchEntityException extends \Exception
+    {
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -308,9 +326,9 @@ namespace Magento\Framework\Exception {
 namespace Magento\Checkout\Model {
     class Session
     {
-        public function getLastRealOrder(): \Magento\Sales\Model\Order 
-        { 
-            return new \Magento\Sales\Model\Order(); 
+        public function getLastRealOrder(): \Magento\Sales\Model\Order
+        {
+            return new \Magento\Sales\Model\Order();
         }
     }
 
@@ -329,7 +347,9 @@ namespace Magento\Sales\Api\Data {
     interface OrderInterface
     {
         public function getId(): ?int;
+
         public function getExtOrderId(): ?string;
+
         public function setExtOrderId(string $id): static;
     }
 }
@@ -338,6 +358,7 @@ namespace Magento\Sales\Api {
     interface OrderRepositoryInterface
     {
         public function get(int $id): \Magento\Sales\Api\Data\OrderInterface;
+
         public function save(\Magento\Sales\Api\Data\OrderInterface $entity): \Magento\Sales\Api\Data\OrderInterface;
     }
 
@@ -355,13 +376,14 @@ namespace Magento\Sales\Api {
 namespace Magento\Sales\Model {
     class OrderRepository implements \Magento\Sales\Api\OrderRepositoryInterface
     {
-        public function get(int $id): \Magento\Sales\Api\Data\OrderInterface 
-        { 
-            return new Order(); 
+        public function get(int $id): \Magento\Sales\Api\Data\OrderInterface
+        {
+            return new Order();
         }
-        public function save(\Magento\Sales\Api\Data\OrderInterface $entity): \Magento\Sales\Api\Data\OrderInterface 
-        { 
-            return $entity; 
+
+        public function save(\Magento\Sales\Api\Data\OrderInterface $entity): \Magento\Sales\Api\Data\OrderInterface
+        {
+            return $entity;
         }
     }
 
@@ -381,102 +403,125 @@ namespace Magento\Sales\Model {
 
         public const STATE_HOLDED = 'holded';
 
-        public function getId(): ?int 
-        { 
-            return null; 
+        public function getId(): ?int
+        {
+            return null;
         }
-        public function getIncrementId(): ?string 
-        { 
-            return null; 
+
+        public function getIncrementId(): ?string
+        {
+            return null;
         }
-        public function getStatus(): ?string 
-        { 
-            return null; 
+
+        public function getStatus(): ?string
+        {
+            return null;
         }
-        public function getState(): ?string 
-        { 
-            return null; 
+
+        public function getState(): ?string
+        {
+            return null;
         }
-        public function getStatusLabel(): mixed 
-        { 
-            return null; 
+
+        public function getStatusLabel(): mixed
+        {
+            return null;
         }
-        public function setState(string $state): static 
-        { 
-            return $this; 
+
+        public function setState(string $state): static
+        {
+            return $this;
         }
-        public function setStatus(string $status): static 
-        { 
-            return $this; 
+
+        public function setStatus(string $status): static
+        {
+            return $this;
         }
-        public function getPayment(): ?\Magento\Sales\Model\Order\Payment 
-        { 
-            return null; 
+
+        public function getPayment(): ?\Magento\Sales\Model\Order\Payment
+        {
+            return null;
         }
-        public function getInvoiceCollection(): \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection 
-        { 
-            return new \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection(); 
+
+        public function getInvoiceCollection(): \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection
+        {
+            return new \Magento\Sales\Model\ResourceModel\Order\Invoice\Collection();
         }
-        public function addCommentToStatusHistory(string $comment): static 
-        { 
-            return $this; 
+
+        public function addCommentToStatusHistory(string $comment): static
+        {
+            return $this;
         }
-        public function getExtOrderId(): ?string 
-        { 
-            return null; 
+
+        public function getExtOrderId(): ?string
+        {
+            return null;
         }
-        public function setExtOrderId(string $id): static 
-        { 
-            return $this; 
+
+        public function setExtOrderId(string $id): static
+        {
+            return $this;
         }
-        public function getCustomerId(): ?int 
-        { 
-            return null; 
+
+        public function getCustomerId(): ?int
+        {
+            return null;
         }
-        public function getCustomerFirstname(): ?string 
-        { 
-            return null; 
+
+        public function getCustomerFirstname(): ?string
+        {
+            return null;
         }
-        public function getCustomerLastname(): ?string 
-        { 
-            return null; 
+
+        public function getCustomerLastname(): ?string
+        {
+            return null;
         }
-        public function getGrandTotal(): float 
-        { 
-            return 0.0; 
+
+        public function getGrandTotal(): float
+        {
+            return 0.0;
         }
-        public function getSubtotal(): float 
-        { 
-            return 0.0; 
+
+        public function getSubtotal(): float
+        {
+            return 0.0;
         }
-        public function getBaseTaxAmount(): float 
-        { 
-            return 0.0; 
+
+        public function getBaseTaxAmount(): float
+        {
+            return 0.0;
         }
-        public function getShippingAmount(): float 
-        { 
-            return 0.0; 
+
+        public function getShippingAmount(): float
+        {
+            return 0.0;
         }
-        public function getOrderCurrencyCode(): ?string 
-        { 
-            return null; 
+
+        public function getOrderCurrencyCode(): ?string
+        {
+            return null;
         }
-        public function getCreatedAt(): ?string 
-        { 
-            return null; 
+
+        public function getCreatedAt(): ?string
+        {
+            return null;
         }
-        public function getProtectCode(): ?string 
-        { 
-            return null; 
+
+        public function getProtectCode(): ?string
+        {
+            return null;
         }
-        public function getBillingAddress(): ?\Magento\Sales\Model\Order\Address 
-        { 
-            return null; 
+
+        public function getBillingAddress(): ?\Magento\Sales\Model\Order\Address
+        {
+            return null;
         }
+
         /** @return array<int, mixed> */
-        public function getItems(): array 
-        { 
-            return []; 
+        public function getItems(): array
+        {
+            return [];
         }
     }
 }
@@ -484,16 +529,17 @@ namespace Magento\Sales\Model {
 namespace Magento\Sales\Model\Order {
     class Payment
     {
-        public function getMethod(): string 
-        { 
-            return ''; 
+        public function getMethod(): string
+        {
+            return '';
         }
+
         public function getMethodInstance(): \Magento\Payment\Model\MethodInterface
         {
             return new class implements \Magento\Payment\Model\MethodInterface {
-                public function getTitle(): string 
-                { 
-                    return ''; 
+                public function getTitle(): string
+                {
+                    return '';
                 }
             };
         }
@@ -501,42 +547,48 @@ namespace Magento\Sales\Model\Order {
 
     class Address
     {
-        public function getFirstname(): ?string 
-        { 
-            return null; 
+        public function getFirstname(): ?string
+        {
+            return null;
         }
-        public function getLastname(): ?string 
-        { 
-            return null; 
+
+        public function getLastname(): ?string
+        {
+            return null;
         }
-        public function getEmail(): ?string 
-        { 
-            return null; 
+
+        public function getEmail(): ?string
+        {
+            return null;
         }
+
         /** @return string[] */
-        public function getStreet(): array 
-        { 
-            return ['']; 
+        public function getStreet(): array
+        {
+            return [''];
         }
-        public function getCity(): ?string 
-        { 
-            return null; 
+
+        public function getCity(): ?string
+        {
+            return null;
         }
-        public function getCountryId(): ?string 
-        { 
-            return null; 
+
+        public function getCountryId(): ?string
+        {
+            return null;
         }
-        public function getPostcode(): ?string 
-        { 
-            return null; 
+
+        public function getPostcode(): ?string
+        {
+            return null;
         }
     }
 
     class Invoice
     {
-        public function getId(): ?int 
-        { 
-            return null; 
+        public function getId(): ?int
+        {
+            return null;
         }
     }
 }
@@ -544,9 +596,9 @@ namespace Magento\Sales\Model\Order {
 namespace Magento\Sales\Model\ResourceModel\Order\Invoice {
     class Collection
     {
-        public function getFirstItem(): ?\Magento\Sales\Model\Order\Invoice 
-        { 
-            return null; 
+        public function getFirstItem(): ?\Magento\Sales\Model\Order\Invoice
+        {
+            return null;
         }
     }
 }
@@ -554,16 +606,18 @@ namespace Magento\Sales\Model\ResourceModel\Order\Invoice {
 namespace Magento\Sales\Block\Adminhtml\Order {
     class View extends \Magento\Backend\Block\Template
     {
-        public function getOrderId(): ?int 
-        { 
-            return null; 
+        public function getOrderId(): ?int
+        {
+            return null;
         }
-        public function getOrder(): \Magento\Sales\Model\Order 
-        { 
-            return new \Magento\Sales\Model\Order(); 
+
+        public function getOrder(): \Magento\Sales\Model\Order
+        {
+            return new \Magento\Sales\Model\Order();
         }
+
         /** @param array<string, mixed> $data */
-        public function addButton(string $buttonId, array $data): void 
+        public function addButton(string $buttonId, array $data): void
         {
         }
     }
@@ -579,18 +633,19 @@ namespace Magento\Backend\App {
         /** @var \Magento\Framework\Authorization */
         protected $_authorization;
 
-        public function __construct(\Magento\Backend\App\Action\Context $context) 
+        public function __construct(\Magento\Backend\App\Action\Context $context)
         {
         }
-        public function getRequest(): \Magento\Framework\App\Request\Http 
-        { 
-            return new \Magento\Framework\App\Request\Http(); 
+
+        public function getRequest(): \Magento\Framework\App\Request\Http
+        {
+            return new \Magento\Framework\App\Request\Http();
         }
     }
 }
 
 namespace Magento\Backend\App\Action {
-    class Context 
+    class Context
     {
     }
 }
@@ -602,23 +657,25 @@ namespace Magento\Backend\Block {
         protected $_localeDate;
 
         /** @param array<string, mixed> $data */
-        public function __construct(\Magento\Backend\Block\Template\Context $context, array $data = []) 
+        public function __construct(\Magento\Backend\Block\Template\Context $context, array $data = [])
         {
         }
-        public function getRequest(): \Magento\Framework\App\Request\Http 
-        { 
-            return new \Magento\Framework\App\Request\Http(); 
+
+        public function getRequest(): \Magento\Framework\App\Request\Http
+        {
+            return new \Magento\Framework\App\Request\Http();
         }
-        public function toHtml(...$args): string 
-        { 
-            return ''; 
+
+        public function toHtml(...$args): string
+        {
+            return '';
         }
     }
 }
 
 namespace Magento\Backend\Block\Template {
-    class Context 
-    {    
+    class Context
+    {
     }
 }
 
@@ -629,9 +686,9 @@ namespace Magento\Backend\Block\Template {
 namespace Magento\Config\Block\System\Config\Form {
     class Field extends \Magento\Backend\Block\Template
     {
-        public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element): string 
-        { 
-            return ''; 
+        public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element): string
+        {
+            return '';
         }
     }
 }
@@ -646,7 +703,7 @@ namespace Magento\Payment\Model {
         public function getTitle(): string;
     }
 
-    interface InfoInterface 
+    interface InfoInterface
     {
     }
 }
@@ -664,31 +721,33 @@ namespace Magento\Payment\Model\Method {
         ) {
         }
 
-        public function getCode(): string 
-        { 
-            return ''; 
+        public function getCode(): string
+        {
+            return '';
         }
-        public function isActive(?int $storeId = null): bool 
-        { 
-            return false; 
+
+        public function isActive(?int $storeId = null): bool
+        {
+            return false;
         }
-        public function getTitle(): string 
-        { 
-            return ''; 
+
+        public function getTitle(): string
+        {
+            return '';
         }
     }
 }
 
-namespace Magento\Payment\Gateway\Config 
+namespace Magento\Payment\Gateway\Config
 {
-    interface ValueHandlerPoolInterface 
+    interface ValueHandlerPoolInterface
     {
     }
 }
 
-namespace Magento\Payment\Gateway\Data 
+namespace Magento\Payment\Gateway\Data
 {
-    class PaymentDataObjectFactory 
+    class PaymentDataObjectFactory
     {
     }
 }
@@ -697,7 +756,7 @@ namespace Magento\Payment\Gateway\Data
 // Magento\PageCache
 // ---------------------------------------------------------------------------
 
-namespace Magento\PageCache\Model\Cache 
+namespace Magento\PageCache\Model\Cache
 {
     class Type
     {
@@ -709,21 +768,21 @@ namespace Magento\PageCache\Model\Cache
 // Magento\Store
 // ---------------------------------------------------------------------------
 
-namespace Magento\Store\Model 
+namespace Magento\Store\Model
 {
     class Store
     {
-        public function getBaseCurrencyCode(): string 
-        { 
-            return ''; 
+        public function getBaseCurrencyCode(): string
+        {
+            return '';
         }
     }
 
     class StoreManager
     {
-        public function getStore(): Store 
-        { 
-            return new Store(); 
+        public function getStore(): Store
+        {
+            return new Store();
         }
     }
 

@@ -51,3 +51,4 @@ phpstan-report.txt
 phpcs-report.txt
 .php-cs-fixer.cache
 .php-cs-fixer.cache
+php-cs-fixer-stubs-report.txt
