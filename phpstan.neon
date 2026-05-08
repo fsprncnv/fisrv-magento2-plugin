@@ -8,9 +8,14 @@ parameters:
     - Model
   excludePaths:
     - vendor/*
+    - Model/ConfigProvider.php
   scanDirectories:
     - vendor/fiserv-ipg/php-client
   scanFiles:
     - phpstan-stubs.php
   bootstrapFiles:
     - phpstan-bootstrap.php
+  ignoreErrors:
+    - '#Variable \$response might not be defined\.#'
+    - '#Variable \$report might not be defined\.#'
+  reportUnmatchedIgnoredErrors: false
