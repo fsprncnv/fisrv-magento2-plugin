@@ -1,5 +1,16 @@
 parameters:
   level: 1
+  phpVersion: 80100
+  paths:
+    - Block
+    - Controller
+    - Logger
+    - Model
   excludePaths:
     - vendor/*
-  phpVersion: 70400
+  scanDirectories:
+    - vendor/fiserv-ipg/php-client
+  scanFiles:
+    - phpstan-stubs.php
+  bootstrapFiles:
+    - phpstan-bootstrap.php
