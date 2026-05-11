@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="Fiserv Magento 2 PHPMD Ruleset"
+	xmlns="https://pmd.github.io/ruleset/2.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://pmd.github.io/ruleset/2.0.0 https://pmd.github.io/ruleset_2_0_0.xsd">
+	<rule ref="rulesets/cleancode.xml" >
+        <exclude name="StaticAccess" />
+		<exclude name="MissingImport" />
+		<exclude name="ElseExpression" />
+        <exclude name="BooleanArgumentFlag" />
+    </rule>	
+	<rule ref="rulesets/codesize.xml" >
+        <exclude name="ExcessiveParameterList" />
+    </rule>
+	<rule ref="rulesets/design.xml" >
+        <exclude name="CouplingBetweenObjects" />
+    </rule>
+     <exclude-pattern>*/vendor/*</exclude-pattern>
+</ruleset>

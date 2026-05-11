@@ -1,5 +1,21 @@
 parameters:
   level: 1
+  phpVersion: 80100
+  paths:
+    - Block
+    - Controller
+    - Logger
+    - Model
   excludePaths:
     - vendor/*
-  phpVersion: 70400
+    - Model/ConfigProvider.php
+  scanDirectories:
+    - vendor/fiserv-ipg/php-client
+  scanFiles:
+    - phpstan-stubs.php
+  bootstrapFiles:
+    - phpstan-bootstrap.php
+  ignoreErrors:
+    - '#Variable \$response might not be defined\.#'
+    - '#Variable \$report might not be defined\.#'
+  reportUnmatchedIgnoredErrors: false

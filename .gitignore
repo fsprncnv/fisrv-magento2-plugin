@@ -43,3 +43,12 @@ auth.json
 
 magento-stubs-generator.php
 phpstan-output.json
+.php-cs-fixer.cache
+php-cs-fixer-report.txt
+.php-cs-fixer.cache
+php-cs-fixer-fix.txt
+phpstan-report.txt
+phpcs-report.txt
+.php-cs-fixer.cache
+.php-cs-fixer.cache
+php-cs-fixer-stubs-report.txt

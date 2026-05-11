@@ -45,6 +45,7 @@ $config
         // Local variables should not be assigned and return directly instead
         'return_assignment' => true,
         'protected_to_private' => true,
+        
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="Fiserv Magento PHPCS">
+    <description>Project PHPCS configuration with relaxed legacy compatibility rules.</description>
+
+    <file>Block</file>
+    <file>Controller</file>
+    <file>Logger</file>
+    <file>Model</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/phpstan-stubs.php</exclude-pattern>
+    <exclude-pattern>*/phpstan-bootstrap.php</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg value="sp"/>
+    <arg name="warning-severity" value="0"/>
+
+    <rule ref="PSR12">
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing"/>
+        <exclude name="PSR12.Files.FileHeader"/>
+    </rule>
+    <rule ref="PSR2">
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+    </rule>
+
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.ContentAfterBrace">
+        <severity>0</severity>
+    </rule>
+</ruleset>
