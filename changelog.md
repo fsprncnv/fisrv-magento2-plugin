@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [1.1.1] - 2026-22-10
+
+- Require PHP 8.5.12 or greater
+
 ## [1.1.0] - 2026-01-22
 
 - Update iDEAL branding
