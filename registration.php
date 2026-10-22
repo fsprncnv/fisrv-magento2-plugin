@@ -5,8 +5,8 @@ declare(strict_types=1);
 use Magento\Framework\Component\ComponentRegistrar;
 
 $phpVersionAllowed = (
-    PHP_VERSION_ID >= 80509
-    || (PHP_VERSION_ID >= 80427 && PHP_VERSION_ID < 80500)
+    PHP_VERSION_ID >= 80500
+    || (PHP_VERSION_ID >= 80427 && PHP_VERSION_ID < 80499)
     || (PHP_VERSION_ID >= 80336 && PHP_VERSION_ID < 80400)
     || (PHP_VERSION_ID >= 80235 && PHP_VERSION_ID < 80300)
 );
